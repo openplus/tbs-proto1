@@ -1,0 +1,25 @@
+{
+    "name": "drupal/lightning_scheduler",
+    "type": "drupal-module",
+    "description": "Allows authors to schedule automatic transitions between workflow states.",
+    "authors": [
+        {
+            "name": "Adam Globus-Hoenich",
+            "email": "adam.hoenich@acquia.com"
+        },
+        {
+            "name": "Adam Balsam",
+            "email": "adam.balsam@acquia.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^9"
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+moderation_dashboard:
+  label: Moderation Dashboard Layout
+  category: Moderation Dashboard
+  template: templates/moderation-dashboard
+  library: moderation_dashboard/main
+  regions:
+    left:
+      label: Left region
+    middle:
+      label: Middle region
+    right:
+      label: Right region

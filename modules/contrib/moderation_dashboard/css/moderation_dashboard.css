@@ -1,0 +1,114 @@
+.moderation-dashboard {
+  display: flex;
+}
+
+.moderation-dashboard-region {
+  flex-grow: 1;
+  width: 33%;
+  margin: .5rem;
+}
+
+.moderation-dashboard-region:first-child {
+  margin-left: 0;
+}
+
+.moderation-dashboard-region:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 850px) {
+  .moderation-dashboard {
+    display: block;
+  }
+  .moderation-dashboard-region {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.moderation-dashboard .views-field-revision-uid,
+.moderation-dashboard .views-field-uid {
+  float: left;
+  margin-right: .5rem;
+}
+
+.moderation-dashboard canvas::selection {
+  background: none;
+}
+
+.moderation-dashboard .moderation-dashboard-block {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  margin-bottom: 1rem;
+}
+
+.moderation-dashboard .moderation-dashboard-block > h2 {
+  background-color: #f7f7f9;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  margin: 0;
+  font-weight: normal;
+  text-align: left;
+  font-size: 1.3rem;
+}
+
+.moderation-dashboard .moderation-dashboard-block > h2,
+.moderation-dashboard .moderation-dashboard-block > div:not([data-contextual-id]) {
+  padding: .75rem;
+}
+
+.moderation-dashboard nav ul {
+  background: rgba(0, 0, 0, 0.05);
+  margin-bottom: -.75rem;
+  margin-left: -.75rem;
+  margin-right: -.75rem;
+  margin-top: 10px;
+  padding: 10px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.moderation-dashboard nav li {
+  margin-right: 1rem;
+}
+
+.moderation-dashboard .views-row,
+.moderation-dashboard-add-links li {
+  padding: 10px 0 10px 0;
+}
+
+.moderation-dashboard .views-row:not(:last-child),
+.moderation-dashboard-add-links li:not(:last-child) {
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.moderation-dashboard .views-row:first-child,
+.moderation-dashboard-add-links li:first-child {
+  padding-top: 0;
+}
+
+.moderation-dashboard .views-row:last-child,
+.moderation-dashboard-add-links li:last-child {
+  padding-bottom: 0;
+}
+
+.moderation-dashboard h5 {
+  font-size: 18px;
+  text-transform: none;
+  margin: 0;
+  letter-spacing: inherit;
+}
+
+.moderation-dashboard [class*="block-region"] {
+  margin-top: 0;
+}
+
+.moderation-dashboard-add-links ul {
+  list-style: none;
+  margin: 0;
+  padding: .75rem;
+}
+
+.moderation-dashboard-add-links li {
+  font-weight: bold;
+}

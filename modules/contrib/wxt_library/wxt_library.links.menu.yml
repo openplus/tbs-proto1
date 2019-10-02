@@ -1,0 +1,10 @@
+wxt.admin_config_wxt:
+  title: WxT
+  parent: system.admin_config
+  route_name: wxt.admin_config_wxt
+
+wxt_library.admin_config_wxt_library:
+  title: WxT Library
+  description: 'Call WxT Bootstrap jQuery Framework using Drupal Libraries.'
+  parent: wxt.admin_config_wxt
+  route_name: wxt_library.admin_config_wxt_library

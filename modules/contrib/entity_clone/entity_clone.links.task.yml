@@ -1,0 +1,8 @@
+entity_clone.clone:
+  deriver: 'Drupal\entity_clone\Plugin\Derivative\DynamicLocalTasks'
+  weight: 100
+entity_clone.settings:
+  title: 'Entity clone settings'
+  route_name: entity_clone.settings
+  base_route: entity_clone.settings
+  weight: 0

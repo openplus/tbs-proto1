@@ -1,0 +1,5 @@
+administer entity clone:
+  title: 'Administer entity clone'
+
+permission_callbacks:
+  - Drupal\entity_clone\EntityClonePermissions::permissions

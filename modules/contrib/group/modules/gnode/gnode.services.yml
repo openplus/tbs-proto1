@@ -1,0 +1,10 @@
+services:
+  gnode.translation_overview_access:
+    class: Drupal\gnode\Access\GroupContentTranslationAccess
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_overview }
+
+  gnode.translation_manage_access:
+    class: Drupal\gnode\Access\GroupContentTranslationAccess
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_manage }

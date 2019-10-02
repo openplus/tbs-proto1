@@ -1,0 +1,14 @@
+name: Button Link
+type: module
+description: 'Provides a simple button link field formatter.'
+# core: 8.x
+package: Fields
+# version: VERSION
+dependencies:
+  - field
+  
+# Information added by Drupal.org packaging script on 2018-05-21
+version: '8.x-1.1'
+core: '8.x'
+project: 'button_link'
+datestamp: 1526911091

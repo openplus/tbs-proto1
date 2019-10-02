@@ -1,0 +1,16 @@
+name: Views Autocomplete Filters
+type: module
+description: 'Use Autocomplete for string field filters.'
+package: Views
+# core: 8.x
+dependencies:
+  - views
+tags:
+  - views
+  - utility
+
+# Information added by Drupal.org packaging script on 2017-07-15
+version: '8.x-1.2'
+core: '8.x'
+project: 'views_autocomplete_filters'
+datestamp: 1500109745

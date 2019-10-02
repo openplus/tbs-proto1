@@ -1,0 +1,50 @@
+{
+    "name": "drupal/wxt_bootstrap",
+    "description": "WxT Bootstrap theme for Drupal WxT.",
+    "type": "drupal-theme",
+    "license": "GPL-2.0+",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6.0",
+        "drupal/core": "8.*",
+        "drupal/bootstrap": "3.16"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "installer-paths": {
+            "html/core": [
+                "type:drupal-core"
+            ],
+            "html/libraries/{$name}" : [
+                "type:drupal-library"
+            ],
+            "html/modules/custom/{$name}": [
+                "drupal/wxt_library"
+            ],
+            "html/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "html/profiles/{$name}": [
+                "type:drupal-profile"
+            ],
+            "html/themes/custom/{$name}": [
+                "drupal/wxt_bootstrap"
+            ],
+            "html/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ]
+        },
+        "enable-patching": true,
+        "patches": { }
+    }
+}

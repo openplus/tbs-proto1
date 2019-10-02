@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains installation and update hooks for Moderation dashboard.
+ */
+
+/**
+ * Creates the moderation_dashboard.settings config object.
+ */
+function moderation_dashboard_update_8100() {
+  \Drupal::configFactory()
+    ->getEditable('moderation_dashboard.settings')
+    ->set('redirect_on_login', TRUE)
+    ->save(TRUE);
+}

@@ -1,0 +1,14 @@
+{
+  "name": "drupal/context_breadcrumb",
+  "type": "drupal-module",
+  "description": "Breadcrumb with Context",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/context_breadcrumb",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/context_breadcrumb",
+    "source": "http://cgit.drupalcode.org/context_breadcrumb"
+  },
+  "require": { }
+}

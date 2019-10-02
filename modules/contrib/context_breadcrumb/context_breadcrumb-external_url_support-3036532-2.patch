@@ -1,0 +1,48 @@
+diff --git a/context_breadcrumb.info.yml b/context_breadcrumb.info.yml
+index a0e2f63..09d7e79 100644
+--- a/context_breadcrumb.info.yml
++++ b/context_breadcrumb.info.yml
+@@ -1,7 +1,13 @@
+ name: 'Context Breadcrumb'
+ type: module
+ description: 'Breadcrumb with Context'
+-core: 8.x
++# core: 8.x
+ package: 'Custom'
+ dependencies:
+   - context:context
++
++# Information added by Drupal.org packaging script on 2019-02-20
++version: '8.x-1.0-beta7'
++core: '8.x'
++project: 'context_breadcrumb'
++datestamp: 1550647385
+diff --git a/src/Breadcrumb/ContextBreadcrumbBuilder.php b/src/Breadcrumb/ContextBreadcrumbBuilder.php
+index 8c179bc..617e619 100644
+--- a/src/Breadcrumb/ContextBreadcrumbBuilder.php
++++ b/src/Breadcrumb/ContextBreadcrumbBuilder.php
+@@ -183,6 +183,10 @@ class ContextBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+                 $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), $url));
+               }
+             }
++            elseif (strpos($contextBreadcrumb['url'], 'http://') !== FALSE || strpos($contextBreadcrumb['url'], 'https://') !== FALSE) {
++                // External Uri.
++                $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), Url::fromUri($contextBreadcrumb['url'])));
++            }
+             else {
+               $url = $contextBreadcrumb['url'] === '<nolink>' ? Url::fromRoute($contextBreadcrumb['url']) : Url::fromUserInput($contextBreadcrumb['url']);
+               $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), $url));
+diff --git a/src/Plugin/ContextReaction/Breadcrumb.php b/src/Plugin/ContextReaction/Breadcrumb.php
+index 3a9307c..07984f5 100644
+--- a/src/Plugin/ContextReaction/Breadcrumb.php
++++ b/src/Plugin/ContextReaction/Breadcrumb.php
+@@ -115,7 +115,8 @@ class Breadcrumb extends ContextReactionPluginBase {
+         if (ContextBreadcrumbBuilder::isToken($breadcrumb['title']) && empty($breadcrumb['token'])) {
+           $form_state->setErrorByName('breadcrumbs][' . $i . '][token', $this->t('The title using token, please select token option.'));
+         }
+-        if (!ContextBreadcrumbBuilder::isToken($breadcrumb['url']) && !in_array($breadcrumb['url'], ['<front>', '<nolink>']) && $breadcrumb['url'][0] !== '/') {
++        if (!ContextBreadcrumbBuilder::isToken($breadcrumb['url']) && !in_array($breadcrumb['url'], ['<front>', '<nolink>']) && strpos($breadcrumb['url'], 'http://') === FALSE && strpos($breadcrumb['url'], 'https://') === FALSE && $breadcrumb['url'][0] !== '/') {
++        //if (!ContextBreadcrumbBuilder::isToken($breadcrumb['url']) && !in_array($breadcrumb['url'], ['<front>', '<nolink>']) && $breadcrumb['url'][0] !== '/') {
+           $form_state->setErrorByName('breadcrumbs][' . $i . '][url', $this->t('The url path has to start with a slash.'));
+         }
+       }

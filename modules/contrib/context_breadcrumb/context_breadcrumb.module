@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains context_breadcrumb.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function context_breadcrumb_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the context_breadcrumb module.
+    case 'help.page.context_breadcrumb':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Breadcrumb with Context') . '</p>';
+      return $output;
+
+    default:
+  }
+}

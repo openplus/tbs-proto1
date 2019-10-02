@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Contains install routines for moderation_note.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function moderation_note_install() {
+  $config = \Drupal::configFactory()->getEditable('system.mail');
+  $interface = $config->get('interface');
+  if (!isset($interface['moderation_note'])) {
+    $interface['moderation_note'] = 'moderation_note';
+  }
+  $config->set('interface', $interface);
+  $config->save();
+}

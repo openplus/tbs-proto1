@@ -1,0 +1,18 @@
+services:
+  lightning_scheduler.transition_manager:
+    class: '\Drupal\lightning_scheduler\TransitionManager'
+    arguments:
+      - '@content_moderation.moderation_information'
+      - '@current_user'
+      - '@entity_type.manager'
+      - '@logger.channel.cron'
+      - '@string_translation'
+
+  lightning_scheduler.migrator:
+    class: '\Drupal\lightning_scheduler\Migrator'
+    arguments:
+      - '@entity_type.manager'
+      - '@database'
+      - '@state'
+      - '@messenger'
+      - '@string_translation'

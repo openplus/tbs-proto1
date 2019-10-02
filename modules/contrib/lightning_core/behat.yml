@@ -1,0 +1,14 @@
+imports:
+  - 'docroot/modules/contrib/lightning_core/tests/drupal.behat.yml'
+  - 'docroot/modules/contrib/lightning_core/tests/mink.behat.yml'
+
+default:
+  suites:
+    lightning_core:
+      contexts:
+        - '\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\Drupal\DrupalExtension\Context\MinkContext'
+        - '\Drupal\DrupalExtension\Context\MessageContext'
+        - '\Drupal\Tests\lightning_core\FixtureContext'
+      paths:
+        - 'docroot/modules/contrib/lightning_core/modules/lightning_search/tests/features'

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Allows modules to rewrite configuration provided by other extensions.
+ */
+
+/**
+ * Implements hook_module_preinstall().
+ *
+ * Allow config to be rewritten before a module is installed.
+ */
+function config_rewrite_module_preinstall($module) {
+  \Drupal::service('config_rewrite.config_rewriter')->rewriteModuleConfig($module);
+}

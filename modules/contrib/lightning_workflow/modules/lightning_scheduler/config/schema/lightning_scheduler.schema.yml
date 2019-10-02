@@ -1,0 +1,7 @@
+lightning_scheduler.settings:
+  type: config_object
+  label: 'Lightning Scheduler settings'
+  mapping:
+    time_step:
+      type: integer
+      label: "The time input's step attribute"

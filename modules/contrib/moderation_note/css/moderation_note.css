@@ -1,0 +1,314 @@
+.moderation-note-tooltip {
+  position: absolute;
+  background: #277abd;
+  border: 0;
+  border-radius: 5px;
+  color: white;
+  transition: background .5s ease;
+  padding: 6px 1em;
+  font-size: 12px;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
+}
+
+.moderation-note-quickedit-active .moderation-note-tooltip {
+  opacity: 0;
+}
+
+.moderation-note-tooltip:hover,
+.moderation-note-tooltip:focus {
+  outline: none;
+  border: 0;
+  color: white;
+  background: #46a0f5;
+}
+
+.moderation-note-tooltip::after {
+  content: " ";
+  position: absolute;
+  left: calc(50% - 10px);
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #277abd;
+  transition: border-top .5s ease;
+}
+
+.moderation-note-tooltip:hover::after,
+.moderation-note-tooltip:focus::after {
+  border-top: 10px solid #46a0f5;
+}
+
+.moderation-note-highlight {
+  background: yellow;
+  transition: background .5s ease;
+}
+
+.moderation-note-contextual-highlight {
+  background: #b7d2ff;
+}
+
+.moderation-note-sidebar-wrapper,
+#drupal-off-canvas .moderation-note-sidebar-wrapper {
+  padding-bottom: 150px;
+}
+
+div.moderation-note,
+.moderation-note-form,
+#drupal-off-canvas div.moderation-note,
+#drupal-off-canvas .moderation-note-form {
+  background: #2a6594;
+  display: block;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  max-width: 500px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-form .form-item.form-item-assignee {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.moderation-note-form .form-item-assignee label,
+#drupal-off-canvas .moderation-note-form .form-item-assignee label {
+  margin-right: .5rem;
+}
+
+.moderation-note-form .form-item-assignee input,
+#drupal-off-canvas .moderation-note-form .form-item-assignee input {
+  width: 100%;
+  margin: 0;
+}
+
+#drupal-off-canvas .moderation-note-form input {
+  min-width: inherit;
+}
+
+@keyframes moderation-note-form-delete {
+  from {
+    background: #2a6594;
+}
+  to {
+    background: #b53535;
+}
+}
+
+@keyframes moderation-note-form-delete-actions {
+  from {
+    background: #407baa;
+  }
+  to {
+    background: #b94747;
+  }
+}
+
+.moderation-note-form-delete,
+#drupal-off-canvas .moderation-note-form-delete {
+  background: #b53535;
+  animation: moderation-note-form-delete .5s;
+}
+
+.ui-dialog .ui-dialog-content .moderation-note-form.moderation-note-form-delete .form-actions,
+.moderation-note-form.moderation-note-form-delete input[type="submit"],
+.moderation-note-form.moderation-note-form-delete .form-actions,
+#drupal-off-canvas .moderation-note-form.moderation-note-form-delete .form-actions,
+#drupal-off-canvas .moderation-note-form.moderation-note-form-delete input[type="submit"].button {
+  background: #b94747;
+  color: white;
+  animation: moderation-note-form-delete-actions .5s;
+}
+
+.moderation-note-form.moderation-note-form-delete input[type="submit"]:hover,
+#drupal-off-canvas .moderation-note-form.moderation-note-form-delete input[type="submit"].button:hover {
+  background: #893737;
+}
+
+.moderation-note .moderation-note-text,
+#drupal-off-canvas .moderation-note .moderation-note-text {
+  margin-bottom: 10px;
+}
+
+.moderation-note .moderation-note-owner,
+.moderation-note .moderation-note-owner a,
+.moderation-note .moderation-note-assignee,
+.moderation-note .moderation-note-assignee a,
+#drupal-off-canvas .moderation-note .moderation-note-owner,
+#drupal-off-canvas .moderation-note .moderation-note-owner a,
+#drupal-off-canvas .moderation-note .moderation-note-assignee,
+#drupal-off-canvas .moderation-note .moderation-note-assignee a {
+  font-size: 12px;
+  text-align: right;
+}
+
+.moderation-note .moderation-note-assignee,
+#drupal-off-canvas .moderation-note .moderation-note-assignee {
+  padding: 5px;
+  margin: -10px -10px 10px -10px;
+}
+
+.moderation-note a,
+#drupal-off-canvas .moderation-note a {
+  color: #85bef4;
+  border: 0;
+}
+
+.moderation-note a:hover,
+#drupal-off-canvas .moderation-note a:hover {
+  color: #46a0f5;
+}
+
+.moderation-note-quote-information,
+#drupal-off-canvas .moderation-note-quote-information {
+  background: #245780;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #407baa;
+}
+
+.moderation-note-quote-information blockquote,
+#drupal-off-canvas .moderation-note-quote-information blockquote {
+  background: none;
+  border: 0;
+  margin: 5px;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moderation-note-quote-information p,
+#drupal-off-canvas .moderation-note-quote-information p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.ui-dialog .moderation-note-quote-information,
+.ui-dialog .moderation-note-quote-information p,
+#drupal-off-canvas .ui-dialog .moderation-note-quote-information,
+#drupal-off-canvas .ui-dialog .moderation-note-quote-information p {
+  display: none;
+}
+
+.ui-dialog .moderation-note-preview .moderation-note-quote-information,
+#drupal-off-canvas .ui-dialog .moderation-note-preview .moderation-note-quote-information {
+  display: block;
+}
+
+.moderation-note .moderation-note-actions,
+.ui-dialog .ui-dialog-content .moderation-note-form .form-actions,
+.moderation-note-form .form-actions,
+#drupal-off-canvas .moderation-note .moderation-note-actions,
+#drupal-off-canvas .ui-dialog .ui-dialog-content .moderation-note-form .form-actions,
+#drupal-off-canvas .moderation-note-form .form-actions {
+  display: block;
+  background: #407baa;
+  padding-top: 0;
+  text-align: right;
+  margin-left: -10px;
+  margin-bottom: -10px;
+  margin-top: 10px;
+  width: calc(100% + 20px);
+}
+
+.moderation-note-reply,
+.moderation-note-form-reply,
+#drupal-off-canvas .moderation-note-reply,
+#drupal-off-canvas .moderation-note-form-reply {
+  margin-left: 15px;
+}
+
+.moderation-note-actions a,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-actions a,
+.moderation-note-form input[type="submit"],
+#drupal-off-canvas .moderation-note-actions a,
+#drupal-off-canvas .moderation-note-form input[type="submit"].button {
+  background: #407baa;
+  color: white;
+  font-size: 13px;
+  font-weight: normal;
+  margin: 0;
+  display: inline-block;
+  padding: 10px;
+  width: initial;
+  border-radius: 0;
+  border: 0;
+  transition: .2s ease;
+}
+
+.moderation-note-actions a:hover,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-actions a:hover,
+.moderation-note-form input[type="submit"]:hover,
+#drupal-off-canvas .moderation-note-actions a:hover,
+#drupal-off-canvas .moderation-note-form input[type="submit"].button:hover,
+.moderation-note-actions a:active,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-actions a:active,
+.moderation-note-form input[type="submit"]:active,
+#drupal-off-canvas .moderation-note-actions a:active,
+#drupal-off-canvas .moderation-note-form input[type="submit"].button:active,
+.moderation-note-actions a:focus,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-actions a:focus,
+.moderation-note-form input[type="submit"]:focus,
+#drupal-off-canvas .moderation-note-actions a:focus,
+#drupal-off-canvas .moderation-note-form input[type="submit"].button:focus {
+  background: #376189;
+  border: 0;
+  color: white;
+  text-decoration: none;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-form .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#drupal-off-canvas .moderation-note-form .messages__wrapper,
+#drupal-off-canvas .moderation-note-form .messages {
+  background: none;
+  padding-top: 0;
+  margin: 0;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-form .form-item.form-item-assignee,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note-form .form-item.form-item-assignee label,
+#drupal-off-canvas .ui-autocomplete *,
+#drupal-off-canvas .moderation-note *,
+#drupal-off-canvas .moderation-note-form-wrapper,
+#drupal-off-canvas .moderation-note-form-wrapper p {
+  background: none;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-note .moderation-note-publishing-status {
+  padding: 10px;
+  background: #407baa;
+  color: white;
+  text-align: right;
+  margin: -10px -10px 15px -10px;
+}
+
+.moderation-note-resolved {
+  filter: grayscale(.4);
+}
+
+/* @todo Remove when https://www.drupal.org/project/drupal/issues/2945571 is closed */
+
+.ui-dialog-off-canvas #drupal-off-canvas {
+  background: none;
+}
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  position: relative;
+}
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  margin-top: -10px;
+}
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
+  display: block;
+}

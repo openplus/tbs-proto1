@@ -1,0 +1,22 @@
+name: 'Lightning Core'
+# core: 8.x
+type: module
+package: Lightning
+description: 'Shared functionality for the Lightning distribution.'
+configure: lightning_core.settings
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:user
+components:
+  - lightning_contact_form
+  - lightning_page
+  - lightning_roles
+  - lightning_search
+
+# Information added by Drupal.org packaging script on 2019-03-20
+version: '8.x-3.9'
+core: '8.x'
+project: 'lightning_core'
+datestamp: 1553105814

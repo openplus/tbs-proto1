@@ -1,0 +1,23 @@
+wxt.admin_config_wxt:
+  path: '/admin/config/wxt'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'WxT'
+  requirements:
+    _permission: 'administer site configuration'
+
+wxt_library.admin_config_wxt_library:
+  path: '/admin/config/wxt/wxt_library'
+  defaults:
+    _form: '\Drupal\wxt_library\LibrarySettingsForm'
+    _title: 'WxT Boostrap Library'
+  requirements:
+    _permission: 'administer site configuration'
+
+wxt_library.service_wxt:
+  path: '/admin/config/wxt/wxt_library/info'
+  defaults:
+    _controller: '\Drupal\wxt_library\Controller\LibraryController::wxtInfo'
+  requirements:
+    # WxT service information
+    _access: 'TRUE'

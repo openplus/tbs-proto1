@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Installation and update functions for the WxT Bootstrap Library.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ */
+function wxt_library_requirements($phase) {
+  $requirements = [];
+
+  if ('runtime' == $phase) {
+    $has_wxt_core = _wxt_library_verify_library('wxt_library', 'wet-boew');
+    $requirements['wxt'] = [
+      'title' => t('WxT Core library'),
+      'value' => $has_wxt_core ? t('Enabled') : t('Not found'),
+    ];
+
+    if (!$has_wxt_core) {
+      $requirements['wxt']['severity'] = REQUIREMENT_WARNING;
+      $wxt_url = Url::fromUri('https://github.com/wet-boew/wet-boew', ['attributes' => ['target' => '_blank']]);
+      $requirements['wxt']['description'] = [
+        '#prefix' => ' ',
+        '#markup' => t('wxt_library module requires <a href=":wxt_link">WxT</a> core jQuery Framework to properly render data.', [':wxt_link' => $wxt_url->toUriString()]),
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Verify that the library files exist.
+ *
+ * @param string $extension
+ *   The name of the extension that registered a library.
+ * @param string $name
+ *   The name of a registered library to retrieve.
+ *
+ * @return bool
+ *   TRUE if all files of this library exists, FALSE otherwise
+ *
+ * @see https://drupal.org/node/2231385
+ */
+function _wxt_library_verify_library($extension, $name) {
+  /** @var Drupal\Core\Asset\LibraryDiscovery $library_discovery */
+  $library_discovery = \Drupal::service('library.discovery');
+  $library = $library_discovery->getLibraryByName($extension, $name);
+
+  $exist = TRUE;
+  if ($library['js']) {
+    foreach ($library['js'] as $js) {
+      if ($js['type'] == 'file') {
+        if (!file_exists(DRUPAL_ROOT . '/' . $js['data'])) {
+          $exist = FALSE;
+        }
+      }
+    }
+  }
+
+  if ($library['css']) {
+    foreach ($library['css'] as $css) {
+      if ($css['type'] == 'file') {
+        if (!file_exists(DRUPAL_ROOT . '/' . $css['data'])) {
+          $exist = FALSE;
+        }
+      }
+    }
+  }
+
+  if ($library['dependencies']) {
+    foreach ($library['dependencies'] as $dependency) {
+      $parts = explode('/', $dependency);
+      $exist = _wxt_library_verify_library($parts[0], $parts[1]);
+    }
+  }
+
+  return $exist;
+}

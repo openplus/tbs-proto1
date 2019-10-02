@@ -1,0 +1,6 @@
+moderation_note.settings:
+  title: 'Moderation notes'
+  route_name: moderation_note.settings
+  description: 'Configure email notification settings for moderation notes.'
+  parent: system.admin_config_workflow
+  weight: 10

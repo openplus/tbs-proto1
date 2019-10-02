@@ -1,0 +1,5 @@
+lightning_scheduler.settings:
+  title: 'Scheduler'
+  description: 'Configure Lightning Scheduler settings.'
+  parent: lightning_core.settings
+  route_name: lightning_scheduler.settings

@@ -1,0 +1,8 @@
+/*
+ * This pretty much copies the .entity-meta__header style from Seven.
+ */
+.form-wrapper.field--name-moderation-state {
+    border: 1px solid #bfbfbf;
+    background-color: #f7f7f7;
+    padding: 1em 1.5em;
+}

@@ -1,0 +1,171 @@
+.toolbar-bar .toolbar-icon-moderation-sidebar:before {
+  background-image: url(../images/icon.svg);
+}
+
+.toolbar-icon-moderation-sidebar.sidebar-open {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+}
+
+.toolbar .toolbar-bar .toolbar-tab.moderation-sidebar-toolbar-tab {
+  float: right;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link:visited,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link.button {
+  display: block;
+  font-weight: normal;
+  font-size: 14px;
+  margin: 0 0 10px 0;
+  padding: 10px 6px;
+  color: white;
+  border: 0;
+  border-radius: 2px;
+  text-align: center;
+  transition: .2s;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-button-wrapper i.material-icons {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  pointer-events: none;
+  z-index: 11;
+  background: transparent;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.ui-dialog.ui-dialog-off-canvas {
+  border: none !important;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas a.moderation-sidebar-link.button {
+  background: #7b7b7b;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas a.moderation-sidebar-link.button:hover {
+  background: #888;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link:hover {
+  color: white;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link.button.button--danger {
+  background: #bd2727;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link.button.button--danger:hover,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-link.button.button--danger:focus {
+  background: #da2e2e;
+}
+
+.quick-moderation-form select {
+  width: 100%;
+  height: 30px;
+}
+
+.moderation-sidebar-container {
+  padding-bottom: 100px;
+}
+
+.moderation-sidebar-info {
+  margin: 10px 0 20px 0;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-container p,
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-container a {
+  font-size: 14px;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-container .moderation-sidebar-back-button {
+  display: block;
+  font-size: 16px;
+  margin-top: 1rem;
+}
+
+.ui-dialog-off-canvas #drupal-off-canvas .moderation-sidebar-info h2 {
+  font-size: 16px;
+}
+
+.moderation-sidebar-revision-item:nth-child(2) {
+  border-top: 1px solid #676767;
+  margin-top: 1rem;
+}
+
+.moderation-sidebar-revision-item {
+  border-bottom: 1px solid #676767;
+  margin-bottom: 1rem;
+}
+
+.moderation-sidebar-revision-item:nth-last-child(2) {
+  border-bottom: none;
+}
+
+.moderation-sidebar-revision-item .revision-info,
+.moderation-sidebar-revision-item .revision-info a {
+  font-size: 13px;
+}
+
+.toolbar a.toolbar-icon-moderation-sidebar {
+  padding-right: 0 !important;
+  overflow: hidden;
+}
+
+.toolbar-icon-moderation-sidebar:after {
+  content: attr(data-label);
+  margin-left: .5em;
+  padding: 1rem .5rem;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  background: #444643;
+  color: white;
+}
+
+.toolbar-icon-moderation-sidebar.moderation-label-published:after {
+  background: #269e2c;
+}
+
+.toolbar-icon-moderation-sidebar.moderation-label-draft:after {
+  background: #bd2727;
+}
+
+.toolbar-icon-moderation-sidebar.moderation-label-draft-available:after {
+  background: #ffae00;
+}
+
+.moderation-sidebar-toolbar-tab .ajax-progress {
+  display: none;
+}
+
+.toolbar-icon-moderation-sidebar + .ajax-progress {
+  opacity: .5;
+}
+
+@media only screen and (min-width: 16.5em) and (max-width: 36em) {
+  .toolbar-icon-moderation-sidebar:before {
+    filter: brightness(1.5);
+  }
+  .toolbar-icon-moderation-sidebar.moderation-label-published {
+    background: #269e2c;
+  }
+  .toolbar-icon-moderation-sidebar.moderation-label-draft {
+    background: #bd2727;
+  }
+  .toolbar-icon-moderation-sidebar.moderation-label-draft-available {
+    background: #ffae00;
+  }
+}

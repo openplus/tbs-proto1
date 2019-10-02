@@ -1,0 +1,25 @@
+url:
+  visibility: 0
+  pages:
+    - 'admin*'
+    - 'imagebrowser*'
+    - 'img_assist*'
+    - 'imce*'
+    - 'node/add/*'
+    - 'node/*/edit'
+    - 'print/*'
+    - 'printpdf/*'
+    - 'system/ajax'
+    - 'system/ajax/*'
+theme:
+  visibility: 1
+  themes:
+    wxt_bootstrap: wxt_bootstrap
+minimized:
+  options: 1
+files:
+  types:
+    css: css
+    js: js
+wxt:
+  theme: theme-wet-boew

@@ -1,0 +1,10 @@
+config_rewrite: 'replace'
+langcode: en
+status: true
+dependencies: {  }
+id: test3
+label: "Test 3 replaced"
+weight: 0
+is_admin: false
+permissions:
+  - 'change own username'

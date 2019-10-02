@@ -1,0 +1,38 @@
+name: WxT Bootstrap
+description: WxT theme(s) support leveraging Bootstrap.
+type: theme
+# core: 8.x
+package: 'WxT'
+base theme: bootstrap
+
+regions:
+  branding: 'Branding'
+  breadcrumb: 'Breadcrumbs'
+  language_toggle: 'Language Toggle'
+  banner: 'Banner'
+  search: 'Search'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  header: 'Header'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  content_footer: 'Content Footer'
+  content_suffix: 'Content Suffix'
+  sidebar_first: 'Sidebar First'
+  sidebar_second: 'Sidebar Second'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+libraries-extend:
+  bootstrap/framework:
+    - 'wxt_bootstrap/drupal.wxt_bootstrap'
+libraries-override:
+   core/jquery: wxt_bootstrap/jquery   
+
+# Information added by Drupal.org packaging script on 2019-03-30
+version: '8.x-1.9'
+core: '8.x'
+project: 'wxt_bootstrap'
+datestamp: 1553972891

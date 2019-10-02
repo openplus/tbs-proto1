@@ -1,0 +1,8 @@
+services:
+  wxt_library.service_wxt:
+    class: Drupal\wxt_library\LibraryService
+    arguments: ['@config.factory']
+  wxt_library.twig_extension:
+    class: Drupal\wxt_library\TwigExtension\LibraryTwig
+    tags:
+      - { name: twig.extension }

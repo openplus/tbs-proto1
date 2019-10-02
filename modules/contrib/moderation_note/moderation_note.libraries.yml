@@ -1,0 +1,10 @@
+main:
+  version: VERSION
+  js:
+    js/moderation_note.js: {}
+  css:
+    component:
+      css/moderation_note.css: {}
+  dependencies:
+    - core/drupal.dialog.off_canvas
+    - core/jquery.once

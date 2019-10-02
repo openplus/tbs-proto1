@@ -1,0 +1,659 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for moderation_note.
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\moderation_note\ModerationNoteInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\user\UserInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function moderation_note_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.moderation_note':
+      $readme = file_get_contents(__DIR__ . '/README.txt');
+      // Remove the header.
+      $readme = preg_replace("/.*\n====+/", '', $readme);
+      // Turn section titles into headers.
+      $readme = preg_replace("/\n([^\n]*)\n----+/", "\n<h2>$1</h2>\n", $readme);
+      // Format ordered lists.
+      $readme = preg_replace("/(\n[0-9]\..+?(?=\n\n))/s", "\n<ol>$1</ol>\n", $readme);
+      $readme = preg_replace("/[0-9]\.(.+?)(?=(\n[0-9]\.|\n\n))/s", "\n<li>$1</li>\n", $readme);
+      // Format unordered lists.
+      $readme = preg_replace("/(\n-\s.+?(?=\n\n))/s", "\n<ul>$1</ul>\n", $readme);
+      $readme = preg_replace("/-\s(.+?)(?=(\n-\s|\n\n))/s", "\n<li>$1</li>\n", $readme);
+      // Wrap everything else.
+      $readme = preg_replace("/(?<=\S\n\n)([^<]+?)(?=\n\n)/s", "\n<p>$1</p>\n", $readme);
+      return $readme;
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function moderation_note_entity_delete(EntityInterface $entity) {
+  if ($entity instanceof ModerationNoteInterface) {
+    // Load and delete all child notes for this parent.
+    $ids = \Drupal::entityQuery('moderation_note')
+      ->condition('parent', $entity->id())
+      ->execute();
+    $notes = \Drupal::entityTypeManager()->getStorage('moderation_note')->loadMultiple($ids);
+  }
+  else {
+    // Load and delete all associated notes for this entity.
+    $ids = \Drupal::entityQuery('moderation_note')
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id())
+      ->execute();
+    $notes = \Drupal::entityTypeManager()->getStorage('moderation_note')->loadMultiple($ids);
+  }
+  \Drupal::entityTypeManager()->getStorage('moderation_note')->delete($notes);
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function moderation_note_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  /** @var \Drupal\content_moderation\ModerationInformation $information */
+  $information = \Drupal::service('content_moderation.moderation_information');
+
+  // Get the current Entity.
+  foreach (\Drupal::routeMatch()->getParameters() as $parameter) {
+    if ($parameter instanceof EntityInterface && $information->isModeratedEntity($parameter)) {
+      $entity = $parameter;
+      break;
+    }
+  }
+  if (!isset($entity)) {
+    return;
+  }
+
+  if (\Drupal::currentUser()->hasPermission('access moderation notes')) {
+    $data['tabs'][0]['moderation_note.list'] = [
+      '#theme' => 'menu_local_task',
+      '#link' => [
+        'title' => t('View Notes'),
+        'url' => Url::fromRoute('moderation_note.list', [
+          'entity_type' => $entity->getEntityTypeId(),
+          'entity' => $entity->id(),
+        ]),
+        'localized_options' => [
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'data-dialog-type' => 'dialog',
+            'data-dialog-renderer' => 'off_canvas',
+          ],
+        ],
+      ],
+      '#attached' => [
+        'library' => ['moderation_note/main'],
+      ],
+    ];
+  }
+  $cacheability->addCacheContexts(['user.permissions']);
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function moderation_note_toolbar_alter(&$items) {
+  $user = \Drupal::currentUser();
+
+  if (isset($items['user']) && $user->hasPermission('access moderation notes')) {
+    $items['user']['tray']['moderation_note'] = [
+      '#theme' => 'links__toolbar_user',
+      '#links' => [
+        'moderation_note_link' => [
+          'title' => t('Assigned notes'),
+          'url' => Url::fromRoute('moderation_note.assigned_list', ['user' => $user->id()]),
+          'attributes' => [
+            'title' => t('View the Assigned Notes page'),
+          ],
+        ],
+      ],
+      '#attributes' => [
+        'class' => ['toolbar-menu'],
+      ],
+      '#cache' => [
+        'contexts' => ['user.permissions'],
+      ],
+    ];
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field templates.
+ */
+function moderation_note_preprocess_field(&$variables) {
+  $variables['#cache']['contexts'][] = 'user.permissions';
+
+  $element = $variables['element'];
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
+  $entity = $element['#object'];
+  /** @var \Drupal\Core\Field\FieldItemList $field_list */
+  $field_list = $element['#items'];
+  $field_definition = $field_list->getFieldDefinition();
+
+  if (!_moderation_note_access($entity)) {
+    return;
+  }
+
+  // Check the field type - we only support text fields at this time.
+  $supported_types = ['string', 'text', 'text_long', 'text_with_summary'];
+  if (!in_array($field_definition->getType(), $supported_types, TRUE)) {
+    return;
+  }
+
+  $definition = $entity->getFieldDefinition($element['#field_name']);
+  if (!$definition->isComputed()) {
+    $variables['#attached']['library'][] = 'moderation_note/main';
+    if (\Drupal::currentUser()->hasPermission('create moderation notes')) {
+      $variables['attributes']['data-moderation-note-can-create'] = TRUE;
+    }
+    $variables['attributes']['data-moderation-note-field-id'] = $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+    $variables['#cache']['tags'][] = implode(':', [
+      'moderation_note',
+      $entity->getEntityTypeId(),
+      $entity->id(),
+      $element['#field_name'],
+      $element['#language'],
+    ]);
+    _moderation_note_attach_field_notes($variables);
+  }
+}
+
+/**
+ * Attaches drupal settings that represent moderation notes to a field.
+ *
+ * @param array $variables
+ *   The render array for a field as passed to hook_preprocess_field().
+ */
+function _moderation_note_attach_field_notes(array &$variables) {
+  $element = $variables['element'];
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
+  $entity = $element['#object'];
+
+  if (!_moderation_note_access($entity)) {
+    return;
+  }
+
+  // Load notes for this entity field.
+  $ids = \Drupal::entityQuery('moderation_note')
+    ->condition('entity_type', $entity->getEntityTypeId())
+    ->condition('entity_id', $entity->id())
+    ->condition('entity_field_name', $element['#field_name'])
+    ->condition('entity_langcode', $element['#language'])
+    ->condition('entity_view_mode_id', $element['#view_mode'])
+    ->condition('published', 1)
+    ->notExists('parent')
+    ->execute();
+
+  /** @var \Drupal\moderation_note\ModerationNoteInterface[] $notes */
+  $notes = \Drupal::entityTypeManager()->getStorage('moderation_note')->loadMultiple($ids);
+  foreach ($notes as $note) {
+    $setting = [
+      'field_id' => _moderation_note_generate_field_id($note),
+      'id' => $note->id(),
+      'quote' => $note->getQuote(),
+      'quote_offset' => $note->getQuoteOffset(),
+    ];
+    $variables['#attached']['drupalSettings']['moderation_notes'][$note->id()] = $setting;
+  }
+}
+
+/**
+ * Access callback to determine if an Entity can be annotated.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The Entity to check.
+ *
+ * @return bool
+ *   TRUE if the current user can access the Entity, FALSE otherwise.
+ */
+function _moderation_note_access(EntityInterface $entity) {
+  /** @var \Drupal\content_moderation\ModerationInformation $moderation_information */
+  $moderation_information = \Drupal::service('content_moderation.moderation_information');
+
+  if (!($entity instanceof ContentEntityInterface)) {
+    return FALSE;
+  }
+
+  $is_moderated_entity = $moderation_information->isModeratedEntity($entity);
+
+  // Check if this is the latest moderated revision and if the user has access.
+  // @todo When Quick Edit is rendering an entity after an edit, the revision
+  // ID is null. Investigate and/or file a core issue.
+  $has_permission = \Drupal::currentUser()->hasPermission('access moderation notes');
+  $is_latest_revision = ($entity->getRevisionId() === NULL || $moderation_information->isLatestRevision($entity));
+  return $has_permission && $is_moderated_entity && $is_latest_revision && !$entity->isNew();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function moderation_note_theme() {
+  return [
+    'moderation_note' => [
+      'render element' => 'elements',
+    ],
+    'moderation_note__preview' => [
+      'base hook' => 'moderation_note',
+    ],
+    'mail_moderation_note' => [
+      'variables' => [
+        'note' => '',
+        'quote' => '',
+        'author' => '',
+        'header' => '',
+        'view_link' => NULL,
+        'previous_note' => '',
+        'previous_note_quote' => '',
+        'previous_note_author' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function moderation_note_theme_suggestions_moderation_note(array $variables) {
+  return [
+    'moderation_note__' . $variables['elements']['#view_mode'],
+  ];
+}
+
+/**
+ * Prepares variables for moderation_note templates.
+ *
+ * Default template: moderation-note.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ */
+function template_preprocess_moderation_note(array &$variables) {
+  /** @var \Drupal\content_moderation\ModerationInformation $information */
+  $information = \Drupal::service('content_moderation.moderation_information');
+
+  $variables['moderation_note'] = $variables['elements']['#moderation_note'];
+  /** @var \Drupal\moderation_note\ModerationNoteInterface $note */
+  $note = $variables['moderation_note'];
+  $variables['text'] = $note->getText();
+  $variables['quote'] = $note->getQuote();
+  $variables['created'] = $note->getCreatedTime();
+  $variables['created_pretty'] = _moderation_note_pretty_time($note->getCreatedTime());
+  $variables['updated'] = $note->getChangedTime();
+  $variables['updated_pretty'] = _moderation_note_pretty_time($note->getChangedTime());
+  $owner = $note->getOwner();
+  $variables['author_name'] = $owner->getDisplayName();
+  $variables['author_link'] = $owner->toLink()->toRenderable();
+  $variables['author_picture'] = user_view($owner, 'compact');
+  $variables['parent'] = $note->getParent();
+  $variables['published'] = $note->isPublished();
+
+  if ($information->hasPendingRevision($note->getModeratedEntity())) {
+    $rel = 'latest-version';
+  }
+  else {
+    $rel = 'canonical';
+  }
+
+  $variables['moderated_entity_link'] = $note->getModeratedEntity()->toLink(NULL, $rel);
+  if ($assignee = $note->getAssignee()) {
+    $variables['assignee_name'] = $assignee->getDisplayName();
+    $variables['assignee_link'] = $assignee->toLink()->toRenderable();
+    $variables['assignee_picture'] = user_view($assignee, 'compact');
+  }
+
+  // Attributes.
+  $variables['attributes']['class'][] = 'moderation-note';
+  $variables['attributes']['data-moderation-note-id'] = $note->id();
+  if ($note->getParent()) {
+    $variables['attributes']['class'][] = 'moderation-note-reply';
+  }
+  if (!$note->isPublished()) {
+    $variables['attributes']['class'][] = 'moderation-note-resolved';
+  }
+
+  $params = ['moderation_note' => $note->id()];
+
+  // We show note actions inline with the note, if the user has access.
+  $actions = [];
+  if ($note->access('update')) {
+    $url = Url::fromRoute('moderation_note.edit', $params);
+    $actions['edit'] = [
+      '#type' => 'link',
+      '#title' => t('Edit'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+      ],
+    ];
+  }
+
+  if ($note->isPublished() && $note->access('resolve')) {
+    $url = Url::fromRoute('moderation_note.resolve', $params);
+    $actions['resolve'] = [
+      '#type' => 'link',
+      '#title' => t('Resolve'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+      ],
+    ];
+  }
+  if (!$note->isPublished() && $note->access('resolve')) {
+    $url = Url::fromRoute('moderation_note.resolve', $params);
+    $actions['re_open'] = [
+      '#type' => 'link',
+      '#title' => t('Re-open'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+      ],
+    ];
+  }
+  if ($note->access('delete')) {
+    $url = Url::fromRoute('moderation_note.delete', $params);
+    $actions['delete'] = [
+      '#type' => 'link',
+      '#title' => t('Delete'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+      ],
+    ];
+  }
+
+  // We don't support view modes, but if a note is rendered with "preview" we
+  // add a button to view the "full" note (the note with replies).
+  if (\Drupal::routeMatch()->getRouteName() === 'moderation_note.assigned_list') {
+    $query = [
+      'open-moderation-note' => $note->hasParent() ? $note->getParent()->id() : $note->id(),
+    ];
+    $actions['view'] = [
+      '#type' => 'link',
+      '#title' => t('View note at "%label"', [
+        '%label' => $note->getModeratedEntity()->label(),
+      ]),
+      '#url' => $note->getModeratedEntity()->toUrl($rel)
+        ->setOption('query', $query),
+    ];
+  }
+  else {
+    $url = Url::fromRoute('moderation_note.view', $params);
+    $url->setOption('query', ['from-preview' => '1']);
+    $actions['view'] = [
+      '#type' => 'link',
+      '#title' => t('View full note'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+      ],
+    ];
+  }
+  $variables['actions'] = $actions;
+}
+
+/**
+ * Displays a timestamp in a human-readable fashion.
+ *
+ * @param int $time
+ *   A timestamp.
+ *
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+ *   Markup representing a formatted time.
+ */
+function _moderation_note_pretty_time($time) {
+  $time = (int) $time;
+  $too_old = strtotime('-1 month');
+  // Show formatted time differences for edits younger than a month.
+  if ($time > $too_old) {
+    $diff = \Drupal::service('date.formatter')->formatTimeDiffSince($time, ['granularity' => 1]);
+    $time_pretty = t('@diff ago', ['@diff' => $diff]);
+  }
+  else {
+    $date = date('m/d/Y - h:i A', $time);
+    $time_pretty = t('on @date', ['@date' => $date]);
+  }
+  return $time_pretty;
+}
+
+/**
+ * Generates a field ID for a given note.
+ *
+ * @param \Drupal\moderation_note\ModerationNoteInterface $note
+ *   The note to generate the field ID from.
+ *
+ * @return string
+ *   A string representing a note's field ID.
+ */
+function _moderation_note_generate_field_id(ModerationNoteInterface $note) {
+  return $note->getModeratedEntityTypeId() . '/' . $note->getModeratedEntityId() . '/' . $note->getEntityFieldName() . '/' . $note->getEntityLanguage() . '/' . $note->getEntityViewModeId();
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function moderation_note_moderation_note_insert(ModerationNoteInterface $note) {
+  /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
+  $mail_manager = \Drupal::service('plugin.manager.mail');
+  $to = _moderation_note_collect_recipients($note);
+  $mail_manager->mail('moderation_note', 'insert', $to, $note->getEntityLanguage(), [
+    'note' => $note,
+  ]);
+  if ($note->getAssignee()) {
+    $to = _moderation_note_get_user_email($note->getAssignee());
+    $mail_manager->mail('moderation_note', 'assign', $to, $note->getEntityLanguage(), [
+      'note' => $note,
+    ]);
+  }
+  // Moderation notes provide cache tags that invalidate their related field.
+  \Drupal::service('cache_tags.invalidator')->invalidateTags($note->getCacheTagsToInvalidate());
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function moderation_note_moderation_note_update(ModerationNoteInterface $note) {
+  /** @var \Drupal\moderation_note\ModerationNoteInterface $original */
+  $original = $note->original;
+  /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
+  $mail_manager = \Drupal::service('plugin.manager.mail');
+  if ($original->getAssignee() !== $note->getAssignee() && $note->getAssignee()) {
+    $to = _moderation_note_get_user_email($note->getAssignee());
+    $mail_manager->mail('moderation_note', 'assign', $to, $note->getEntityLanguage(), [
+      'note' => $note,
+    ]);
+  }
+  if (!$note->hasParent() && $original->isPublished() !== $note->isPublished()) {
+    $to = _moderation_note_collect_recipients($note);
+    $key = $note->isPublished() ? 're-open' : 'resolve';
+    $mail_manager->mail('moderation_note', $key, $to, $note->getEntityLanguage(), [
+      'note' => $note,
+    ]);
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function moderation_note_mail($key, &$message, $params) {
+  if (!\Drupal::config('moderation_note.settings')->get('send_email')) {
+    $message['send'] = FALSE;
+    return;
+  }
+  /** @var \Drupal\moderation_note\ModerationNoteInterface $note */
+  $note = $params['note'];
+  /** @var \Drupal\content_moderation\ModerationInformation $information */
+  $information = \Drupal::service('content_moderation.moderation_information');
+  if ($information->hasPendingRevision($note->getModeratedEntity())) {
+    $rel = 'latest-version';
+  }
+  else {
+    $rel = 'canonical';
+  }
+  $view_url = $note->getModeratedEntity()->toUrl($rel)->setAbsolute();
+  if ($key === 'resolve') {
+    $view_link = [
+      '#type' => 'link',
+      '#title' => t('Click here to view the related content'),
+    ] + $view_url->toRenderArray();
+  }
+  else {
+    $query = [
+      'open-moderation-note' => $note->hasParent() ? $note->getParent()->id() : $note->id(),
+    ];
+    $view_url->setOption('query', $query)->toString();
+    $view_link = [
+      '#type' => 'link',
+      '#title' => t('Click here to view this note in context'),
+    ] + $view_url->toRenderArray();
+  }
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  $header = 'note';
+  switch ($key) {
+    case 'insert':
+      if ($note->hasParent()) {
+        $message['subject'] = t('Reply on "@label"', [
+          '@label' => $note->getModeratedEntity()->label(),
+        ], $options);
+        $header = t('A new reply has been created on "@label" by @author:', [
+          '@label' => $note->getModeratedEntity()->label(),
+          '@author' => $note->getOwner()->getDisplayName(),
+        ], $options);
+      }
+      else {
+        $message['subject'] = t('Note on "@label"', [
+          '@label' => $note->getModeratedEntity()->label(),
+        ], $options);
+        $header = t('A new note has been created on "@label" by @author:', [
+          '@label' => $note->getModeratedEntity()->label(),
+          '@author' => $note->getOwner()->getDisplayName(),
+        ], $options);
+      }
+      break;
+
+    case 'resolve':
+      $message['subject'] = t('Note resolved on "@label"', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      $header = t('A note has been resolved on "@label":', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      break;
+
+    case 're-open':
+      $message['subject'] = t('Note re-opened on "@label"', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      $header = t('A note has been re-opened on "@label":', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      break;
+
+    case 'assign':
+      $message['subject'] = t('Note assigned to you on "@label"', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      $header = t('A note has been assigned to you on "@label":', [
+        '@label' => $note->getModeratedEntity()->label(),
+      ], $options);
+      break;
+  }
+  $body = [
+    '#theme' => 'mail_moderation_note',
+    '#header' => $header,
+    '#note' => $note->getText(),
+    '#author' => $note->getOwner()->getDisplayName(),
+    '#quote' => !$note->hasParent() ? $note->getQuote() : '',
+    '#view_link' => $view_link,
+  ];
+  if ($note->hasParent()) {
+    $parent = $note->getParent();
+    $children = $parent->getChildren();
+    array_pop($children);
+    $previous_note = empty($children) ? $parent : end($children);
+    $body['#previous_note'] = $previous_note->getText();
+    $body['#previous_note_author'] = $previous_note->getOwner()->getDisplayName();
+    $body['#previous_note_quote'] = !$previous_note->hasParent() ? $previous_note->getQuote() : '';
+  }
+  $message['body'] = \Drupal::service('renderer')->renderRoot($body);
+}
+
+/**
+ * Collects email addresses for users related to this note.
+ *
+ * @param \Drupal\moderation_note\ModerationNoteInterface $note
+ *   A moderation note.
+ *
+ * @return string
+ *   Email addresses for users related to this note.
+ */
+function _moderation_note_collect_recipients(ModerationNoteInterface $note) {
+  $users = [];
+  $users[] = $note->getOwner();
+  $users[] = $note->getAssignee();
+  $entity = $note->getModeratedEntity();
+  if ($entity instanceof EntityOwnerInterface) {
+    $users[] = $entity->getOwner();
+  }
+  if ($entity instanceof RevisionLogInterface) {
+    $users[] = $entity->getRevisionUser();
+  }
+  $parent = $note->hasParent() ? $note->getParent() : $note;
+  $users[] = $parent->getOwner();
+  foreach ($parent->getChildren() as $child) {
+    $users[] = $child->getOwner();
+    $users[] = $child->getAssignee();
+  }
+  $emails = [];
+  foreach ($users as $user) {
+    if ($user instanceof UserInterface && $user->isActive() && $note->access('view', $user)) {
+      $emails[] = _moderation_note_get_user_email($user);
+    }
+  }
+  $emails = array_unique($emails);
+  return implode(', ', $emails);
+}
+
+/**
+ * Fetches a user's email in the format "<Name>" email@example.com.
+ *
+ * @param \Drupal\user\UserInterface $user
+ *   A user you want to get an email for.
+ *
+ * @return string
+ *   An email suitable for PHP's mail function.
+ */
+function _moderation_note_get_user_email(UserInterface $user) {
+  $name = htmlspecialchars($user->getDisplayName(), ENT_QUOTES);
+  $email = filter_var($user->getEmail(), FILTER_SANITIZE_EMAIL);
+  return "\"$name\" <$email>";
+}

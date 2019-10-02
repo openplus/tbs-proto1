@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Set up the WxT Extend Translation module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function wxt_ext_translation_install() {
+  // Enable translation for our core entities/bundles.
+  $entities = [
+    'block_content' => [
+      'basic',
+    ],
+    'node' => [
+      'page',
+    ],
+    'media' => [
+      'image',
+    ],
+    'menu_link_content' => [
+      'menu_link_content',
+    ],
+  ];
+  wxt_ext_translation_enable_translation($entities);
+
+  // Download the newest config translations from Drupal.org.
+  wxt_ext_translation_update_config_translation();
+
+  // Translate User Account link.
+  $storageMenuLink = \Drupal::service('entity_type.manager')->getStorage('menu_link_content');
+  $links_title = [
+    'User Account' => 'Compte de l\'utilisateur',
+  ];
+
+  foreach ($links_title as $link_title_en => $link_title_fr) {
+    $link = $storageMenuLink->loadByProperties(['title' => $link_title_en]);
+    $link = reset($link);
+    if ($link && !$link->hasTranslation('fr')) {
+      $link->addTranslation('fr', ['title' => $link_title_fr])->save();
+    }
+  }
+
+  // Translate Date Format.
+  $dateConfig = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'core.date_format.wxt_standard');
+  $dateConfig->set('pattern', 'd F Y')
+    ->save();
+}

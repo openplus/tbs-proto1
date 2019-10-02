@@ -1,0 +1,24 @@
+react:
+  js:
+    'https://unpkg.com/react@16.3.2/umd/react.production.min.js':
+      external: true
+      attributes:
+        integrity: 'sha384-ssmDfleGSKwIS4GlKJM3gqgSQtp6pzFAc7y8f0r2Mfjn+EsHt4UqrSM8EXKZCAFU'
+        crossorigin: anonymous
+    'https://unpkg.com/react-dom@16.3.2/umd/react-dom.production.min.js':
+      external: true
+      attributes:
+        integrity: 'sha384-9HNXemlU8cB7vTVvdlZbsut+fnt78jK2amX1CCxkLlamx+yD4gde8D6DJe+QkHm3'
+        crossorigin: anonymous
+
+widget:
+  js:
+    'js/dist/helpers.js':
+      preprocess: false
+    'js/dist/index.js':
+      preprocess: false
+  css:
+    component:
+      'css/component.css': {}
+  dependencies:
+    - 'lightning_scheduler/react'

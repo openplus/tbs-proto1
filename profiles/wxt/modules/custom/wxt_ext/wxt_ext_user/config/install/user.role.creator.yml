@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies: {  }
+id: creator
+label: Creator
+weight: 3
+is_admin: null
+permissions:
+  - 'access administration pages'
+  - 'access browse_content entity browser pages'
+  - 'access browse_content_modal entity browser pages'
+  - 'access comments'
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access files overview'
+  - 'access image_browser entity browser pages'
+  - 'access media overview'
+  - 'access media_browser entity browser pages'
+  - 'access shortcuts'
+  - 'access toolbar'
+  - 'access user contact forms'
+  - 'access user profiles'
+  - 'create content translations'
+  - 'create media'
+  - 'delete all revisions'
+  - 'delete content translations'
+  - 'dropzone upload files'
+  - 'edit own comments'
+  - 'post comments'
+  - 'revert all revisions'
+  - 'update any media'
+  - 'update content translations'
+  - 'update media'
+  - 'use editorial transition create_new_draft'
+  - 'use editorial transition review'
+  - 'use text format full_html'
+  - 'use text format rich_text'
+  - 'view all revisions'
+  - 'view any unpublished content'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view the administration theme'

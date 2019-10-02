@@ -1,0 +1,11 @@
+services:
+  context_breadcrumb.breadcrumb:
+    class: Drupal\context_breadcrumb\Breadcrumb\ContextBreadcrumbBuilder
+    arguments: ['@entity_type.manager', '@current_user', '@token', '@context.manager', '@logger.factory']
+    tags:
+    - { name: breadcrumb_builder, priority: 9999 }
+  context_breadcrumb.vocabulary_context:
+    class: Drupal\context_breadcrumb\ContextProvider\VocabularyContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: 'context_provider' }

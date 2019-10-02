@@ -1,0 +1,8 @@
+.region-banner {
+    .brand.col-xs-5.col-md-4 {
+        // width: 50%;
+        @media #{$tablet} {}
+        @media #{$normal} {}
+        @media #{$wide} {}
+    }
+}

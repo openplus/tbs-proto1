@@ -1,0 +1,26 @@
+main:
+  version: VERSION
+  css:
+    theme:
+      css/moderation_dashboard.css: {}
+
+activity:
+  version: VERSION
+  js:
+    js/moderation_dashboard_activity.js: {}
+  dependencies:
+    - moderation_dashboard/chart.js
+    - core/jquery
+    - core/jquery.once
+
+chart.js:
+  remote: https://github.com/chartjs/Chart.js
+  version: 2.5.0
+  license:
+      name: MIT
+      url: https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
+      gpl-compatible: true
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js:
+      type: external
+      minified: true

@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Defines simple link field types.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme().
+ */
+function button_link_theme() {
+  return array(
+    'link_formatter_button_link' => array(
+      'variables' => array('title' => NULL, 'url_title' => NULL, 'url' => NULL, 'type' => NULL, 'size' => NULL, 'icon_class' => NULL),
+    ),
+  );
+}
+
+/**
+ * Prepares variables for button link field templates.
+ *
+ * This template outputs a separate title and link.
+ *
+ * Default template: link-formatter-button-link.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - title: (optional) A descriptive or alternate title for the link, which
+ *     may be different than the actual link text.
+ *   - url_title: The anchor text for the link.
+ *   - url: A \Drupal\Core\Url object.
+ */
+function template_preprocess_link_formatter_button_link(&$variables) {
+  $url = $variables['url'];
+  $attributes = $url->getOption('attributes');
+  $attributes['role'] = 'button';
+  $attributes['class'][] = 'btn';
+  $attributes['class'][] = $variables['type'];
+  $attributes['class'][] = $variables['size'];
+  $attributes['href'] = $url->toString();
+  $url->setOption('attributes', $attributes);
+  $variables['link'] = Link::fromTextAndUrl($variables['title'], $url )->toString();
+  $variables['attributes'] = new Attribute($attributes);
+  $icon_attributes['class'][] = $variables['icon_class'];
+  $variables['icon_attributes'] = new Attribute($icon_attributes);
+}

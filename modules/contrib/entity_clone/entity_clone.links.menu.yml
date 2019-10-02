@@ -1,0 +1,5 @@
+entity_clone.settings:
+  title: 'Entity clone settings'
+  description: 'Entity clone settings.'
+  route_name: entity_clone.settings
+  parent: 'system.admin_config_content'

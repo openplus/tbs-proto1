@@ -1,0 +1,13 @@
+condition.plugin.moderation_dashboard_access:
+  type: condition.plugin
+
+condition.plugin.has_moderated_content_type:
+  type: condition.plugin
+
+moderation_dashboard.settings:
+  type: config_object
+  label: 'Moderation dashboard settings'
+  mapping:
+    redirect_on_login:
+      type: boolean
+      label: 'Redirect to moderation dashboard after login'

@@ -1,0 +1,88 @@
+entity_clone.settings:
+  type: config_object
+  label: 'Module entity_clone settings'
+  mapping:
+    form_settings:
+      type: mapping
+      mapping:
+        taxonomy_term:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        block_content:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        comment:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        contact_message:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        file:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        node:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        shortcut:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        user:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean
+        menu_link_content:
+          type: mapping
+          mapping:
+            default_value:
+              type: boolean
+            disable:
+              type: boolean
+            hidden:
+              type: boolean

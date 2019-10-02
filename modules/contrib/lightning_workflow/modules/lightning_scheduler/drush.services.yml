@@ -1,0 +1,7 @@
+services:
+  lightning_scheduler.migration_commands:
+    class: \Drupal\lightning_scheduler\Commands\MigrationCommands
+    arguments:
+      - '@lightning_scheduler.migrator'
+    tags:
+      - { name: drush.command }

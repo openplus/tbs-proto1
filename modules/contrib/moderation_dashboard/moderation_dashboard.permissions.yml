@@ -1,0 +1,6 @@
+use moderation dashboard:
+  title: 'Use the Moderation Dashboard'
+  description: 'This allows you to access the Moderation Dashboard.'
+view any moderation dashboard:
+  title: 'View any Moderation Dashboard'
+  description: "This allows you to access other user's Moderation Dashboards."

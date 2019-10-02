@@ -1,0 +1,13 @@
+name: 'Install Helper'
+# core: 8.x
+type: module
+hidden: true
+package: Lightning
+description: 'Provides helpful under-the-hood functionality used while installing Lightning.'
+# version: '8.x-3.207'
+
+# Information added by Drupal.org packaging script on 2019-03-20
+version: '8.x-3.207'
+core: '8.x'
+project: 'lightning'
+datestamp: 1553109999

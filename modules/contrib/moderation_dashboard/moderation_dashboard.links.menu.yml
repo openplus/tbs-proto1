@@ -1,0 +1,6 @@
+moderation_dashboard.settings:
+  title: 'Moderation Dashboard'
+  route_name: moderation_dashboard.settings
+  description: 'Configure Moderation Dashboard.'
+  parent: user.admin_index
+  weight: 100

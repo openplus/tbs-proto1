@@ -1,0 +1,6 @@
+services:
+  moderation_dashboard.response_subscriber:
+    class: Drupal\moderation_dashboard\Routing\ResponseSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@current_user', '@plugin.manager.condition', '@config.factory']

@@ -1,0 +1,11 @@
+services:
+  taxonomy_term.breadcrumb:
+    class: Drupal\taxonomy\TermBreadcrumbBuilder
+    arguments: ['@entity.manager']
+    tags:
+      - { name: breadcrumb_builder, priority: 1002 }
+  taxonomy_term.taxonomy_term_route_context:
+    class: Drupal\taxonomy\ContextProvider\TaxonomyRouteContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: 'context_provider' }

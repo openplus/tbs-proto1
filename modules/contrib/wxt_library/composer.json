@@ -1,0 +1,61 @@
+{
+    "name": "drupal/wxt_library",
+    "description": "Registers WxT Bootstrap using native libraries.",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://drupalwxt.github.io/composer-extdeps/"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6.0",
+        "drupal/core": "8.*",
+        "wet-boew/wet-boew": "4.0.30",
+        "wet-boew/theme-wet-boew": "4.0.29",
+        "wet-boew/theme-base": "4.0.27",
+        "wet-boew/theme-gc-intranet": "4.0.27",
+        "wet-boew/theme-gcwu-fegc": "4.0.27",
+        "wet-boew/theme-gcweb": "5.0.1",
+        "wet-boew/theme-gcweb-legacy": "4.0.29",
+        "wet-boew/theme-ogpl": "4.0.27"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "installer-paths": {
+            "html/core": [
+                "type:drupal-core"
+            ],
+            "html/libraries/{$name}" : [
+                "type:drupal-library"
+            ],
+            "html/modules/custom/{$name}": [
+                "drupal/wxt_library"
+            ],
+            "html/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "html/profiles/{$name}": [
+                "type:drupal-profile"
+            ],
+            "html/themes/custom/{$name}": [
+                "drupal/wxt_bootstrap"
+            ],
+            "html/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ]
+        },
+        "enable-patching": true,
+        "patches": { }
+    }
+}

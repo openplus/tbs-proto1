@@ -1,0 +1,8 @@
+services:
+  config_rewrite.config_rewriter:
+    class: Drupal\config_rewrite\ConfigRewriter
+    arguments: ['@config.factory', '@module_handler', '@logger.channel.config_rewrite', '@?language.config_factory_override']
+  logger.channel.config_rewrite:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: ['config_rewrite']

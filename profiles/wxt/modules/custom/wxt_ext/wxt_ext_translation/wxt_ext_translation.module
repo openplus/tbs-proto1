@@ -1,0 +1,137 @@
+<?php
+
+/**
+ * @file
+ * Contains wxt_ext_translation.module.
+ */
+
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Enables translation for the given entity bundles and all their fields.
+ *
+ * @param array
+ *   $entity_info An array mapping entity types to arrays of bundles.
+ */
+function wxt_ext_translation_enable_translation($entity_info) {
+  // Enable translation for all of our entities/bundles.
+  $type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $translation_manager */
+  $translation_manager = \Drupal::service('content_translation.manager');
+  $supported_types = $translation_manager->getSupportedEntityTypes();
+  foreach ($entity_info as $entity_type_id => $bundles) {
+    foreach ($bundles as $bundle) {
+      // Store whether a bundle has translation enabled or not.
+      if (isset($supported_types[$entity_type_id])) {
+        $translation_manager->setEnabled($entity_type_id, $bundle, TRUE);
+      }
+      // Make every field translatable as well.
+      $entity_type = $type_manager->getDefinition($entity_type_id);
+      if ($entity_type && $entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+        $fields = $field_manager->getFieldDefinitions($entity_type_id, $bundle);
+        foreach ($fields as $field) {
+          $field_config = $field->getConfig($bundle);
+          if ($field_config->isTranslatable() && strpos($field->getName(), 'content_translation_') !== 0) {
+            $field_config->setTranslatable(TRUE)->save();
+          }
+        }
+      }
+    }
+  }
+  // Ensure entity and menu router information are correctly rebuilt.
+  $type_manager->clearCachedDefinitions();
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}
+
+/**
+ * Updates the current site's translations via a batch process.
+ */
+function wxt_ext_translation_update_config_translation() {
+  // Pull in translations for the all available languages/projects.
+  \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'compare.inc');
+
+  // Get a list of all currently installed languages as langcodes.
+  $languageManager = \Drupal::languageManager();
+  $langcodes = array_keys($languageManager->getLanguages());
+
+  // Set a batch to download and import translations.
+  locale_translation_flush_projects();
+  locale_translation_check_projects();
+  $options = _locale_translation_default_update_options();
+  $batch = locale_translation_batch_fetch_build([], $langcodes, $options);
+  batch_set($batch);
+  // Set a batch to update configuration as well.
+  if ($batch = locale_config_batch_update_components($options, $langcodes)) {
+    $batch['file'] = drupal_get_path('module', 'wxt_ext_translation') . '/wxt_ext_translation.batch.inc';
+    batch_set($batch);
+  }
+}
+
+/**
+ * Imports all relevant translations from a modules /translations directory.
+ *
+ * @param string
+ *   $type The project type.
+ * @param string $name
+ *   The name of the project.
+ *
+ * @return bool FALSE if the project does not exist.
+ */
+function wxt_ext_translation_import_translations($type, $name) {
+  // Attempt to pull module path.
+  $path = drupal_get_path($type, $name);
+  if (!$path) {
+    return FALSE;
+  }
+
+  // Get a list of all currently installed languages as langcodes.
+  $languageManager = \Drupal::languageManager();
+  $langcodes = array_keys($languageManager->getLanguages());
+
+  // Import each file.
+  foreach ($langcodes as $langcode) {
+    $filepath = DRUPAL_ROOT . '/' . $path . '/translations/' . $langcode . '.po';
+    if (file_exists($filepath)) {
+      \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+      \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
+      $options = array_merge(_locale_translation_default_update_options(), [
+        'langcode' => $langcode,
+        'overwrite_options' => [
+          'customized' => TRUE,
+          'not_customized' => TRUE,
+        ],
+        'customized' => TRUE,
+      ]);
+
+      $original_file = (object) [
+        'filename' => $langcode . '.po',
+        'uri' => $filepath,
+      ];
+      $file = locale_translate_file_attach_properties($original_file, $options);
+      $batch = locale_translate_batch_build([$file->uri => $file], $options);
+      batch_set($batch);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function wxt_ext_translation_views_pre_render(ViewExecutable $view) {
+  $language_manager = \Drupal::service('language_manager');
+  $currentLang = $language_manager->getCurrentLanguage()->getId();
+
+  if ($currentLang == 'fr') {
+    foreach ($view->field as $id => $field) {
+      if ($view->field[$id]->options['label'] && $view->field[$id]->options['element_label_colon']) {
+        $view->field[$id]->options['label'] .= ' ';
+      }
+    }
+  }
+
+}

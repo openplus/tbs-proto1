@@ -1,0 +1,3 @@
+label: 'Test 2 rewritten'
+permissions:
+  - 'change own username'

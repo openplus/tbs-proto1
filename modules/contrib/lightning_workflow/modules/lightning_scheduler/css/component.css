@@ -1,0 +1,9 @@
+.scheduled-transition label {
+    display: inline;
+    font-weight: normal;
+}
+
+.scheduled-transition label::before,
+.scheduled-transition label::after {
+    content: " ";
+}

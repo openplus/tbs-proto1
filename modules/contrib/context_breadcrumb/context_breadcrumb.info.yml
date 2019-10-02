@@ -1,0 +1,13 @@
+name: 'Context Breadcrumb'
+type: module
+description: 'Breadcrumb with Context'
+# core: 8.x
+package: 'Custom'
+dependencies:
+  - context:context
+
+# Information added by Drupal.org packaging script on 2019-02-20
+version: '8.x-1.0-beta7'
+core: '8.x'
+project: 'context_breadcrumb'
+datestamp: 1550647385

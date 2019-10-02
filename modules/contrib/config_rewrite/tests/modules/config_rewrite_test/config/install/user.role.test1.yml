@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test1
+label: 'Test 1'
+weight: 0
+is_admin: false
+permissions:
+  - 'access user profiles'

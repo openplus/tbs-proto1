@@ -1,0 +1,5 @@
+{
+  "name": "drupal/api_test",
+  "type": "drupal-module",
+  "description": "Contains configuration and support code for testing Headless Lightning JSON API."
+}

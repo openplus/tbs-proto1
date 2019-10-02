@@ -1,0 +1,5 @@
+moderation_dashboard.page:
+  title: 'Moderation Dashboard'
+  base_route: entity.user.canonical
+  route_name: page_manager.page_view_moderation_dashboard_moderation_dashboard-panels_variant-0
+  weight: 100

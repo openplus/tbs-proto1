@@ -1,0 +1,15 @@
+imports:
+  - 'docroot/modules/contrib/lightning_core/tests/drupal.behat.yml'
+  - 'docroot/modules/contrib/lightning_core/tests/mink.behat.yml'
+
+default:
+  suites:
+    lightning_workflow:
+      contexts:
+        - '\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\Drupal\DrupalExtension\Context\MinkContext'
+        - '\Drupal\DrupalExtension\Context\MessageContext'
+        - '\Drupal\Tests\lightning_workflow\FixtureContext'
+      paths:
+        - 'modules/lightning_scheduler/tests/features'
+        - 'tests/features'

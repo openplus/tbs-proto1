@@ -1,0 +1,5 @@
+moderation_note.assigned_list:
+  route_name: moderation_note.assigned_list
+  base_route: entity.user.canonical
+  title: 'Assigned Notes'
+  weight: 20

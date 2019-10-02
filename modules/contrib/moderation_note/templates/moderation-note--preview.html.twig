@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * "Preview" theme implementation for the moderation note entity.
+ *
+ * The only reason this exists as a distinct template is so that in the future
+ * we can have more control over how notes look when viewed when the
+ * "View Notes" button is clicked.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - text: The plain text of the note.
+ *   Using the nl2br Twig filter is recommended as the text may contain "\n".
+ * - quote: The text that was selected when creating this note.
+ * - created: The timestamp when this note was created.
+ * - created_pretty: The created time, formatted to be human-readable.
+ * - updated: The timestamp when this note was updated.
+ * - updated_pretty: The updated time, formatted to be human-readable.
+ * - author_name: The display name of the author.
+ * - author_link: A link to the author, as rendered by $user->toLink().
+ * - author_username: The username of the author.
+ * - author_picture: The author's picture as rendered by the compact view mode.
+ * - parent: The note's parent, if one exists.
+ * - moderated_entity_link: A link to the entity this note is related to.
+ * - actions: An array of buttons which open entity forms.
+ * - published: Whether or not the note is published.
+ *
+ * @ingroup themeable
+ */
+#}
+<div {{ attributes.addClass('moderation-note-preview') }}>
+    {% if not published and not parent %}
+      <div class="moderation-note-publishing-status">{{ 'Resolved' | t }}</div>
+    {% endif %}
+    {% if quote %}
+      <div class="moderation-note-quote-information">
+          <blockquote>{{ quote }}</blockquote>
+      </div>
+    {% endif %}
+    <div class="moderation-note-text">
+        {{ text|nl2br }}
+    </div>
+    <div class="moderation-note-owner">
+        {{ author_link }} {{ created_pretty }}
+    </div>
+    {% if actions and actions.view %}
+      <div class="moderation-note-actions">
+        {{ actions.view }}
+      </div>
+    {% endif %}
+</div>

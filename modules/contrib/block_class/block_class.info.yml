@@ -1,0 +1,13 @@
+name: 'Block Class'
+type: module
+description: 'Allows assigning classes to Blocks'
+package: Other
+# core: 8.x
+dependencies:
+  - drupal:block
+
+# Information added by Drupal.org packaging script on 2018-07-13
+version: '8.x-1.0'
+core: '8.x'
+project: 'block_class'
+datestamp: 1531440825

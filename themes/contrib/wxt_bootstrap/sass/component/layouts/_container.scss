@@ -1,0 +1,67 @@
+.page-node-type-landing-page {
+    .dialog-off-canvas-main-canvas {
+        &>.container {
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .region-content-footer .row {
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+            max-width: 100%;
+        }
+        .node--type-landing_page {
+            h1#wb-cont {
+                // max-width: 1176px;
+                // margin: 0 auto;
+                // margin-top: 20px;
+                // margin-bottom: 20px;
+            }
+            .field--name-body {
+                // padding-top: 25px;
+                padding-bottom: 75px;
+            }
+        }
+        &>footer#wb-info {
+            background: transparent;
+            &>.landscape {
+                // display: none;
+                // background: none;    
+                // background-image: inherit;
+                background: #26374a url(../../../../libraries/theme-gcweb/assets/landscape.png) no-repeat right bottom;
+                footer#wb-info {
+                    background: transparent;
+                    .landscape {
+                        // display: none;
+                        // background: none;    
+                        background: transparent;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//Targeting drupal blocks to have fixed width since overriding container at top level to be fluid
+.messages__wrapper,
+.block-user-account-block,
+.container-fixed {
+    max-width: 1176px;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.container-fixed {
+    float: none;
+}
+
+.content-suffix {
+    .container {
+        .row {
+            // max-width: 1170px;
+            // margin: 0 auto;
+        }
+    }
+}

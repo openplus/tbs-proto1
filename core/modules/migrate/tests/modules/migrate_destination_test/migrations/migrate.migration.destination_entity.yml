@@ -1,0 +1,11 @@
+id: destination_entity
+label: Migrate to no bundle specified destination
+source:
+  plugin: migrate_destination_test
+  constants:
+    type: test_node_type
+process:
+  type: constants/type
+  title: title
+destination:
+  plugin: entity:node

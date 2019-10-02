@@ -1,0 +1,69 @@
+dist: trusty
+language: php
+
+cache:
+  bundler: true
+  directories:
+    - "$HOME/.composer/cache"
+    - "$HOME/.drush/cache"
+    - "$HOME/.npm"
+php:
+  - 7.1
+
+env:
+  - VERSION=HEAD ORCA_FIXTURE_FLAGS='--dev --sut-only' ORCA_TEST_FLAGS=--sut-only
+  - VERSION=1.0.0 ORCA_FIXTURE_FLAGS='--dev --sut-only' ORCA_TEST_FLAGS=--sut-only
+  - VERSION=1.0.0
+  - VERSION=1.0.0 ORCA_FIXTURE_FLAGS=--dev
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: VERSION=1.0.0
+    - env: VERSION=1.0.0 ORCA_FIXTURE_FLAGS=--dev
+
+addons:
+  chrome: stable
+
+before_install:
+  - phpenv config-add ./tests/travis.php.ini
+  - phpenv rehash
+
+  - composer self-update
+  - composer --version
+  - google-chrome-stable --version
+
+  - export ORCA=$TRAVIS_BUILD_DIR/../orca
+  - export ORCA_FIXTURE=$ORCA-build
+  - export ORCA_SUT=drupal/lightning_layout
+
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - export PATH="$ORCA/bin:$PATH"
+  - export PATH="$ORCA/vendor/bin:$PATH"
+  - export PATH="$ORCA_FIXTURE/vendor/bin:$PATH"
+
+  # Add the ORCA repository.
+  - composer config --global repositories.orca vcs "https://github.com/acquia/orca"
+  # Use a personal access token to authenticate with GitHub, to avoid being
+  # rate-limited. The token is configured in the Travis CI repository settings.
+  - composer config --global github-oauth.github.com $GITHUB_API_TOKEN
+
+install:
+  - composer create-project --stability dev --no-dev acquia/orca $ORCA
+  - "$ORCA/bin/travis/install 8.x-1.x"
+
+  # Run ORCA static analysis tools.
+  - orca static-analysis:run ./
+
+  # Use ORCA to build the code base.
+  - orca fixture:init -f --sut $ORCA_SUT $ORCA_FIXTURE_FLAGS
+
+before_script:
+  - cd $ORCA_FIXTURE/docroot
+  - $TRAVIS_BUILD_DIR/update.sh $VERSION
+
+script:
+  - orca tests:run --sut $ORCA_SUT $ORCA_TEST_FLAGS
+
+after_failure:
+  - drush watchdog:show --count=100 --severity=Error --extended

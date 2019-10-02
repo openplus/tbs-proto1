@@ -1,0 +1,7 @@
+moderation_note.settings:
+  type: config_object
+  label: 'Moderation Note settings'
+  mapping:
+    send_email:
+      type: boolean
+      label: 'Send email notifications'

@@ -1,0 +1,9 @@
+entity_clone.settings:
+  path: '/admin/config/system/entity-clone'
+  defaults:
+    _form: 'Drupal\entity_clone\Form\EntityCloneSettingsForm'
+    _title: 'Entity clone settings'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer entity clone'

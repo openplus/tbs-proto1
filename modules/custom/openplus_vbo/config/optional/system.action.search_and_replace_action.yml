@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: search_and_replace_action
+label: 'Search and replace'
+type: node
+plugin: search_and_replace_action
+configuration: {  }

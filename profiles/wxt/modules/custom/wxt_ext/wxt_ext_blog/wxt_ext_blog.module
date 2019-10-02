@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Contains wxt_ext_blog.module.
+ */
+
+/**
+ * Implements hook_user_view_alter().
+ */
+function wxt_ext_blog_user_view_alter(&$build, $account, $display) {
+  unset($build['summary']['blog']['#markup']);
+}

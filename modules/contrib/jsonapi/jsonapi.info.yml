@@ -1,0 +1,17 @@
+name: JSON:API
+type: module
+description: Exposes entities as a JSON:API-specification-compliant web API.
+# core: 8.x
+package: Web services
+configure: jsonapi.settings
+dependencies:
+  - drupal:system (>=8.5.11)
+  - drupal:serialization
+test_dependencies:
+  - schemata:schemata_json_schema
+
+# Information added by Drupal.org packaging script on 2019-03-21
+version: '8.x-2.4'
+core: '8.x'
+project: 'jsonapi'
+datestamp: 1553177889

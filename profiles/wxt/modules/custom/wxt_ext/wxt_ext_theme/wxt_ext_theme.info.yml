@@ -1,0 +1,9 @@
+name: 'WxT Extend Theme'
+description: 'Provides default configuration for the WxT theme(s).'
+type: module
+core: 8.x
+package: WxT
+
+# Required modules
+dependencies:
+  - drupal:config_rewrite

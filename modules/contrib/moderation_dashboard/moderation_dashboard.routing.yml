@@ -1,0 +1,7 @@
+moderation_dashboard.settings:
+  path: '/admin/config/people/moderation_dashboard'
+  defaults:
+    _form: '\Drupal\moderation_dashboard\Form\SettingsForm'
+    _title: 'Moderation Dashboard Settings'
+  requirements:
+    _permission: 'administer site configuration'

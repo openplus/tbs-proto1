@@ -1,0 +1,17 @@
+name: 'WxT Extend Media Slideshow'
+description: 'Adds a slideshow media_entity bundle.'
+type: module
+core: 8.x
+package: WxT
+
+# Required modules
+dependencies:
+  - drupal:field_formatter
+  - drupal:lightning_media
+  - drupal:lightning_media_document
+  - drupal:lightning_media_image
+  - drupal:lightning_media_instagram
+  - drupal:lightning_media_twitter
+  - drupal:lightning_media_video
+  - drupal:media_entity_slideshow
+  - drupal:wxt_ext_media_slideshow

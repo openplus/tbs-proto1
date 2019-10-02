@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks for the moderation_dashboard module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_views_data().
+ */
+function moderation_dashboard_views_data() {
+  $data = [];
+
+  $manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $entity_types */
+  $entity_types = array_filter($manager->getDefinitions(), function (EntityTypeInterface $entity_type) {
+    return (
+      $entity_type instanceof ContentEntityTypeInterface &&
+      $entity_type->isRevisionable() &&
+      $entity_type->hasHandlerClass('views_data')
+    );
+  });
+
+  foreach ($entity_types as $id => $entity_type) {
+    $table = $manager->getHandler($id, 'views_data')
+      ->getViewsTableForEntityType($entity_type);
+
+    $data[$table]['link_to_latest_version'] = [
+      'title' => t('Link to latest version'),
+      'field' => [
+        'id' => 'link_to_latest_version',
+        'real field' => $entity_type->getKey('id'),
+      ],
+    ];
+  }
+
+  return $data;
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ *
+ * Don't show the pager if there's no reason to page. Might be fit for core.
+ */
+function moderation_dashboard_preprocess_views_view(&$variables) {
+  if (isset($variables['id']) && strpos($variables['id'], 'moderation_dashboard') === 0) {
+    /** @var \Drupal\views\ViewExecutable $view */
+    $view = $variables['view'];
+    if ($view->getCurrentPage() === 0 && $view->total_rows < $view->getItemsPerPage()) {
+      $variables['pager'] = [];
+    }
+  }
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function moderation_dashboard_toolbar_alter(&$items) {
+  $user = \Drupal::currentUser();
+
+  if (isset($items['user']) && $user->hasPermission('use moderation dashboard')) {
+    $items['user']['tray']['moderation_dashboard'] = [
+      '#theme' => 'links__toolbar_user',
+      '#links' => [
+        'moderation_dashboard_link' => [
+          'title' => t('Moderation Dashboard'),
+          'url' => Url::fromRoute('page_manager.page_view_moderation_dashboard_moderation_dashboard-panels_variant-0', ['user' => $user->id()]),
+          'attributes' => [
+            'title' => t('View the Moderation Dashboard page'),
+          ],
+        ],
+      ],
+      '#attributes' => [
+        'class' => ['toolbar-menu'],
+      ],
+      '#cache' => [
+        'contexts' => ['user.permissions'],
+      ],
+    ];
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function moderation_dashboard_preprocess_block(&$variables) {
+  if (strpos(\Drupal::routeMatch()->getRouteName(), 'page_manager.page_view_moderation_dashboard') === 0) {
+    $variables['attributes']['class'][] = 'moderation-dashboard-block';
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function moderation_dashboard_plugin_filter_condition__block_ui_alter(array &$definitions) {
+  unset($definitions['has_moderated_content_type']);
+  unset($definitions['moderation_dashboard_access']);
+}

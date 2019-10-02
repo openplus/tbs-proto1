@@ -1,0 +1,134 @@
+<?php
+
+use Drupal\Core\Url;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
+/**
+ * Installs new base fields.
+ */
+function lightning_scheduler_update_8001() {
+  // Reset the hook implementation cache so that our entity presave hook will
+  // be picked up.
+  Drupal::moduleHandler()->resetImplementations();
+
+  $definition_manager = Drupal::entityDefinitionUpdateManager();
+
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $installed */
+  $installed = Drupal::service('entity.last_installed_schema.repository');
+
+  $migrations = [];
+
+  foreach (Drupal::entityTypeManager()->getDefinitions() as $entity_type) {
+    // Generate the base field definitions, if the entity type supports them.
+    $base_fields = lightning_scheduler_entity_base_field_info($entity_type);
+    if (empty($base_fields)) {
+      continue;
+    }
+
+    // Install the new base fields.
+    foreach ($base_fields as $field_name => $field_definition) {
+      $definition_manager->installFieldStorageDefinition($field_name, $entity_type->id(), 'lightning_scheduler', $field_definition);
+    }
+
+    // Query the last installed field storage definitions to determine if this
+    // entity type needs to be migrated.
+    $installed_fields = $installed->getLastInstalledFieldStorageDefinitions($entity_type->id());
+
+    if (isset($installed_fields['scheduled_publication'], $installed_fields['scheduled_moderation_state'])) {
+      array_push($migrations, $entity_type->id());
+    }
+  }
+  Drupal::service('lightning_scheduler.migrator')->setMigrations($migrations);
+
+  // Generate the URL for the migration form.
+  $url = Url::fromRoute('lightning_scheduler.migrate');
+  try {
+    // If the router has not been rebuilt yet, we'll get an exception. Once we
+    // rebuild the router, we should be able to get the internal path for this
+    // route. If we can't, something has gone awry.
+    $url->getInternalPath();
+  }
+  catch (RouteNotFoundException $e) {
+    Drupal::service('router.builder')->rebuild();
+  }
+
+  // We need to set a different message for the command line, since Drush and
+  // Drupal Console might not display HTML.
+  $variables = [
+    ':url' => $url->getInternalPath(),
+  ];
+  if (PHP_SAPI === 'cli') {
+    $link = t('You may want to visit /:url to migrate your existing content now', $variables);
+  }
+  else {
+    $variables += [
+      ':base_url' => Drupal::service('router.request_context')->getCompleteBaseUrl(),
+    ];
+    $link = t('You may want to <a href=":base_url/:url">migrate your existing content</a> now', $variables);
+  }
+
+  return t(
+    'Lightning Scheduler\'s new fields have been created. @link. Note that you must be logged in as the superuser (user 1) to do this.',
+    [
+      '@link' => $link,
+    ]
+  );
+}
+
+/**
+ * Refreshes the field widget plugin definition cache.
+ */
+function lightning_scheduler_update_8002() {
+  Drupal::service('plugin.manager.field.widget')->clearCachedDefinitions();
+}
+
+/**
+ * Creates the lightning_scheduler.settings config object.
+ */
+function lightning_scheduler_update_8003() {
+  Drupal::configFactory()
+    ->getEditable('lightning_scheduler.settings')
+    ->set('time_step', 60)
+    ->save();
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function lightning_scheduler_update_dependencies() {
+  return [
+    'block_content' => [
+      8400 => [
+        'lightning_scheduler' => 8001,
+      ],
+    ],
+    'lightning_scheduler' => [
+      8001 => [
+        'system' => 8501,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function lightning_scheduler_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'runtime') {
+    $migrations = Drupal::service('lightning_scheduler.migrator')->getMigrations();
+
+    if ($migrations) {
+      $requirements['lightning_scheduler_migrations'] = [
+        'severity' => REQUIREMENT_INFO,
+        'title' => t('Lightning Scheduler data migration'),
+        'description' => t('Some content has not yet been migrated into the new base fields installed by Lightning Scheduler. Visit <a href=":url">this page</a> to migrate the data.', [
+          ':url' => Url::fromRoute('lightning_scheduler.migrate')->toString(),
+        ]),
+      ];
+    }
+  }
+
+  return $requirements;
+}
