@@ -18,7 +18,7 @@ class EntityBundle extends EntityDeriverBase {
       if ($entity_type->hasKey('bundle') && $entity_type_id != 'node') {
         $this->derivatives[$entity_type_id] = $base_plugin_definition;
         $this->derivatives[$entity_type_id]['label'] = $this->getEntityBundleLabel($entity_type);
-        $this->derivatives[$entity_type_id]['context'] = [
+        $this->derivatives[$entity_type_id]['context_definitions'] = [
           "$entity_type_id" => new ContextDefinition('entity:' . $entity_type_id),
         ];
       }

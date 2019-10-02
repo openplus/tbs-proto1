@@ -1,0 +1,4 @@
+services:
+  library_manager.library_discovery:
+    class: Drupal\library_manager\LibraryDiscovery
+    arguments: ['@library.discovery.collector', '@module_handler', '@theme_handler', '@app.root']

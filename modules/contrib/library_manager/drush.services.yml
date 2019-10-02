@@ -1,0 +1,6 @@
+services:
+  library_manager.commands:
+    class: \Drupal\library_manager\Commands\LibraryManagerCommands
+    arguments: ['@library_manager.library_discovery', '@serialization.yaml', '@http_client', '@state']
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,5 @@
+entity.library_definition.add_form:
+  route_name: entity.library_definition.add_form
+  title: Add library definition
+  appears_on:
+    - entity.library_definition.collection

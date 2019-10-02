@@ -1,0 +1,115 @@
+library_manager.settings:
+  type: config_object
+  label: Libarary manager settings
+  mapping:
+    libraries_path:
+      type: string
+      label: Libaries path
+
+library_manager.library_definition.*:
+  type: config_entity
+  label: Library definition
+  mapping:
+    uuid:
+      type: string
+    id:
+      type: string
+      label: ID
+    target:
+      type: string
+      label: target
+    remote:
+      type: string
+      label: Remote
+    version:
+      type: string
+      label: Version
+    license:
+      type: mapping
+      label: License
+      mapping:
+        name:
+          type: string
+          label: Name
+        url:
+          type: string
+          label: URL
+        gpl-compatible:
+          type: boolean
+          label: GPL compatible
+    js:
+      type: sequence
+      label: JS files
+      sequence:
+        type: mapping
+        label: JS file
+        mapping:
+          file_name:
+            type: string
+            label: File name
+          group:
+            type: string
+            label: Group
+          preprocess:
+            type: boolean
+            label: Preprocess
+          minified:
+            type: boolean
+            label: Minified
+          weight:
+            type: integer
+            label: Weight
+          external:
+            type: boolean
+            label: External
+          code:
+            type: string
+            label: Code
+          url:
+            type: uri
+            label: Url
+    css:
+      type: sequence
+      label: CSS files
+      sequence:
+        type: mapping
+        label: CSS file
+        mapping:
+          file_name:
+            type: string
+            label: File name
+          group:
+            type: string
+            label: Group
+          preprocess:
+            type: boolean
+            label: Preprocess
+          minified:
+            type: boolean
+            label: Minified
+          weight:
+            type: integer
+            label: Weight
+          external:
+            type: boolean
+            label: External
+          code:
+            type: string
+            label: Code
+          url:
+            type: uri
+            label: Url
+    library_dependencies:
+      type: sequence
+      sequence:
+        type: string
+        label: Dependency
+    load:
+      type: boolean
+      label: Load library
+    visibility:
+      type: sequence
+      label: Visibility conditions
+      sequence:
+        type: condition.plugin.[id]
+        label: Visibility condition

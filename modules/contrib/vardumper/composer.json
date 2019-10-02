@@ -1,0 +1,16 @@
+{
+  "name": "drupal/vardumper",
+  "description": "Variable dumper service and Drupal API",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/vardumper",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    { "name": "Pol Dellaiera", "email": "pol.dellaiera@protonmail.com" }
+  ],
+  "require": {
+    "php": ">=5.3.10",
+    "symfony/var-dumper":  "~3.4"
+  }
+}

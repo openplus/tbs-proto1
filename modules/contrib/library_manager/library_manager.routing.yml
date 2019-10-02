@@ -1,0 +1,148 @@
+library_manager.settings:
+  path: '/admin/structure/library/settings'
+  defaults:
+    _form: 'Drupal\library_manager\Form\SettingsForm'
+    _title: Library manager configuration
+  requirements:
+    _permission: 'administer libraries'
+
+library_manager.library_collection:
+  path: '/admin/structure/library'
+  defaults:
+    _controller: '\Drupal\library_manager\Controller\LibraryCollectionController::buildCollection'
+    _title: 'Libraries'
+  requirements:
+    _permission: 'administer libraries'
+
+library_manager.library_autocomplete:
+  path: '/admin/structure/library/autocomplete'
+  defaults:
+    _controller: '\Drupal\library_manager\Controller\LibraryCollectionController::buildAutocomplete'
+    _title: 'Libraries'
+  requirements:
+    _permission: 'administer libraries'
+
+library_manager.library_canonical:
+  path: '/admin/structure/library/library/{extension}/{library}'
+  defaults:
+    _controller: '\Drupal\library_manager\Controller\LibraryDetailsController::details'
+    _title: 'Library details'
+  requirements:
+    _permission: 'administer libraries'
+
+
+library_manager.library_build:
+  path: '/admin/structure/library/library/{extension}/{library}/build'
+  defaults:
+    _entity_form: 'library_definition.build'
+    _title: 'Create library definition'
+  requirements:
+    _permission: 'administer libraries'
+
+library_manager.library_export:
+  path: '/admin/structure/library/library/{extension}/{library}/export'
+  defaults:
+    _controller: '\Drupal\library_manager\Controller\LibraryDetailsController::export'
+    _title: 'Library details'
+  requirements:
+    _permission: 'administer libraries'
+
+library_manager.assets:
+  path: '/admin/reports/libraries'
+  defaults:
+    _form: '\Drupal\library_manager\Form\AssetsCheckForm'
+    _title: 'Library assets'
+  requirements:
+    _permission: 'access site reports'
+
+entity.library_definition.collection:
+  path: '/admin/structure/library/definition'
+  defaults:
+    _entity_list: 'library_definition'
+    _title: 'Library definitions'
+  requirements:
+    _permission: 'administer libraries'
+
+# Definition forms.
+entity.library_definition.add_form:
+  path: '/admin/structure/library/definition/add'
+  defaults:
+    _entity_form: 'library_definition.add'
+    _title: 'Add library definition'
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.edit_form:
+  path: '/admin/structure/library/definition/{library_definition}/edit'
+  defaults:
+    _entity_form: 'library_definition.edit'
+    _title: 'Edit library definition'
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.delete_form:
+  path: '/admin/structure/library/definition/{library_definition}/delete'
+  defaults:
+    _entity_form: 'library_definition.delete'
+    _title: 'Delete a library definition'
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.duplicate_form:
+  path: '/admin/structure/library/definition/{library_definition}/duplicate'
+  defaults:
+    _entity_form: 'library_definition.duplicate'
+    _title: 'Duplicate library definition'
+  requirements:
+    _permission: 'administer libraries'
+
+# JS file forms.
+entity.library_definition.add_js_form:
+  path: '/admin/structure/library/definition/{library_definition}/js/add'
+  defaults:
+    _entity_form: 'library_definition.add_js'
+    _title: 'Add JS file'
+    is_new: true
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.edit_js_form:
+  path: '/admin/structure/library/definition/{library_definition}/js/{file_id}/edit'
+  defaults:
+    _entity_form: 'library_definition.edit_js'
+    _title: 'Edit JS file'
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.delete_js_form:
+  path: '/admin/structure/library/definition/{library_definition}/js/{file_id}/delete'
+  defaults:
+    _entity_form: 'library_definition.delete_js'
+    _title: 'Delete JS file'
+  requirements:
+    _permission: 'administer libraries'
+
+# CSS file forms.
+entity.library_definition.add_css_form:
+  path: '/admin/structure/library/definition/{library_definition}/css/add'
+  defaults:
+    _entity_form: 'library_definition.add_css'
+    _title: 'Add CSS file'
+    is_new: true
+  requirements:
+    _permission: 'administer libraries'
+entity.library_definition.edit_css_form:
+  path: '/admin/structure/library/definition/{library_definition}/css/{file_id}/edit'
+  defaults:
+    _entity_form: 'library_definition.edit_css'
+    _title: 'Edit CSS file'
+  requirements:
+    _permission: 'administer libraries'
+
+entity.library_definition.delete_css_form:
+  path: '/admin/structure/library/definition/{library_definition}/css/{file_id}/delete'
+  defaults:
+    _entity_form: 'library_definition.delete_css'
+    _title: 'Delete css file'
+  requirements:
+    _permission: 'administer libraries'

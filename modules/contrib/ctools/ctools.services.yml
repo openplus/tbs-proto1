@@ -31,6 +31,11 @@ services:
   ctools.context_mapper:
     class: Drupal\ctools\ContextMapper
     arguments: ['@entity.repository']
+  ctools.entity_route_context:
+    class: Drupal\ctools\ContextProvider\EntityRouteContext
+    arguments: ['@current_route_match', '@entity_type.manager']
+    tags:
+      - { name: 'context_provider' }
   ctools.serializable.tempstore.factory:
     class: Drupal\ctools\SerializableTempstoreFactory
     arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%user.tempstore.expire%']

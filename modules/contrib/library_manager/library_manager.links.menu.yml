@@ -1,0 +1,28 @@
+library_manager.library_collection:
+  title: Libraries
+  description: List of installed libraries.
+  route_name: library_manager.library_collection
+  parent: system.admin_structure
+
+library_manager.library_definition:
+  title: Library definitions
+  description: List of library definitions.
+  route_name: entity.library_definition.collection
+  parent: library_manager.library_collection
+
+library_manager.add_library_definition:
+  title: Add library definition
+  route_name: entity.library_definition.add_form
+  parent: library_manager.library_definition
+
+library_manager.settings:
+  title: Settings
+  description: Library manager settings.
+  route_name: library_manager.settings
+  parent: library_manager.library_collection
+
+library_manager.assets:
+  title: Library assets
+  description: Check installed library assets.
+  route_name: library_manager.assets
+  parent: system.admin_reports

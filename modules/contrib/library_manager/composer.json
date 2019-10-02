@@ -1,0 +1,19 @@
+{
+  "name": "drupal/library_manager",
+  "type": "drupal-module",
+  "description": "Provides administrative interface to manage Drupal libraries.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/library_manager",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/library_manager",
+    "source": "http://cgit.drupalcode.org/library_manager"
+  },
+  "require": {
+    "drupal/core": "^8.6.0",
+    "drupal/codemirror_editor": "^1.0"
+  },
+  "require-dev": {
+    "chi-teck/test-base": "^1.0"
+  }
+}

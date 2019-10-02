@@ -1,0 +1,15 @@
+library_manager_test:
+  version: 2.3.4
+  js:
+    js/example.js: {}
+    /libraries/example/global.js: {}
+    http://example.com/external.js: {external: true}
+  css:
+    theme:
+      css/example.css: {}
+      /libraries/example/global.css: {}
+      http://example.com/external.css: {external: true}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.dialog.ajax

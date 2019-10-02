@@ -1,0 +1,24 @@
+library_manager.libraries:
+  route_name: library_manager.library_collection
+  base_route: library_manager.library_collection
+  title: Libraries
+
+library_manager.entity.library_definition.collection:
+  route_name: entity.library_definition.collection
+  base_route: library_manager.library_collection
+  title: Definitions
+
+library_manager.settings:
+  route_name: library_manager.settings
+  base_route: library_manager.library_collection
+  title: Settings
+
+library_manager.library_canonical:
+  route_name: library_manager.library_canonical
+  base_route: library_manager.library_canonical
+  title: View
+
+library_manager.library_export:
+  route_name: library_manager.library_export
+  base_route: library_manager.library_canonical
+  title: Export

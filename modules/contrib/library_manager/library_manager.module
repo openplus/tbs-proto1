@@ -1,0 +1,204 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Library manager module.
+ */
+
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Component\Plugin\Exception\ContextException;
+
+/**
+ * Implements hook_library_info_build().
+ */
+function library_manager_library_info_build() {
+
+  $libraries = library_manager_build_libraries()['libraries'];
+
+  // Add Library manager library.
+  $libraries['library_manager'] = [];
+  $libraries['library_manager']['js']['js/library-manager.js'] = [];
+  $libraries['library_manager']['dependencies'][] = 'core/jquery';
+  $libraries['library_manager']['dependencies'][] = 'core/jquery.once';
+  $libraries['library_manager']['dependencies'][] = 'core/drupal.debounce';
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function library_manager_library_info_alter(&$libraries, $extension) {
+  $overrides = library_manager_build_libraries()['overrides'];
+  foreach ($libraries as $library => $library_info) {
+    $library_id = $extension . '/' . $library;
+    if (isset($overrides[$library_id])) {
+      $libraries[$library] = $overrides[$library_id];
+    }
+  }
+}
+
+/**
+ * Saves library file to a given location.
+ *
+ * @return bool
+ *   TRUE if the was successfully created and is writable or FALSE on error.
+ */
+function library_manager_save_file($file_path, $data) {
+
+  $file_system = \Drupal::service('file_system');
+  $directory = $file_system->dirname($file_path);
+
+  if (file_prepare_directory($directory, FILE_CREATE_DIRECTORY)) {
+    if (file_unmanaged_save_data($data, $file_path, FILE_EXISTS_REPLACE)) {
+      return TRUE;
+    }
+  }
+
+  $message = t('Could not create file %file', ['%file' => $file_path]);
+  \Drupal::messenger()->addError($message);
+  \Drupal::logger('library_manager')->error($message);
+
+  return FALSE;
+}
+
+/**
+ * Build libraries form corresponding definitions.
+ */
+function library_manager_build_libraries() {
+  if (!$data = &drupal_static(__FUNCTION__)) {
+
+    $data = [
+      'libraries' => [],
+      'overrides' => [],
+    ];
+
+    $libraries_path = \Drupal::config('library_manager.settings')->get('libraries_path');
+
+    /** @var Drupal\library_manager\LibraryDefinitionInterface[] $definitions */
+    $definitions = \Drupal::service('entity.manager')
+      ->getStorage('library_definition')
+      ->loadMultiple();
+
+    foreach ($definitions as $definition) {
+
+      $library_path = $libraries_path . '/' . $definition->id();
+      if (file_exists($library_path)) {
+        // The files can be removed in other thread when tests are running.
+        @file_unmanaged_delete_recursive($library_path);
+      }
+
+      $library_info = [];
+      $library_info['remote'] = $definition->get('remote');
+      $library_info['version'] = $definition->get('version');
+      $library_info['license'] = $definition->get('license');
+      $library_info['definition'] = $definition->id();
+
+      // Process JS.
+      $library_info['js'] = [];
+      foreach ($definition->get('js') as $file) {
+
+        $options = [
+          'minified' => $file['minified'],
+          'preprocess' => $file['preprocess'],
+        ];
+
+        // Weight is optional property for JS files.
+        if (isset($file['weight'])) {
+          $options['weight'] = $file['weight'];
+        }
+
+        if ($file['external']) {
+          $options['type'] = 'external';
+          $library_info['js'][$file['url']] = $options;
+        }
+        else {
+          $file_path = $libraries_path . '/' . $definition->id() . '/' . $file['file_name'];
+          $library_info['js']['/' . $file_path] = $options;
+          library_manager_save_file($file_path, $file['code']);
+        }
+
+      }
+
+      // Process CSS.
+      $library_info['css'] = [];
+      foreach ($definition->get('css') as $file) {
+
+        $options = [
+          'minified' => $file['minified'],
+          'preprocess' => $file['preprocess'],
+          'weight' => $file['weight'],
+        ];
+
+        if ($file['external']) {
+          $options['type'] = 'external';
+          $library_info['css'][$file['group']][$file['url']] = $options;
+        }
+        else {
+          $file_path = $libraries_path . '/' . $definition->id() . '/' . $file['file_name'];
+          $library_info['css'][$file['group']]['/' . $file_path] = $options;
+          library_manager_save_file($file_path, $file['code']);
+        }
+
+      }
+
+      // Process dependencies.
+      $library_info['dependencies'] = [];
+      foreach ($definition->get('library_dependencies') as $dependency) {
+        $library_info['dependencies'][] = $dependency;
+      }
+
+      if ($target = $definition->get('target')) {
+        $data['overrides'][$target] = $library_info;
+      }
+      else {
+        $data['libraries'][$definition->id()] = $library_info;
+      }
+
+    }
+  }
+
+  return $data;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function library_manager_page_attachments(array &$attachments) {
+  /** @var Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
+  $storage = \Drupal::service('entity.manager')->getStorage('library_definition');
+
+  /** @var Drupal\library_manager\LibraryDefinitionInterface[] $definitions */
+  $definitions = $storage->loadByProperties(['load' => TRUE]);
+  $context_repository = \Drupal::service('context.repository');
+  $context_handler = \Drupal::service('context.handler');
+  
+  foreach ($definitions as $definition) {
+    foreach ($definition->getVisibilityConditions() as $condition) {
+      $missing_context = FALSE;
+      if ($condition instanceof ContextAwarePluginInterface) {
+        try {
+          $contexts = $context_repository->getRuntimeContexts(array_values($condition->getContextMapping()));
+          $context_handler->applyContextMapping($condition, $contexts);
+        }
+        catch (ContextException $exception) {
+          $missing_context = TRUE;
+        }
+      }
+
+      if ($missing_context || !$condition->execute()) {
+        break 2;
+      }
+    }
+    $attachments['#attached']['library'][] = 'library_manager/' . $definition->id();
+  }
+}
+
+/**
+ * Implements hook_codemirror_editor_assets_alter().
+ */
+function library_manager_codemirror_editor_assets_alter(array &$assets) {
+  $assets['js'][] = 'mode/javascript/javascript.min.js';
+  $assets['js'][] = 'mode/css/css.min.js';
+  $assets['js'][] = 'mode/yaml/yaml.min.js';
+}

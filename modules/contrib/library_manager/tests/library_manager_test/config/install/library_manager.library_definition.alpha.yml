@@ -1,0 +1,41 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: alpha
+version: 1.2.3
+license:
+  name: GNU-GPL-2.0-or-later
+  url: https://www.drupal.org/licensing/faq
+  gpl-compatible: true
+js:
+  1:
+    file_name: example.js
+    preprocess: true
+    minified: false
+    weight: 0
+    external: false
+    code: "console.log('Hello world!');"
+    url: ''
+css:
+  1:
+    file_name: example.css
+    group: component
+    preprocess: true
+    minified: false
+    weight: 0
+    external: false
+    code: "body:before {\r\n  content: 'Hello world!';\r\n}"
+    url: ''
+library_dependencies:
+  - core/backbone
+  - core/jquery
+  - core/drupal.ajax
+load: true
+visibility:
+  current_theme:
+    id: current_theme
+    theme: classy
+    negate: false
+    context_mapping: {  }

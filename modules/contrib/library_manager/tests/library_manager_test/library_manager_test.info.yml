@@ -1,0 +1,13 @@
+name: Library manager test
+type: module
+description: Helper module to test Library manager functionality.
+package: Testing
+# core: 8.x
+dependencies:
+  - drupal:library_manager
+
+# Information added by Drupal.org packaging script on 2018-10-01
+version: '8.x-1.0'
+core: '8.x'
+project: 'library_manager'
+datestamp: 1538391783
