@@ -1,0 +1,12 @@
+services:
+  codemirror_editor.commands:
+    class: Drupal\codemirror_editor\Commands\CodeMirrorEditorCommands
+    arguments:
+      - '@library.discovery'
+      - '@http_client'
+      - '@asset.js.collection_optimizer'
+      - '@asset.css.collection_optimizer'
+      - '@state'
+      - '@datetime.time'
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,12 @@
+name: CodeMirror editor
+type: module
+description: Syntax highlighting using the CodeMirror library.
+# core: 8.x
+dependencies:
+  - drupal:editor
+
+# Information added by Drupal.org packaging script on 2019-01-28
+version: '8.x-1.2'
+core: '8.x'
+project: 'codemirror_editor'
+datestamp: 1548660484
