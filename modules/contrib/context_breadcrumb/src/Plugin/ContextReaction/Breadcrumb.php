@@ -116,7 +116,6 @@ class Breadcrumb extends ContextReactionPluginBase {
           $form_state->setErrorByName('breadcrumbs][' . $i . '][token', $this->t('The title using token, please select token option.'));
         }
         if (!ContextBreadcrumbBuilder::isToken($breadcrumb['url']) && !in_array($breadcrumb['url'], ['<front>', '<nolink>']) && strpos($breadcrumb['url'], 'http://') === FALSE && strpos($breadcrumb['url'], 'https://') === FALSE && $breadcrumb['url'][0] !== '/') {
-        //if (!ContextBreadcrumbBuilder::isToken($breadcrumb['url']) && !in_array($breadcrumb['url'], ['<front>', '<nolink>']) && $breadcrumb['url'][0] !== '/') {
           $form_state->setErrorByName('breadcrumbs][' . $i . '][url', $this->t('The url path has to start with a slash.'));
         }
       }

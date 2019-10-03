@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Condition(
  *   id = "node_type",
- *   label = @Translation("Node Bundle"),
+ *   label = @Translation("Content type (Deprecated)"),
  *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   }
@@ -45,6 +45,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
    */
   public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    @trigger_error(__NAMESPACE__ . '\NodeType is deprecated in Drupal 8.6.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead. See https://www.drupal.org/node/2919303.', E_USER_DEPRECATED);
     $this->entityStorage = $entity_storage;
   }
 
@@ -70,7 +71,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
       $options[$type->id()] = $type->label();
     }
     $form['bundles'] = [
-      '#title' => $this->t('Node types'),
+      '#title' => $this->t('Content types'),
       '#type' => 'checkboxes',
       '#options' => $options,
       '#default_value' => $this->configuration['bundles'],

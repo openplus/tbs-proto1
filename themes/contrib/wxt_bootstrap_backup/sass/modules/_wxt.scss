@@ -1,0 +1,116 @@
+
+/* =============================================================================
+   WxT inconsistencies with Bootstrap
+   ========================================================================== */
+
+.icon {
+  font-size: inherit;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+.btn {
+  .icon {
+    padding-left: 0px;
+  }
+}
+
+.form-item {
+  .input-group-addon {
+    .icon {
+      padding-left: 0px;
+    }
+  }
+}
+
+.ajax-throbber.icon {
+  padding-left: 0px;
+}
+
+.quickedit-toolgroup {
+  .icon {
+    padding-left: 5px;
+  }
+}
+
+.theme-gcweb,
+.theme-gcweb-legacy {
+  .block-user-account-block {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .gc-nttvs img {
+    margin-bottom: 15px;
+  }
+  .panel-primary  {
+    border-color: #335075;
+    & > .panel-heading {
+      background-color: #335075;
+    }
+  }
+  .wb-srch-multi {
+    padding-top: 1em;
+  }
+}
+
+.theme-wet-boew {
+  .highlighted {
+    .region-highlighted {
+      background-color: #fff;
+    }
+  }
+}
+
+.wb-srch-multi {
+    padding-top: 1em
+}
+
+.wb-srch-multi button, .wb-srch-multi input {
+    border-radius: 0
+}
+
+.wb-srch-multi button {
+    background-color: #335075;
+    border: 0;
+    border-color: #335075;
+    font-size: 17px
+}
+
+.wb-srch-multi button:active, .wb-srch-multi button:focus, .wb-srch-multi button:hover {
+    background: #243850
+}
+
+.wb-srch-multi .glyphicon {
+    top: auto;
+    vertical-align: middle
+}
+
+.wb-srch-multi input {
+    float: left;
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
+    border-right: 0;
+    border-style: solid;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #555;
+    margin-right: -4px;
+    min-width: 246px;
+    position: relative
+}
+
+.zbra div.brdr-tp {
+  &:nth-child(odd) {
+    background: #eee;
+  }
+  .row {
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+}
+
+#drupal-off-canvas {
+  .modal-dialog {
+    margin: 0px auto;
+  }
+}

@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Template;
 
-use Twig\Node\CheckToStringNode;
-
 /**
  * A class that defines the Twig 'trans' tag for Drupal.
  *
@@ -115,9 +113,6 @@ class TwigNodeTrans extends \Twig_Node {
             $n = $n->getNode('node');
           }
 
-          if ($n instanceof CheckToStringNode) {
-            $n = $n->getNode('expr');
-          }
           $args = $n;
 
           // Support TwigExtension->renderVar() function in chain.
@@ -138,9 +133,6 @@ class TwigNodeTrans extends \Twig_Node {
                 break;
             }
             $args = $args->getNode('node');
-          }
-          if ($args instanceof CheckToStringNode) {
-            $args = $args->getNode('expr');
           }
           if ($args instanceof \Twig_Node_Expression_GetAttr) {
             $argName = [];

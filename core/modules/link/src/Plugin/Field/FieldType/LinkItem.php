@@ -191,12 +191,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
     //   SqlContentEntityStorage::loadFieldItems, see
     //   https://www.drupal.org/node/2414835
     if (is_string($values['options'])) {
-      if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
-        $values['options'] = unserialize($values['options'], ['allowed_classes' => FALSE]);
-      }
-      else {
-        $values['options'] = unserialize($values['options']);
-      }
+      $values['options'] = unserialize($values['options']);
     }
     parent::setValue($values, $notify);
   }

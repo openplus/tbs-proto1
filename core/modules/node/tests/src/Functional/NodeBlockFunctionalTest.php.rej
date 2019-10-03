@@ -1,0 +1,40 @@
+***************
+*** 118,134 ****
+      $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
+  
+      // Enable the "Powered by Drupal" block only on article nodes.
+      $edit = [
+        'id' => strtolower($this->randomMachineName()),
+        'region' => 'sidebar_first',
+-       'visibility[node_type][bundles][article]' => 'article',
+      ];
+-     $theme = \Drupal::service('theme_handler')->getDefault();
+      $this->drupalPostForm("admin/structure/block/add/system_powered_by_block/$theme", $edit, t('Save block'));
+  
+      $block = Block::load($edit['id']);
+      $visibility = $block->getVisibility();
+-     $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
+  
+      // Create a page node.
+      $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
+--- 118,137 ----
+      $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
+  
+      // Enable the "Powered by Drupal" block only on article nodes.
++     $theme = \Drupal::service('theme_handler')->getDefault();
++     $this->drupalGet("admin/structure/block/add/system_powered_by_block/$theme");
++     $this->assertSession()->pageTextContains('Content type');
++     $this->assertSession()->pageTextNotContains('Content type (Deprecated)');
+      $edit = [
+        'id' => strtolower($this->randomMachineName()),
+        'region' => 'sidebar_first',
++       'visibility[entity_bundle:node][bundles][article]' => 'article',
+      ];
+      $this->drupalPostForm("admin/structure/block/add/system_powered_by_block/$theme", $edit, t('Save block'));
+  
+      $block = Block::load($edit['id']);
+      $visibility = $block->getVisibility();
++     $this->assertTrue(isset($visibility['entity_bundle:node']['bundles']['article']), 'Visibility settings were saved to configuration');
+  
+      // Create a page node.
+      $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);

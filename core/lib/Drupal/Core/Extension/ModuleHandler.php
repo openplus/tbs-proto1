@@ -777,12 +777,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
-    try {
-      return \Drupal::service('extension.list.module')->getName($module);
-    }
-    catch (UnknownExtensionException $e) {
-      return $module;
-    }
+    return \Drupal::service('extension.list.module')->getName($module);
   }
 
 }

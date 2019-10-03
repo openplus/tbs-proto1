@@ -393,15 +393,18 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Otherwise, Xss::filterAdmin could remove valid Twig syntax before the
       // template is parsed.
 
+      //@TODO joel to patch
       $build = [
         '#type' => 'inline_template',
         '#template' => $text,
         '#context' => $twig_tokens,
+/*
         '#post_render' => [
           function ($children, $elements) {
             return Xss::filterAdmin($children);
           },
         ],
+*/
       ];
 
       // Currently you cannot attach assets to tokens with
@@ -411,7 +414,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       return (string) $this->getRenderer()->renderPlain($build);
     }
     else {
-      return Xss::filterAdmin($text);
+      //@TODO joel to patch
+      return $text;
+      //return Xss::filterAdmin($text);
     }
   }
 

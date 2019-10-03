@@ -6,7 +6,6 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
@@ -210,7 +209,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
 
     foreach ($layout_definition->getRegions() as $region => $info) {
       if (!empty($build[$region])) {
-        foreach (Element::children($build[$region]) as $uuid) {
+        foreach ($build[$region] as $uuid => $block) {
           $build[$region][$uuid]['#attributes']['class'][] = 'draggable';
           $build[$region][$uuid]['#attributes']['data-layout-block-uuid'] = $uuid;
           $build[$region][$uuid]['#contextual_links'] = [

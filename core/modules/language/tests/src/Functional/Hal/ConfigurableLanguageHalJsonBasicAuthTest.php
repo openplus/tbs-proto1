@@ -3,14 +3,14 @@
 namespace Drupal\Tests\language\Functional\Hal;
 
 use Drupal\Tests\language\Functional\Rest\ConfigurableLanguageResourceTestBase;
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceWithInterfaceTranslationTestTrait;
 
 /**
  * @group hal
  */
 class ConfigurableLanguageHalJsonBasicAuthTest extends ConfigurableLanguageResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use BasicAuthResourceWithInterfaceTranslationTestTrait;
 
   /**
    * {@inheritdoc}

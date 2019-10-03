@@ -1,0 +1,12 @@
+.region-content-suffix {
+    padding-left: 15px;
+    padding-right: 15px;
+    @media #{$tablet} {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    @media #{$wide} {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

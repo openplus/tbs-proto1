@@ -17,19 +17,12 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function filterPluginDefinitionsByContexts(array $contexts, array $definitions) {
-    $checked_requirements = [];
-    return array_filter($definitions, function ($plugin_definition) use ($contexts, &$checked_requirements) {
+    return array_filter($definitions, function ($plugin_definition) use ($contexts) {
       $context_definitions = $this->getContextDefinitions($plugin_definition);
+
       if ($context_definitions) {
-        // Generate a unique key for the current context definitions. This will
-        // allow calling checkRequirements() once for all plugins that have the
-        // same context definitions.
-        $context_definitions_key = hash('sha256', serialize($context_definitions));
-        if (!isset($checked_requirements[$context_definitions_key])) {
-          // Check the set of contexts against the requirements.
-          $checked_requirements[$context_definitions_key] = $this->checkRequirements($contexts, $context_definitions);
-        }
-        return $checked_requirements[$context_definitions_key];
+        // Check the set of contexts against the requirements.
+        return $this->checkRequirements($contexts, $context_definitions);
       }
       // If this plugin doesn't need any context, it is available to use.
       return TRUE;

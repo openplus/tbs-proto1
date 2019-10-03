@@ -210,7 +210,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       return parent::getExpectedUnauthorizedAccessMessage($method);
     }
 
-    if ($method === 'GET' || $method == 'PATCH' || $method == 'DELETE' || $method == 'POST') {
+    if ($method === 'GET' || $method == 'PATCH' || $method == 'DELETE') {
       return "The 'access content' permission is required.";
     }
     return parent::getExpectedUnauthorizedAccessMessage($method);

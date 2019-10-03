@@ -1,0 +1,16 @@
+***************
+*** 10,15 ****
+   * Tests that conditions, provided by the node module, are working properly.
+   *
+   * @group node
+   */
+  class NodeConditionTest extends EntityKernelTestBase {
+  
+--- 10,16 ----
+   * Tests that conditions, provided by the node module, are working properly.
+   *
+   * @group node
++  * @group legacy
+   */
+  class NodeConditionTest extends EntityKernelTestBase {
+  

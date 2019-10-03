@@ -175,14 +175,13 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
       foreach ($expected as $key => $value) {
         $this->assertArrayHasKey($key, $actual);
 
-        $msg = sprintf("Value at 'array[%s][%s]' is not correct.", $i - 1, $key);
         if (is_array($value)) {
           ksort($value);
           ksort($actual[$key]);
-          $this->assertEquals($value, $actual[$key], $msg);
+          $this->assertEquals($value, $actual[$key]);
         }
         else {
-          $this->assertEquals((string) $value, (string) $actual[$key], $msg);
+          $this->assertSame((string) $value, (string) $actual[$key]);
         }
       }
     }

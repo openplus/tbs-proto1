@@ -1,0 +1,17 @@
+***************
+*** 83,89 ****
+      // Ensure that all the context mappings got updated properly.
+      $block = Block::load('testfor2354889');
+      $visibility = $block->get('visibility');
+-     $this->assertEqual('@node.node_route_context:node', $visibility['node_type']['context_mapping']['node']);
+      $this->assertEqual('@user.current_user_context:current_user', $visibility['user_role']['context_mapping']['user']);
+      $this->assertEqual('@language.current_language_context:language_interface', $visibility['language']['context_mapping']['language']);
+  
+--- 83,89 ----
+      // Ensure that all the context mappings got updated properly.
+      $block = Block::load('testfor2354889');
+      $visibility = $block->get('visibility');
++     $this->assertEqual('@node.node_route_context:node', $visibility['entity_bundle:node']['context_mapping']['node']);
+      $this->assertEqual('@user.current_user_context:current_user', $visibility['user_role']['context_mapping']['user']);
+      $this->assertEqual('@language.current_language_context:language_interface', $visibility['language']['context_mapping']['language']);
+  

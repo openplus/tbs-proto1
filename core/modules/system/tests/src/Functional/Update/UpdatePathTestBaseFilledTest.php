@@ -174,8 +174,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/block/manage/testblock');
     $this->assertNoFieldChecked('edit-visibility-language-langcodes-es');
     $this->assertFieldChecked('edit-visibility-language-langcodes-en');
-    $this->assertNoFieldChecked('edit-visibility-node-type-bundles-book');
-    $this->assertFieldChecked('edit-visibility-node-type-bundles-test-content-type');
+    $this->assertNoFieldChecked('edit-visibility-entity-bundlenode-bundles-book');
+    $this->assertFieldChecked('edit-visibility-entity-bundlenode-bundles-test-content-type');
 
     // Make sure our block is still translated.
     $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');

@@ -87,25 +87,11 @@ class MetadataGeneratorTest extends QuickEditTestBase {
       'number_integer',
       []
     );
-    $field_3_name = 'field_without_formatter';
-    $field_3_label = 'A field without a formatter';
-    $this->createFieldWithStorage(
-      $field_3_name, 'integer', 1, $field_3_label,
-      // Instance settings.
-      [],
-      // Widget type & settings.
-      NULL,
-      [],
-      // no formatter available.
-      NULL,
-      []
-    );
 
     // Create an entity with values for this text field.
     $entity = EntityTest::create();
     $entity->{$field_1_name}->value = 'Test';
     $entity->{$field_2_name}->value = 42;
-    $entity->{$field_3_name}->value = 1;
     $entity->save();
     $entity = EntityTest::load($entity->id());
 
@@ -128,14 +114,6 @@ class MetadataGeneratorTest extends QuickEditTestBase {
       'editor' => 'form',
     ];
     $this->assertEqual($expected_2, $metadata_2, 'The correct metadata is generated for the second field.');
-
-    // Verify metadata for field 3.
-    $items_3 = $entity->get($field_3_name);
-    $metadata_3 = $this->metadataGenerator->generateFieldMetadata($items_3, 'default');
-    $expected_3 = [
-      'access' => FALSE,
-    ];
-    $this->assertEqual($expected_3, $metadata_3, 'No metadata is generated for the third field.');
   }
 
   /**

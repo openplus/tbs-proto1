@@ -1,0 +1,52 @@
+***************
+*** 249,254 ****
+        if ($condition_id == 'language' && !$this->language->isMultilingual()) {
+          continue;
+        }
+        /** @var \Drupal\Core\Condition\ConditionInterface $condition */
+        $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+        $form_state->set(['conditions', $condition_id], $condition);
+--- 249,261 ----
+        if ($condition_id == 'language' && !$this->language->isMultilingual()) {
+          continue;
+        }
++ 
++       // Don't display the deprecated node type condition unless it has existing
++       // settings.
++       if ($condition_id == 'node_type' && !isset($visibility[$condition_id])) {
++         continue;
++       }
++ 
+        /** @var \Drupal\Core\Condition\ConditionInterface $condition */
+        $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+        $form_state->set(['conditions', $condition_id], $condition);
+***************
+*** 260,271 ****
+      }
+  
+      if (isset($form['node_type'])) {
+-       $form['node_type']['#title'] = $this->t('Content types');
+-       $form['node_type']['bundles']['#title'] = $this->t('Content types');
+        $form['node_type']['negate']['#type'] = 'value';
+        $form['node_type']['negate']['#title_display'] = 'invisible';
+        $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+      }
+      if (isset($form['user_role'])) {
+        $form['user_role']['#title'] = $this->t('Roles');
+        unset($form['user_role']['roles']['#description']);
+--- 267,281 ----
+      }
+  
+      if (isset($form['node_type'])) {
+        $form['node_type']['negate']['#type'] = 'value';
+        $form['node_type']['negate']['#title_display'] = 'invisible';
+        $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+      }
++     if (isset($form['entity_bundle:node'])) {
++       $form['entity_bundle:node']['negate']['#type'] = 'value';
++       $form['entity_bundle:node']['negate']['#title_display'] = 'invisible';
++       $form['entity_bundle:node']['negate']['#value'] = $form['entity_bundle:node']['negate']['#default_value'];
++     }
+      if (isset($form['user_role'])) {
+        $form['user_role']['#title'] = $this->t('Roles');
+        unset($form['user_role']['roles']['#description']);

@@ -3,15 +3,18 @@
 namespace Drupal\context_breadcrumb\Breadcrumb;
 
 use Drupal\context\ContextManager;
+use Drupal\context_breadcrumb\Plugin\ContextReaction\Breadcrumb as ContextBreadcrumb;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
 use Drupal\node\Entity\Node;
@@ -125,7 +128,7 @@ class ContextBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   Validate result.
    */
   public static function isToken($str) {
-    return strpos($str, '[') !== FALSE;
+    return strpos($str, '[') !== FALSE || strpos($str, '{{') !== FALSE;
   }
 
   /**
@@ -137,63 +140,148 @@ class ContextBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   }
 
   /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See \Drupal\Core\StringTranslation\TranslatableMarkup::__construct() for
+   * important security information and usage guidelines.
+   *
+   * In order for strings to be localized, make them available in one of the
+   * ways supported by the
+   *
+   * @link https://www.drupal.org/node/322729 Localization API @endlink. When
+   * possible, use the \Drupal\Core\StringTranslation\StringTranslationTrait
+   * $this->t(). Otherwise create a new
+   * \Drupal\Core\StringTranslation\TranslatableMarkup object.
+   *
+   * @param string $string
+   *   A string containing the English text to translate.
+   * @param array $args
+   *   (optional) An associative array of replacements to make after
+   *   translation. Based on the first character of the key, the value is
+   *   escaped and/or themed. See
+   *   \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
+   *   details.
+   * @param array $options
+   *   (optional) An associative array of additional options, with the following
+   *   elements:
+   *   - 'langcode' (defaults to the current language): A language code, to
+   *     translate to a language other than what is used to display the page.
+   *   - 'context' (defaults to the empty context): The context the source
+   *     string belongs to. See the
+   *
+   * @link i18n Internationalization topic @endlink for more information
+   *     about string contexts.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   An object that, when cast to a string, returns the translated string.
+   *
+   * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
+   * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
+   *
+   * @ingroup sanitization
+   */
+  protected function trans($string, array $args = [], array $options = []) {
+    return new TranslatableMarkup($string, $args, $options, $this->getStringTranslation());
+  }
+
+  /**
+   * Render data.
+   *
+   * @param string $title
+   *   The title.
+   * @param string|int $renderType
+   *   The render type.
+   * @param array|mixed $data
+   *   Context data.
+   *
+   * @return mixed|string|null
+   *   Title render output.
+   */
+  protected function renderData($title, $renderType, $data) {
+    if (strpos($title, '[') !== FALSE && strpos($title, ']') !== FALSE) {
+      // Render token.
+      return $this->token->replace($title, $data);
+    }
+    if (strpos($title, '{{') !== FALSE && strpos($title, '}}') !== FALSE) {
+      $render_array = [
+        '#type' => 'inline_template',
+        '#template' => $title,
+        '#context' => $data,
+      ];
+      $renderer = \Drupal::service('renderer');
+      return (string) $renderer->render($render_array);
+    }
+    return $title;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
     if (!empty($this->contextReactions)) {
-      /** @var \Drupal\context\ContextReactionInterface $reaction */
-      $reaction = $this->contextReactions[0];
-      $contextBreadcrumbs = $reaction->execute();
-      foreach ($contextBreadcrumbs as $contextBreadcrumb) {
-        try {
-          if (!empty($contextBreadcrumb['title'])) {
-            if ($contextBreadcrumb['url'] == '<front>') {
-              $contextBreadcrumb['url'] = '/';
-            }
+      $language = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+      foreach ($this->contextReactions as $reaction) {
+        if (empty($reaction) || !($reaction instanceof ContextBreadcrumb)) {
+          continue;
+        }
+        /** @var \Drupal\context\ContextReactionInterface $reaction */
+        $contextBreadcrumbs = $reaction->execute();
+        foreach ($contextBreadcrumbs as $contextBreadcrumb) {
+          try {
+            if (!empty($contextBreadcrumb['title'])) {
+              if ($contextBreadcrumb['url'] == '<front>') {
+                $contextBreadcrumb['url'] = '/';
+              }
 
-            if (!empty($contextBreadcrumb['token'])) {
-              $token_data = [];
-              $params = $route_match->getParameters();
-              foreach ($params->keys() as $key) {
-                $param_object = $params->get($key);
-                if ($key == 'node' && !is_object($param_object)) {
-                  $param_object = Node::load($param_object);
+              if (!empty($contextBreadcrumb['token'])) {
+                $token_data = [];
+                $params = $route_match->getParameters();
+                foreach ($params->keys() as $key) {
+                  $param_object = $params->get($key);
+                  if ($key == 'node' && !is_object($param_object)) {
+                    $param_object = Node::load($param_object);
+                  }
+                  if ($key == 'user' && !is_object($param_object)) {
+                    $param_object = User::load($param_object);
+                  }
+                  if ($key == 'node_revision' && !is_object($param_object)) {
+                    $param_object = \Drupal::entityTypeManager()
+                      ->getStorage('node')
+                      ->loadRevision($param_object);
+                  }
+                  $token_data[$key] = $param_object;
                 }
-                if ($key == 'user' && !is_object($param_object)) {
-                  $param_object = User::load($param_object);
+                $contextBreadcrumb['title'] = $this->renderData($contextBreadcrumb['title'], $contextBreadcrumb['token'], $token_data);
+                if ($contextBreadcrumb['url'] === '<nolink>') {
+                  $contextBreadcrumb['url'] = Url::fromRoute($contextBreadcrumb['url']);
                 }
-                if ($key == 'node_revision' && !is_object($param_object)) {
-                  $param_object = \Drupal::entityTypeManager()
-                    ->getStorage('node')
-                    ->loadRevision($param_object);
+                else {
+                  $contextBreadcrumb['url'] = $this->renderData($contextBreadcrumb['url'], $contextBreadcrumb['token'], $token_data);
                 }
-                $token_data[$key] = $param_object;
-              }
-              if (self::isToken($contextBreadcrumb['title'])) {
-                $contextBreadcrumb['title'] = $this->token->replace($contextBreadcrumb['title'], $token_data);
-              }
-              if (self::isToken($contextBreadcrumb['url'])) {
-                $replace_url = $this->token->replace($contextBreadcrumb['url'], $token_data);
-                $contextBreadcrumb['url'] = $replace_url === $contextBreadcrumb['url'] ? 'internal:/' : $replace_url;
-                $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), Url::fromUri($contextBreadcrumb['url'])));
+
+                if ($contextBreadcrumb['url'] instanceof Url) {
+                  $breadcrumb->addLink(Link::fromTextAndUrl($this->trans($contextBreadcrumb['title']), $contextBreadcrumb['url']));
+                }
+
+                if (is_string($contextBreadcrumb['url'])) {
+                    if (strpos($contextBreadcrumb['url'], '://') !== FALSE) {
+                        $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), Url::fromUri($contextBreadcrumb['url'])));
+                    }
+                    else {
+                       $breadcrumb->addLink(Link::fromTextAndUrl($this->trans($contextBreadcrumb['title']), Url::fromUserInput($contextBreadcrumb['url'])));
+                    }
+                }
               }
               else {
-                $url = $contextBreadcrumb['url'] === '<nolink>' ? Url::fromRoute($contextBreadcrumb['url']) : Url::fromUserInput($contextBreadcrumb['url']);
-                $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), $url));
+                $url = $contextBreadcrumb['url'] === '<nolink>' ? Url::fromRoute($contextBreadcrumb['url']) : Url::fromUserInput($contextBreadcrumb['url'], ['language' => $language]);
+                $breadcrumb->addLink(Link::fromTextAndUrl($this->trans($contextBreadcrumb['title']), $url));
               }
             }
-            elseif (strpos($contextBreadcrumb['url'], 'http://') !== FALSE || strpos($contextBreadcrumb['url'], 'https://') !== FALSE) {
-                // External Uri.
-                $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), Url::fromUri($contextBreadcrumb['url'])));
-            }
-            else {
-              $url = $contextBreadcrumb['url'] === '<nolink>' ? Url::fromRoute($contextBreadcrumb['url']) : Url::fromUserInput($contextBreadcrumb['url']);
-              $breadcrumb->addLink(Link::fromTextAndUrl($this->t($contextBreadcrumb['title']), $url));
-            }
           }
-        } catch (\Exception $e) {
-          $this->logger->get('context_breadcrumb')->error($e->getMessage());
+          catch (\Exception $e) {
+            $this->logger->get('context_breadcrumb')->error($e->getMessage());
+          }
         }
       }
     }

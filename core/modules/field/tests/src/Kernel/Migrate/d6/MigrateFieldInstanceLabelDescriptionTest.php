@@ -8,7 +8,7 @@ use Drupal\Tests\migrate\Kernel\MigrateDumpAlterInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
- * Tests migration of field label and description translations.
+ * Tests migration field label and description i18n translations.
  *
  * @group migrate_drupal_6
  * @group legacy
@@ -57,7 +57,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
   }
 
   /**
-   * Tests migration of field label and description translations.
+   * Tests migration of file variables to file.settings.yml.
    */
   public function testFieldInstanceLabelDescriptionTranslationMigration() {
     $language_manager = $this->container->get('language_manager');

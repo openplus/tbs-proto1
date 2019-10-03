@@ -1,0 +1,17 @@
+***************
+*** 31,37 ****
+     */
+    public function __construct() {
+      $manager = new ConditionManager(\Drupal::service('container.namespaces'), \Drupal::cache('discovery'), \Drupal::moduleHandler());
+-     $this->condition = $manager->createInstance('node_type');
+    }
+  
+    /**
+--- 31,37 ----
+     */
+    public function __construct() {
+      $manager = new ConditionManager(\Drupal::service('container.namespaces'), \Drupal::cache('discovery'), \Drupal::moduleHandler());
++     $this->condition = $manager->createInstance('entity_bundle:node');
+    }
+  
+    /**

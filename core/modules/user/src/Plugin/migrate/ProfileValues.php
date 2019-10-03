@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\migrate;
 
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\Migration;
 
 /**
@@ -31,7 +32,6 @@ class ProfileValues extends Migration {
       $definition['destination']['plugin'] = 'null';
       $definition['idMap']['plugin'] = 'null';
       try {
-        $this->checkRequirements();
         $profile_field_migration = $this->migrationPluginManager->createStubMigration($definition);
         $migrate_executable = new MigrateExecutable($profile_field_migration);
         $source_plugin = $profile_field_migration->getSourcePlugin();
@@ -45,7 +45,6 @@ class ProfileValues extends Migration {
             [
               'migration' => 'user_profile_field',
               'source_ids' => $fid,
-              'no_stub' => TRUE,
             ];
           $plugin = $this->processPluginManager->createInstance('migration_lookup', $configuration, $profile_field_migration);
           $new_value = $plugin->transform($fid, $migrate_executable, $row, 'tmp');
@@ -53,12 +52,14 @@ class ProfileValues extends Migration {
             // Set the destination to the migrated profile field name.
             $this->process[$new_value[1]] = $name;
           }
+          else {
+            throw new MigrateSkipRowException("Can't migrate source field $name.");
+          }
         }
       }
       catch (RequirementsException $e) {
         // The checkRequirements() call will fail when the profile module does
-        // not exist on the source site, or if the required migrations have not
-        // yet run.
+        // not exist on the source site.
       }
     }
     return parent::getProcess();

@@ -345,7 +345,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
     // To still run the complete test coverage for POSTing a Media entity, we
     // must revoke the additional permissions that we granted.
-    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
+    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::AUTHENTICATED_ID);
     $role->revokePermission('create camelids media');
     $role->trustData()->save();
   }
@@ -422,9 +422,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['media:1']);
   }
 

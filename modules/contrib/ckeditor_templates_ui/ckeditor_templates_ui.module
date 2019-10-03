@@ -34,6 +34,14 @@ function ckeditor_templates_ui_help($route_name, RouteMatchInterface $route_matc
 }
 
 /**
+ * Implements hook_ckeditor_plugin_info_alter().
+ */
+function ckeditor_templates_ui_ckeditor_plugin_info_alter(array &$plugins) {
+  // Change template plugin class.
+  $plugins['templates']['class'] = 'Drupal\ckeditor_templates_ui\CkeditorTemplatesUi';
+}
+
+/**
  * Implements hook_js_settings_alter().
  */
 function ckeditor_templates_ui_js_settings_alter(array &$settings, AttachedAssetsInterface $assets) {

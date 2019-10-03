@@ -337,10 +337,8 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         return "The 'post comments' permission is required.";
       case 'PATCH';
         return "The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.";
-      case 'DELETE':
-        // \Drupal\comment\CommentAccessControlHandler::checkAccess() does not
-        // specify a reason for not allowing a comment to be deleted.
-        return '';
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
     }
   }
 
@@ -380,9 +378,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\comment\CommentAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['comment:1']);
   }
 

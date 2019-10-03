@@ -1,0 +1,649 @@
+diff --git a/core/config/schema/core.data_types.schema.yml b/core/config/schema/core.data_types.schema.yml
+index b3941643c5..21d0e93fec 100644
+--- a/core/config/schema/core.data_types.schema.yml
++++ b/core/config/schema/core.data_types.schema.yml
+@@ -339,6 +339,14 @@ condition.plugin:
+       sequence:
+         type: string
+ 
++condition.plugin.entity_bundle:*:
++  type: condition.plugin
++  mapping:
++    bundles:
++      type: sequence
++      sequence:
++        type: string
++
+ display_variant.plugin:
+   type: mapping
+   label: 'Display variant'
+diff --git a/core/lib/Drupal/Core/Entity/Plugin/Condition/Deriver/EntityBundle.php b/core/lib/Drupal/Core/Entity/Plugin/Condition/Deriver/EntityBundle.php
+new file mode 100644
+index 0000000000..54f30c731e
+--- /dev/null
++++ b/core/lib/Drupal/Core/Entity/Plugin/Condition/Deriver/EntityBundle.php
+@@ -0,0 +1,67 @@
++<?php
++
++namespace Drupal\Core\Entity\Plugin\Condition\Deriver;
++
++use Drupal\Component\Plugin\Derivative\DeriverBase;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Plugin\Context\ContextDefinition;
++use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
++use Drupal\Core\StringTranslation\StringTranslationTrait;
++use Drupal\Core\StringTranslation\TranslationInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * Deriver that creates a condition for each entity type with bundles.
++ */
++class EntityBundle extends DeriverBase implements ContainerDeriverInterface {
++
++  use StringTranslationTrait;
++
++  /**
++   * The entity type manager.
++   *
++   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
++   */
++  protected $entityTypeManager;
++
++  /**
++   * Constructs a new EntityBundle.
++   *
++   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
++   *   The entity type manager.
++   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
++   *   The string translation service.
++   */
++  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
++    $this->entityTypeManager = $entity_type_manager;
++    $this->stringTranslation = $string_translation;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, $base_plugin_id) {
++    return new static(
++      $container->get('entity_type.manager'),
++      $container->get('string_translation')
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getDerivativeDefinitions($base_plugin_definition) {
++    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
++      if ($entity_type->hasKey('bundle')) {
++        $this->derivatives[$entity_type_id] = $base_plugin_definition;
++        $this->derivatives[$entity_type_id]['label'] = $entity_type->getBundleLabel();
++        $this->derivatives[$entity_type_id]['provider'] = $entity_type->getProvider();
++        $this->derivatives[$entity_type_id]['context'] = [
++          $entity_type_id => new ContextDefinition('entity:' . $entity_type_id),
++        ];
++      }
++    }
++    return $this->derivatives;
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/Entity/Plugin/Condition/EntityBundle.php b/core/lib/Drupal/Core/Entity/Plugin/Condition/EntityBundle.php
+new file mode 100644
+index 0000000000..0955bd9c65
+--- /dev/null
++++ b/core/lib/Drupal/Core/Entity/Plugin/Condition/EntityBundle.php
+@@ -0,0 +1,165 @@
++<?php
++
++namespace Drupal\Core\Entity\Plugin\Condition;
++
++use Drupal\Core\Condition\ConditionPluginBase;
++use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * Provides a 'Entity Bundle' condition.
++ *
++ * @Condition(
++ *   id = "entity_bundle",
++ *   deriver = "\Drupal\Core\Entity\Plugin\Condition\Deriver\EntityBundle",
++ * )
++ */
++class EntityBundle extends ConditionPluginBase implements ContainerFactoryPluginInterface {
++
++  /**
++   * The entity type bundle info service.
++   *
++   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
++   */
++  protected $entityTypeBundleInfo;
++
++  /**
++   * The entity type manager.
++   *
++   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
++   */
++  protected $entityTypeManager;
++
++  /**
++   * The entity type containing the bundles.
++   *
++   * @var \Drupal\Core\Entity\EntityTypeInterface
++   */
++  protected $entityType;
++
++  /**
++   * Creates a new EntityBundle instance.
++   *
++   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
++   *   The entity type manager.
++   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
++   *   The entity type bundle info service.
++   * @param array $configuration
++   *   The plugin configuration, i.e. an array with configuration values keyed
++   *   by configuration option name. The special key 'context' may be used to
++   *   initialize the defined contexts by setting it to an array of context
++   *   values keyed by context names.
++   * @param string $plugin_id
++   *   The plugin_id for the plugin instance.
++   * @param mixed $plugin_definition
++   *   The plugin implementation definition.
++   */
++  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, array $configuration, $plugin_id, $plugin_definition) {
++    parent::__construct($configuration, $plugin_id, $plugin_definition);
++    $this->entityTypeManager = $entity_type_manager;
++    $this->entityTypeBundleInfo = $entity_type_bundle_info;
++    $this->entityType = $entity_type_manager->getDefinition($this->getDerivativeId());
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->get('entity_type.manager'),
++      $container->get('entity_type.bundle.info'),
++      $configuration,
++      $plugin_id,
++      $plugin_definition
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
++    $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entityType->id());
++    $form['bundles'] = [
++      '#title' => $this->pluginDefinition['label'],
++      '#type' => 'checkboxes',
++      '#options' => array_combine(array_keys($bundles), array_column($bundles, 'label')),
++      '#default_value' => $this->configuration['bundles'],
++    ];
++    return parent::buildConfigurationForm($form, $form_state);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
++    $this->configuration['bundles'] = array_filter($form_state->getValue('bundles'));
++    parent::submitConfigurationForm($form, $form_state);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function evaluate() {
++    if (empty($this->configuration['bundles']) && !$this->isNegated()) {
++      return TRUE;
++    }
++    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
++    $entity = $this->getContextValue($this->entityType->id());
++    return !empty($this->configuration['bundles'][$entity->bundle()]);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function summary() {
++    $bundle_type = $this->entityType->getBundleLabel();
++    if (count($this->configuration['bundles']) > 1) {
++      $bundles = $this->configuration['bundles'];
++      $last = array_pop($bundles);
++      $bundles = implode(', ', $bundles);
++
++      if (empty($this->configuration['negate'])) {
++        return $this->t('@bundle_type is @bundles or @last', [
++          '@bundle_type' => $bundle_type,
++          '@bundles' => $bundles,
++          '@last' => $last,
++        ]);
++      }
++      else {
++        return $this->t('@bundle_type is not @bundles or @last', [
++          '@bundle_type' => $bundle_type,
++          '@bundles' => $bundles,
++          '@last' => $last,
++        ]);
++      }
++
++    }
++    $bundle = reset($this->configuration['bundles']);
++
++    if (empty($this->configuration['negate'])) {
++      return $this->t('@bundle_type is @bundle', [
++        '@bundle_type' => $bundle_type,
++        '@bundle' => $bundle,
++      ]);
++    }
++    else {
++      return $this->t('@bundle_type is not @bundle', [
++        '@bundle_type' => $bundle_type,
++        '@bundle' => $bundle,
++      ]);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function defaultConfiguration() {
++    return [
++      'bundles' => [],
++    ] + parent::defaultConfiguration();
++  }
++
++}
+diff --git a/core/modules/block/block.install b/core/modules/block/block.install
+index 50b27585f3..ab1864680d 100644
+--- a/core/modules/block/block.install
++++ b/core/modules/block/block.install
+@@ -117,3 +117,24 @@ function block_update_8003() {
+ 
+   return t('Block settings updated.');
+ }
++
++/**
++ * Updates the node type visibility condition.
++ */
++function block_update_8600() {
++
++  $config_factory = \Drupal::configFactory();
++  foreach ($config_factory->listAll('block.block.') as $block_config_name) {
++    $block = $config_factory->getEditable($block_config_name);
++
++    if ($block->get('visibility.node_type')) {
++      $configuration = $block->get('visibility.node_type');
++      $configuration['id'] = 'entity_bundle:node';
++      $block->set('visibility.entity_bundle:node', $configuration);
++      $block->clear('visibility.node_type');
++      $block->save(TRUE);
++    }
++
++  }
++
++}
+diff --git a/core/modules/block/js/block.es6.js b/core/modules/block/js/block.es6.js
+index 0bde2add24..13ca849a47 100644
+--- a/core/modules/block/js/block.es6.js
++++ b/core/modules/block/js/block.es6.js
+@@ -43,7 +43,7 @@
+         return vals.join(', ');
+       }
+ 
+-      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
++      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
+ 
+       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary((context) => {
+         const $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
+diff --git a/core/modules/block/js/block.js b/core/modules/block/js/block.js
+index 9612dfdbf3..9bfd3053e8 100644
+--- a/core/modules/block/js/block.js
++++ b/core/modules/block/js/block.js
+@@ -25,7 +25,7 @@
+         return vals.join(', ');
+       }
+ 
+-      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
++      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
+ 
+       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
+         var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
+@@ -141,4 +141,4 @@
+       });
+     }
+   };
+-})(jQuery, window, Drupal);
+\ No newline at end of file
++})(jQuery, window, Drupal);
+diff --git a/core/modules/block/src/BlockForm.php b/core/modules/block/src/BlockForm.php
+index 64f1aad775..5fc47d9950 100644
+--- a/core/modules/block/src/BlockForm.php
++++ b/core/modules/block/src/BlockForm.php
+@@ -249,6 +249,13 @@ protected function buildVisibilityInterface(array $form, FormStateInterface $for
+       if ($condition_id == 'language' && !$this->language->isMultilingual()) {
+         continue;
+       }
++
++      // Don't display the deprecated node type condition unless it has existing
++      // settings.
++      if ($condition_id == 'node_type' && !isset($visibility[$condition_id])) {
++        continue;
++      }
++
+       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
+       $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+       $form_state->set(['conditions', $condition_id], $condition);
+@@ -260,12 +267,15 @@ protected function buildVisibilityInterface(array $form, FormStateInterface $for
+     }
+ 
+     if (isset($form['node_type'])) {
+-      $form['node_type']['#title'] = $this->t('Content types');
+-      $form['node_type']['bundles']['#title'] = $this->t('Content types');
+       $form['node_type']['negate']['#type'] = 'value';
+       $form['node_type']['negate']['#title_display'] = 'invisible';
+       $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+     }
++    if (isset($form['entity_bundle:node'])) {
++      $form['entity_bundle:node']['negate']['#type'] = 'value';
++      $form['entity_bundle:node']['negate']['#title_display'] = 'invisible';
++      $form['entity_bundle:node']['negate']['#value'] = $form['entity_bundle:node']['negate']['#default_value'];
++    }
+     if (isset($form['user_role'])) {
+       $form['user_role']['#title'] = $this->t('Roles');
+       unset($form['user_role']['roles']['#description']);
+diff --git a/core/modules/block/tests/src/Functional/Update/BlockContextMappingUpdateTest.php b/core/modules/block/tests/src/Functional/Update/BlockContextMappingUpdateTest.php
+index d1acb3b414..9930d7303d 100644
+--- a/core/modules/block/tests/src/Functional/Update/BlockContextMappingUpdateTest.php
++++ b/core/modules/block/tests/src/Functional/Update/BlockContextMappingUpdateTest.php
+@@ -82,7 +82,7 @@ public function testUpdateHookN() {
+     // Ensure that all the context mappings got updated properly.
+     $block = Block::load('testfor2354889');
+     $visibility = $block->get('visibility');
+-    $this->assertEqual('@node.node_route_context:node', $visibility['node_type']['context_mapping']['node']);
++    $this->assertEqual('@node.node_route_context:node', $visibility['entity_bundle:node']['context_mapping']['node']);
+     $this->assertEqual('@user.current_user_context:current_user', $visibility['user_role']['context_mapping']['user']);
+     $this->assertEqual('@language.current_language_context:language_interface', $visibility['language']['context_mapping']['language']);
+ 
+diff --git a/core/modules/block/tests/src/Functional/Update/BlockNodeTypeVisibilityUpdateTest.php b/core/modules/block/tests/src/Functional/Update/BlockNodeTypeVisibilityUpdateTest.php
+new file mode 100644
+index 0000000000..b9a84107e8
+--- /dev/null
++++ b/core/modules/block/tests/src/Functional/Update/BlockNodeTypeVisibilityUpdateTest.php
+@@ -0,0 +1,45 @@
++<?php
++
++namespace Drupal\Tests\block\Functional\Update;
++
++use Drupal\FunctionalTests\Update\UpdatePathTestBase;
++
++/**
++ * Tests the upgrade path for updating the node type visibility condition.
++ *
++ * @group Update
++ */
++class BlockNodeTypeVisibilityUpdateTest extends UpdatePathTestBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setDatabaseDumpFiles() {
++    $this->databaseDumpFiles = [
++      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
++    ];
++  }
++
++  /**
++   * Tests that block context mapping is updated properly.
++   */
++  public function testBlock() {
++
++    $bundles = [
++      'article' => 'article',
++      'test_content_type' => 'test_content_type',
++    ];
++
++    $block = \Drupal::config('block.block.stark_testblock');
++    $this->assertEquals($bundles, $block->get('visibility.node_type.bundles'));
++    $this->assertNull($block->get('visibility.entity_bundle:node'));
++
++    $this->runUpdates();
++
++    $block = \Drupal::config('block.block.stark_testblock');
++    $this->assertEquals($bundles, $block->get('visibility.entity_bundle:node.bundles'));
++    $this->assertEquals('entity_bundle:node', $block->get('visibility.entity_bundle:node.id'));
++    $this->assertNull($block->get('visibility.node_type'));
++  }
++
++}
+diff --git a/core/modules/node/src/Plugin/Condition/NodeType.php b/core/modules/node/src/Plugin/Condition/NodeType.php
+index dcd2dc7d30..e6aa95d2f6 100644
+--- a/core/modules/node/src/Plugin/Condition/NodeType.php
++++ b/core/modules/node/src/Plugin/Condition/NodeType.php
+@@ -13,7 +13,7 @@
+  *
+  * @Condition(
+  *   id = "node_type",
+- *   label = @Translation("Node Bundle"),
++ *   label = @Translation("Content type (Deprecated)"),
+  *   context = {
+  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
+  *   }
+@@ -45,6 +45,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
+    */
+   public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
+     parent::__construct($configuration, $plugin_id, $plugin_definition);
++    @trigger_error(__NAMESPACE__ . '\NodeType is deprecated in Drupal 8.6.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead. See https://www.drupal.org/node/2919303.', E_USER_DEPRECATED);
+     $this->entityStorage = $entity_storage;
+   }
+ 
+@@ -70,7 +71,7 @@ public function buildConfigurationForm(array $form, FormStateInterface $form_sta
+       $options[$type->id()] = $type->label();
+     }
+     $form['bundles'] = [
+-      '#title' => $this->t('Node types'),
++      '#title' => $this->t('Content types'),
+       '#type' => 'checkboxes',
+       '#options' => $options,
+       '#default_value' => $this->configuration['bundles'],
+diff --git a/core/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php b/core/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php
+index c6f786df8e..25a7a6f10b 100644
+--- a/core/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php
++++ b/core/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php
+@@ -118,17 +118,20 @@ public function testRecentNodeBlock() {
+     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
+ 
+     // Enable the "Powered by Drupal" block only on article nodes.
++    $theme = \Drupal::service('theme_handler')->getDefault();
++    $this->drupalGet("admin/structure/block/add/system_powered_by_block/$theme");
++    $this->assertSession()->pageTextContains('Content type');
++    $this->assertSession()->pageTextNotContains('Content type (Deprecated)');
+     $edit = [
+       'id' => strtolower($this->randomMachineName()),
+       'region' => 'sidebar_first',
+-      'visibility[node_type][bundles][article]' => 'article',
++      'visibility[entity_bundle:node][bundles][article]' => 'article',
+     ];
+-    $theme = \Drupal::service('theme_handler')->getDefault();
+     $this->drupalPostForm("admin/structure/block/add/system_powered_by_block/$theme", $edit, t('Save block'));
+ 
+     $block = Block::load($edit['id']);
+     $visibility = $block->getVisibility();
+-    $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
++    $this->assertTrue(isset($visibility['entity_bundle:node']['bundles']['article']), 'Visibility settings were saved to configuration');
+ 
+     // Create a page node.
+     $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
+diff --git a/core/modules/node/tests/src/Kernel/NodeConditionTest.php b/core/modules/node/tests/src/Kernel/NodeConditionTest.php
+index a30867cb8b..e097069a9f 100644
+--- a/core/modules/node/tests/src/Kernel/NodeConditionTest.php
++++ b/core/modules/node/tests/src/Kernel/NodeConditionTest.php
+@@ -10,6 +10,7 @@
+  * Tests that conditions, provided by the node module, are working properly.
+  *
+  * @group node
++ * @group legacy
+  */
+ class NodeConditionTest extends EntityKernelTestBase {
+ 
+diff --git a/core/modules/system/tests/modules/condition_test/src/FormController.php b/core/modules/system/tests/modules/condition_test/src/FormController.php
+index 19dc9505bd..04e3eff9a1 100644
+--- a/core/modules/system/tests/modules/condition_test/src/FormController.php
++++ b/core/modules/system/tests/modules/condition_test/src/FormController.php
+@@ -31,7 +31,7 @@ public function getFormId() {
+    */
+   public function __construct() {
+     $manager = new ConditionManager(\Drupal::service('container.namespaces'), \Drupal::cache('discovery'), \Drupal::moduleHandler());
+-    $this->condition = $manager->createInstance('node_type');
++    $this->condition = $manager->createInstance('entity_bundle:node');
+   }
+ 
+   /**
+diff --git a/core/modules/system/tests/src/Functional/Update/UpdatePathRC1TestBaseFilledTest.php b/core/modules/system/tests/src/Functional/Update/UpdatePathRC1TestBaseFilledTest.php
+index 7573fc4a92..02b910c159 100644
+--- a/core/modules/system/tests/src/Functional/Update/UpdatePathRC1TestBaseFilledTest.php
++++ b/core/modules/system/tests/src/Functional/Update/UpdatePathRC1TestBaseFilledTest.php
+@@ -172,8 +172,8 @@ public function testUpdatedSite() {
+     $this->drupalGet('admin/structure/block/manage/testblock');
+     $this->assertNoFieldChecked('edit-visibility-language-langcodes-es');
+     $this->assertFieldChecked('edit-visibility-language-langcodes-en');
+-    $this->assertNoFieldChecked('edit-visibility-node-type-bundles-book');
+-    $this->assertFieldChecked('edit-visibility-node-type-bundles-test-content-type');
++    $this->assertNoFieldChecked('edit-visibility-entity-bundlenode-bundles-book');
++    $this->assertFieldChecked('edit-visibility-entity-bundlenode-bundles-test-content-type');
+ 
+     // Make sure our block is still translated.
+     $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');
+diff --git a/core/modules/system/tests/src/Functional/Update/UpdatePathTestBaseFilledTest.php b/core/modules/system/tests/src/Functional/Update/UpdatePathTestBaseFilledTest.php
+index 2ed58fbabc..aa3851f904 100644
+--- a/core/modules/system/tests/src/Functional/Update/UpdatePathTestBaseFilledTest.php
++++ b/core/modules/system/tests/src/Functional/Update/UpdatePathTestBaseFilledTest.php
+@@ -173,8 +173,8 @@ public function testUpdatedSite() {
+     $this->drupalGet('admin/structure/block/manage/testblock');
+     $this->assertNoFieldChecked('edit-visibility-language-langcodes-es');
+     $this->assertFieldChecked('edit-visibility-language-langcodes-en');
+-    $this->assertNoFieldChecked('edit-visibility-node-type-bundles-book');
+-    $this->assertFieldChecked('edit-visibility-node-type-bundles-test-content-type');
++    $this->assertNoFieldChecked('edit-visibility-entity-bundlenode-bundles-book');
++    $this->assertFieldChecked('edit-visibility-entity-bundlenode-bundles-test-content-type');
+ 
+     // Make sure our block is still translated.
+     $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');
+diff --git a/core/profiles/demo_umami/config/install/block.block.views_block__articles_aside_block_1.yml b/core/profiles/demo_umami/config/install/block.block.views_block__articles_aside_block_1.yml
+index b6c1cfd0f5..90f4d9e132 100644
+--- a/core/profiles/demo_umami/config/install/block.block.views_block__articles_aside_block_1.yml
++++ b/core/profiles/demo_umami/config/install/block.block.views_block__articles_aside_block_1.yml
+@@ -22,8 +22,8 @@ settings:
+   views_label: ''
+   items_per_page: none
+ visibility:
+-  node_type:
+-    id: node_type
++  entity_bundle:node:
++    id: entity_bundle:node
+     bundles:
+       article: article
+     negate: false
+diff --git a/core/tests/Drupal/KernelTests/Core/Entity/EntityBundleConditionTest.php b/core/tests/Drupal/KernelTests/Core/Entity/EntityBundleConditionTest.php
+new file mode 100644
+index 0000000000..a464eadfd0
+--- /dev/null
++++ b/core/tests/Drupal/KernelTests/Core/Entity/EntityBundleConditionTest.php
+@@ -0,0 +1,90 @@
++<?php
++
++namespace Drupal\KernelTests\Core\Entity;
++
++use Drupal\entity_test\Entity\EntityTestBundle;
++use Drupal\entity_test\Entity\EntityTestWithBundle;
++use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
++
++/**
++ * Tests that entity bundle conditions works properly.
++ *
++ * @group Entity
++ */
++class EntityBundleConditionTest extends EntityKernelTestBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp() {
++    parent::setUp();
++    $this->installEntitySchema('entity_test_with_bundle');
++
++    // Create the entity bundles required for testing.
++    $bundle = EntityTestBundle::create(['id' => 'page', 'label' => 'page']);
++    $bundle->save();
++    $bundle = EntityTestBundle::create(['id' => 'article', 'label' => 'article']);
++    $bundle->save();
++    $bundle = EntityTestBundle::create(['id' => 'test', 'label' => 'test']);
++    $bundle->save();
++  }
++
++  /**
++   * Tests conditions.
++   */
++  public function testConditions() {
++    $manager = $this->container->get('plugin.manager.condition');
++    $this->createUser();
++    // Get some entities of various bundles to check against.
++    $page = EntityTestWithBundle::create(['type' => 'page', 'name' => $this->randomMachineName()]);
++    $page->save();
++    $article = EntityTestWithBundle::create(['type' => 'article', 'name' => $this->randomMachineName()]);
++    $article->save();
++    $test = EntityTestWithBundle::create(['type' => 'test', 'name' => $this->randomMachineName()]);
++    $test->save();
++
++    // Grab the bundle condition and configure it to check against bundle of
++    // 'article' and set the context to the page type entity.
++    /* @var \Drupal\Core\Entity\Plugin\Condition\EntityBundle $condition */
++    $condition = $manager->createInstance('entity_bundle:entity_test_with_bundle')
++      ->setConfig('bundles', ['article' => 'article'])
++      ->setContextValue('entity_test_with_bundle', $page);
++    $this->assertFalse($condition->execute(), 'Page type entities fail bundle checks for articles.');
++    // Check for the proper summary.
++    $this->assertEquals($condition->summary(), 'Test entity bundle is article');
++    $this->assertEquals('entity_test', $condition->getPluginDefinition()['provider']);
++
++    // Set the bundle check to page.
++    $condition->setConfig('bundles', ['page' => 'page']);
++    $this->assertTrue($condition->execute(), 'Page type entities pass bundle checks for pages');
++    // Check for the proper summary.
++    $this->assertEquals($condition->summary(), 'Test entity bundle is page');
++
++    // Set the bundle check to page or article.
++    $condition->setConfig('bundles', ['page' => 'page', 'article' => 'article']);
++    $this->assertTrue($condition->execute(), 'Page type entities pass bundle checks for pages or articles');
++    // Check for the proper summary.
++    $this->assertEquals($condition->summary(), 'Test entity bundle is page or article');
++
++    // Set the context to the article entity.
++    $condition->setContextValue('entity_test_with_bundle', $article);
++    $this->assertTrue($condition->execute(), 'Article type entities pass bundle checks for pages or articles');
++
++    // Set the context to the test entity.
++    $condition->setContextValue('entity_test_with_bundle', $test);
++    $this->assertFalse($condition->execute(), 'Test type entities pass bundle checks for pages or articles');
++
++    // Check a greater than 2 bundles summary scenario.
++    $condition->setConfig('bundles', [
++      'page' => 'page',
++      'article' => 'article',
++      'test' => 'test',
++    ]);
++    $this->assertEquals($condition->summary(), 'Test entity bundle is page, article or test');
++
++    // Test Constructor injection.
++    $condition = $manager->createInstance('entity_bundle:entity_test_with_bundle', ['bundles' => ['article' => 'article'], 'context' => ['entity_test_with_bundle' => $article]]);
++    $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
++  }
++
++}

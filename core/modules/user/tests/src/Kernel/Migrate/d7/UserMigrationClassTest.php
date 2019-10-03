@@ -12,9 +12,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 class UserMigrationClassTest extends MigrateDrupal7TestBase {
 
   /**
-   * Tests that the profile value process is added to the pipeline.
+   * Tests d6_profile_values builder.
    *
-   * Ensures profile fields are merged into the d7_profile_values migration's
+   * Ensures profile fields are merged into the d6_profile_values migration's
    * process pipeline.
    */
   public function testClass() {

@@ -61,10 +61,3 @@ function rest_post_update_resource_granularity() {
     }
   }
 }
-
-/**
- * Clear caches due to changes in route definitions.
- */
-function rest_post_update_161923() {
-  // Empty post-update hook.
-}

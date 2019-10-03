@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
-use Twig\TemplateWrapper;
 
 /**
  * Tests Twig namespaces.
@@ -34,7 +33,7 @@ class TwigNamespaceTest extends KernelTestBase {
    * Checks to see if a value is a twig template.
    */
   public function assertTwigTemplate($value, $message = '', $group = 'Other') {
-    $this->assertTrue($value instanceof TemplateWrapper, $message, $group);
+    $this->assertTrue($value instanceof \Twig_Template, $message, $group);
   }
 
   /**

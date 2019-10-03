@@ -180,9 +180,9 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\block_content\BlockContentAccessControlHandler()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['block_content:1']);
   }
 

@@ -21,7 +21,7 @@
         "drupal/term_condition": "^1.1"
     },
     "replace": {
-        "drupal/core": "^8.6"
+        "drupal/core": "^8.7"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -1,0 +1,19 @@
+***************
+*** 22,29 ****
+    views_label: ''
+    items_per_page: none
+  visibility:
+-   node_type:
+-     id: node_type
+      bundles:
+        article: article
+      negate: false
+--- 22,29 ----
+    views_label: ''
+    items_per_page: none
+  visibility:
++   entity_bundle:node:
++     id: entity_bundle:node
+      bundles:
+        article: article
+      negate: false

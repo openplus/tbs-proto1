@@ -4,13 +4,8 @@ namespace Drupal\Core\Extension;
 
 /**
  * Defines an extension (file) object.
- *
- * This class does not implement the Serializable interface since problems
- * occurred when using the serialize method.
- *
- * @see https://bugs.php.net/bug.php?id=66052
  */
-class Extension {
+class Extension implements \Serializable {
 
   /**
    * The type of the extension (e.g., 'module').
@@ -161,27 +156,47 @@ class Extension {
   }
 
   /**
-   * Magic method implementation to serialize the extension object.
+   * Implements Serializable::serialize().
    *
-   * @return array
-   *   The names of all variables that should be serialized.
+   * Serializes the Extension object in the most optimized way.
    */
-  public function __sleep() {
-    // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
-    //   properties to the Extension object.
-    $properties = get_object_vars($this);
+  public function serialize() {
     // Don't serialize the app root, since this could change if the install is
-    // moved. Don't serialize splFileInfo because it can not be.
-    unset($properties['splFileInfo'], $properties['root']);
-    return array_keys($properties);
+    // moved.
+    $data = [
+      'type' => $this->type,
+      'pathname' => $this->pathname,
+      'filename' => $this->filename,
+    ];
+
+    // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
+    //   system_list() are adding custom properties to the Extension object.
+    $info = new \ReflectionObject($this);
+    foreach ($info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+      $data[$property->getName()] = $property->getValue($this);
+    }
+
+    return serialize($data);
   }
 
   /**
-   * Magic method implementation to unserialize the extension object.
+   * {@inheritdoc}
    */
-  public function __wakeup() {
+  public function unserialize($data) {
+    $data = unserialize($data);
     // Get the app root from the container.
     $this->root = DRUPAL_ROOT;
+    $this->type = $data['type'];
+    $this->pathname = $data['pathname'];
+    $this->filename = $data['filename'];
+
+    // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
+    //   system_list() are adding custom properties to the Extension object.
+    foreach ($data as $property => $value) {
+      if (!isset($this->$property)) {
+        $this->$property = $value;
+      }
+    }
   }
 
 }

@@ -2,9 +2,6 @@
 
 namespace Drupal\twig_extension_test\TwigExtension;
 
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-
 /**
  * A test Twig extension that adds a custom function and a custom filter.
  */
@@ -24,7 +21,7 @@ class TestExtension extends \Twig_Extension {
    */
   public function getFunctions() {
     return [
-      'testfunc' => new TwigFunction('testfunc', ['Drupal\twig_extension_test\TwigExtension\TestExtension', 'testFunction']),
+      'testfunc' => new \Twig_Function_Function(['Drupal\twig_extension_test\TwigExtension\TestExtension', 'testFunction']),
     ];
   }
 
@@ -42,7 +39,7 @@ class TestExtension extends \Twig_Extension {
    */
   public function getFilters() {
     return [
-      'testfilter' => new TwigFilter('testfilter', ['Drupal\twig_extension_test\TwigExtension\TestExtension', 'testFilter']),
+      'testfilter' => new \Twig_Filter_Function(['Drupal\twig_extension_test\TwigExtension\TestExtension', 'testFilter']),
     ];
   }
 

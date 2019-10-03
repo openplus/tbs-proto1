@@ -10,6 +10,7 @@ use Drupal\node\Entity\NodeType;
  * Tests that conditions, provided by the node module, are working properly.
  *
  * @group node
+ * @group legacy
  */
 class NodeConditionTest extends EntityKernelTestBase {
 

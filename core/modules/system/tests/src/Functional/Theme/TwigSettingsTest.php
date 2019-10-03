@@ -96,12 +96,7 @@ class TwigSettingsTest extends BrowserTestBase {
     // theme_test.template_test.html.twig.
     $info = $templates->get('theme_test_template_test');
     $template_filename = $info['path'] . '/' . $info['template'] . $extension;
-
-    /** @var \Drupal\Core\Template\TwigEnvironment $twig */
-    $environment = $this->container->get('twig');
-    $cache = $environment->getCache();
-    $class = $environment->getTemplateClass($template_filename);
-    $cache_filename = $cache->generateKey($template_filename, $class);
+    $cache_filename = $this->container->get('twig')->getCacheFilename($template_filename);
 
     // Navigate to the page and make sure the template gets cached.
     $this->drupalGet('theme-test/template-test');

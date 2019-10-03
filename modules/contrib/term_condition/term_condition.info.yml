@@ -6,8 +6,8 @@ package: Other
 dependencies:
   - taxonomy
 
-# Information added by Drupal.org packaging script on 2016-03-25
-version: '8.x-1.1'
+# Information added by Drupal.org packaging script on 2019-06-14
+version: '8.x-1.2'
 core: '8.x'
 project: 'term_condition'
-datestamp: 1458914346
+datestamp: 1560550085

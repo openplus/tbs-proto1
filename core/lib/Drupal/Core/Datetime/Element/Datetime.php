@@ -96,7 +96,7 @@ class Datetime extends DateElementBase {
       ];
     }
     else {
-      $date = isset($element['#default_value']) ? $element['#default_value'] : NULL;
+      $date = $element['#default_value'];
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $input = [
           'date'   => $date->format($element['#date_date_format']),
@@ -274,7 +274,7 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_date_callbacks'])) {
         foreach ($element['#date_date_callbacks'] as $callback) {
-          if (is_callable($callback)) {
+          if (function_exists($callback)) {
             $callback($element, $form_state, $date);
           }
         }

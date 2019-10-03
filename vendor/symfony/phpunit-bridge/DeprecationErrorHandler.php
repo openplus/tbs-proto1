@@ -11,6 +11,9 @@
 
 namespace Symfony\Bridge\PhpUnit;
 
+use PHPUnit\Framework\TestResult;
+use PHPUnit\Util\ErrorHandler;
+
 /**
  * Catch deprecation notices and print a summary report at the end of the test suite.
  *
@@ -23,6 +26,7 @@ class DeprecationErrorHandler
     const MODE_DISABLED = 'disabled';
 
     private static $isRegistered = false;
+    private static $isAtLeastPhpUnit83;
 
     /**
      * Registers and configures the deprecation handler.
@@ -33,7 +37,7 @@ class DeprecationErrorHandler
      * - use "/some-regexp/" to stop the test suite whenever a deprecation
      *   message matches the given regular expression;
      * - use a number to define the upper bound of allowed deprecations,
-     *   making the test suite fail whenever more notices are trigerred.
+     *   making the test suite fail whenever more notices are triggered.
      *
      * @param int|string|false $mode The reporting mode, defaults to not allowing any deprecations
      */
@@ -54,7 +58,11 @@ class DeprecationErrorHandler
             if (false === $mode) {
                 $mode = getenv('SYMFONY_DEPRECATIONS_HELPER');
             }
-            if (DeprecationErrorHandler::MODE_WEAK !== $mode && DeprecationErrorHandler::MODE_WEAK_VENDORS !== $mode && (!isset($mode[0]) || '/' !== $mode[0])) {
+            if (DeprecationErrorHandler::MODE_DISABLED !== $mode
+                && DeprecationErrorHandler::MODE_WEAK !== $mode
+                && DeprecationErrorHandler::MODE_WEAK_VENDORS !== $mode
+                && (!isset($mode[0]) || '/' !== $mode[0])
+            ) {
                 $mode = preg_match('/^[1-9][0-9]*$/', $mode) ? (int) $mode : 0;
             }
 
@@ -101,14 +109,11 @@ class DeprecationErrorHandler
             'remaining vendor' => array(),
         );
         $deprecationHandler = function ($type, $msg, $file, $line, $context = array()) use (&$deprecations, $getMode, $UtilPrefix, $inVendors) {
-            $mode = $getMode();
-            if ((E_USER_DEPRECATED !== $type && E_DEPRECATED !== $type) || DeprecationErrorHandler::MODE_DISABLED === $mode) {
-                $ErrorHandler = $UtilPrefix.'ErrorHandler';
-
-                return $ErrorHandler::handleError($type, $msg, $file, $line, $context);
+            if ((E_USER_DEPRECATED !== $type && E_DEPRECATED !== $type) || DeprecationErrorHandler::MODE_DISABLED === $mode = $getMode()) {
+                return \call_user_func(DeprecationErrorHandler::getPhpUnitErrorHandler(), $type, $msg, $file, $line, $context);
             }
 
-            $trace = debug_backtrace(true);
+            $trace = debug_backtrace();
             $group = 'other';
             $isVendor = DeprecationErrorHandler::MODE_WEAK_VENDORS === $mode && $inVendors($file);
 
@@ -175,12 +180,14 @@ class DeprecationErrorHandler
                 ++$ref;
             }
             ++$deprecations[$group.'Count'];
+
+            return null;
         };
         $oldErrorHandler = set_error_handler($deprecationHandler);
 
         if (null !== $oldErrorHandler) {
             restore_error_handler();
-            if (array($UtilPrefix.'ErrorHandler', 'handleError') === $oldErrorHandler) {
+            if ($oldErrorHandler instanceof ErrorHandler || array($UtilPrefix.'ErrorHandler', 'handleError') === $oldErrorHandler) {
                 restore_error_handler();
                 self::register($mode);
             }
@@ -282,19 +289,43 @@ class DeprecationErrorHandler
                 if ($previousErrorHandler) {
                     return $previousErrorHandler($type, $msg, $file, $line, $context);
                 }
-                static $autoload = true;
 
-                $ErrorHandler = class_exists('PHPUnit_Util_ErrorHandler', $autoload) ? 'PHPUnit_Util_ErrorHandler' : 'PHPUnit\Util\ErrorHandler';
-                $autoload = false;
-
-                return $ErrorHandler::handleError($type, $msg, $file, $line, $context);
+                return \call_user_func(DeprecationErrorHandler::getPhpUnitErrorHandler(), $type, $msg, $file, $line, $context);
             }
             $deprecations[] = array(error_reporting(), $msg, $file);
+
+            return null;
         });
 
         register_shutdown_function(function () use ($outputFile, &$deprecations) {
             file_put_contents($outputFile, serialize($deprecations));
         });
+    }
+
+    /**
+     * @internal
+     */
+    public static function getPhpUnitErrorHandler()
+    {
+        if (!isset(self::$isAtLeastPhpUnit83)) {
+            self::$isAtLeastPhpUnit83 = class_exists(ErrorHandler::class) && method_exists(ErrorHandler::class, '__invoke');
+        }
+        if (!self::$isAtLeastPhpUnit83) {
+            return (class_exists('PHPUnit_Util_ErrorHandler', false) ? 'PHPUnit_Util_' : 'PHPUnit\Util\\').'ErrorHandler::handleError';
+        }
+
+        foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS) as $frame) {
+            if (isset($frame['object']) && $frame['object'] instanceof TestResult) {
+                return new ErrorHandler(
+                    $frame['object']->getConvertDeprecationsToExceptions(),
+                    $frame['object']->getConvertErrorsToExceptions(),
+                    $frame['object']->getConvertNoticesToExceptions(),
+                    $frame['object']->getConvertWarningsToExceptions()
+                );
+            }
+        }
+
+        return function () { return false; };
     }
 
     /**

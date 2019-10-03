@@ -122,7 +122,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'title':
-          $replacements[$original] = $node->getTitle();
+	  $replacements[$original] = $node->getTitle();
           break;
 
         case 'body':

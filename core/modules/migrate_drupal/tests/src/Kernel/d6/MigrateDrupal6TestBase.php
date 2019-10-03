@@ -93,7 +93,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    *   Extra things to include as part of the migrations. Values may be
    *   'revisions' or 'translations'.
    */
-  protected function migrateContent(array $include = []) {
+  protected function migrateContent($include = []) {
     if (in_array('translations', $include)) {
       $this->executeMigrations(['language']);
     }
@@ -104,7 +104,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
     $this->executeMigrations(['d6_node_settings', 'd6_node']);
 
     if (in_array('translations', $include)) {
-      $this->executeMigrations(['d6_node_translation']);
+      $this->executeMigrations(['translations']);
     }
     if (in_array('revisions', $include)) {
       $this->executeMigrations(['d6_node_revision']);

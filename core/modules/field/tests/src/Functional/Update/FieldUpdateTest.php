@@ -49,6 +49,13 @@ class FieldUpdateTest extends UpdatePathTestBase {
   protected $state;
 
   /**
+   * The deleted fields repository.
+   *
+   * @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface
+   */
+  protected $deletedFieldsRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -58,6 +65,7 @@ class FieldUpdateTest extends UpdatePathTestBase {
     $this->database = $this->container->get('database');
     $this->installedStorageSchema = $this->container->get('keyvalue')->get('entity.storage_schema.sql');
     $this->state = $this->container->get('state');
+    $this->deletedFieldsRepository = $this->container->get('entity_field.deleted_fields_repository');
   }
 
   /**
@@ -185,18 +193,16 @@ class FieldUpdateTest extends UpdatePathTestBase {
     // Run updates.
     $this->runUpdates();
 
-    $deleted_fields_repository = \Drupal::service('entity_field.deleted_fields_repository');
-
     // Now that we can use the API, check that the "delete fields" state entries
     // have been converted to proper field definition objects.
-    $deleted_fields = $deleted_fields_repository->getFieldDefinitions();
+    $deleted_fields = $this->deletedFieldsRepository->getFieldDefinitions();
 
     $this->assertCount(1, $deleted_fields);
     $this->assertArrayHasKey($field_uuid, $deleted_fields);
     $this->assertTrue($deleted_fields[$field_uuid] instanceof FieldDefinitionInterface);
     $this->assertEquals($field_name, $deleted_fields[$field_uuid]->getName());
 
-    $deleted_field_storages = $deleted_fields_repository->getFieldStorageDefinitions();
+    $deleted_field_storages = $this->deletedFieldsRepository->getFieldStorageDefinitions();
     $this->assertCount(1, $deleted_field_storages);
     $this->assertArrayHasKey($field_storage_uuid, $deleted_field_storages);
     $this->assertTrue($deleted_field_storages[$field_storage_uuid] instanceof FieldStorageDefinitionInterface);
@@ -217,10 +223,10 @@ class FieldUpdateTest extends UpdatePathTestBase {
     // Run cron and repeat the checks above.
     $this->cronRun();
 
-    $deleted_fields = $deleted_fields_repository->getFieldDefinitions();
+    $deleted_fields = $this->deletedFieldsRepository->getFieldDefinitions();
     $this->assertCount(0, $deleted_fields);
 
-    $deleted_field_storages = $deleted_fields_repository->getFieldStorageDefinitions();
+    $deleted_field_storages = $this->deletedFieldsRepository->getFieldStorageDefinitions();
     $this->assertCount(0, $deleted_field_storages);
 
     // Check that the installed storage schema has been deleted.

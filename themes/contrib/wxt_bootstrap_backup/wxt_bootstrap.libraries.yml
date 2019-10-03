@@ -1,0 +1,41 @@
+framework:
+  css:
+    theme:
+      css/style.css: {}
+  js:
+    # js/bootstrap/affix.js: {}
+    js/bootstrap/alert.js: {}
+    # js/bootstrap/button.js: {}
+    # js/bootstrap/carousel.js: {}
+    js/bootstrap/collapse.js: {}
+    js/bootstrap/dropdown.js: {}
+    js/bootstrap/modal.js: {}
+    js/bootstrap/tooltip.js: {}
+    js/bootstrap/popover.js: {}
+    # js/bootstrap/scrollspy.js: {}
+    # js/bootstrap/tab.js: {}
+    # js/bootstrap/transition.js: {}
+  # dependencies:
+  #   - core/jquery
+
+drupal.wxt_bootstrap:
+  js:
+    js/drupal.wxt_bootstrap.js: {}
+  dependencies:
+    # - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - wxt_bootstrap/framework
+    - core/jquery.once
+
+jquery:
+  header: true
+  remote: https://github.com/jquery/jquery
+  version: "2.2.4"
+  license:
+    name: MIT
+    url: https://github.com/jquery/jquery/blob/2.2.4/LICENSE.txt
+    gpl-compatible: true
+  js:
+    js/jquery-2.2.4.min.js: { minified: true, weight: -20 }
+    https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js: { minified: true, type: external }
