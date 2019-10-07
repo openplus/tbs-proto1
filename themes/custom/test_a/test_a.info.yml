@@ -38,14 +38,14 @@ libraries-override:
   #wxt_library/theme-gcweb: false
 
   # Override a certain file
-  # wxt_library/theme-gcweb:
-  #   css:
-  #     theme:
-  #       /libraries/theme-gcweb/css/theme.min.css: css/theme.css
-  #       /libraries/theme-gcweb/css/ie8-theme.min.css: css/test.css
+  wxt_library/theme-gcweb:
+    css:
+      theme:
+        /libraries/theme-gcweb/css/theme.min.css: css/theme.css
+        /libraries/theme-gcweb/css/ie8-theme.min.css: css/test.css
 
   # Disablle the whole theme
-  wxt_library/theme-gcweb: false
+  # wxt_library/theme-gcweb: false
 
   # Disables a library
   # contextual/drupal.contextual-links: false
@@ -57,7 +57,7 @@ libraries-override:
   # core/drupal.collapse: mytheme/collapse
 
   #Replace an asset with another. -> check test_a.libraries.yml
-  # core/jquery: test_a/diff-jquery
+  core/jquery: test_a/diff-jquery
 
 
 # Information added by Drupal.org packaging script on 2019-03-30
