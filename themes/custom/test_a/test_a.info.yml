@@ -57,7 +57,7 @@ libraries-override:
   # core/drupal.collapse: mytheme/collapse
 
   #Replace an asset with another. -> check test_a.libraries.yml
-  core/jquery: test_a/diff-jquery
+  # core/jquery: test_a/diff-jquery
 
 
 # Information added by Drupal.org packaging script on 2019-03-30
