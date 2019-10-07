@@ -45,7 +45,7 @@ libraries-override:
   #       /libraries/theme-gcweb/css/ie8-theme.min.css: css/test.css
 
   # Disablle the whole theme
-  # wxt_library/theme-gcweb: true
+  wxt_library/theme-gcweb: false
 
   # Disables a library
   # contextual/drupal.contextual-links: false
