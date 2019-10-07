@@ -1,0 +1,65 @@
+name: Test A
+description: Sub-theme Test A
+type: theme
+# core: 8.x
+package: 'Custom'
+base theme: wxt_bootstrap
+
+regions:
+  branding: 'Branding'
+  breadcrumb: 'Breadcrumbs'
+  language_toggle: 'Language Toggle'
+  banner: 'Banner'
+  search: 'Search'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  header: 'Header'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  content_footer: 'Content Footer'
+  content_suffix: 'Content Suffix'
+  sidebar_first: 'Sidebar First'
+  sidebar_second: 'Sidebar Second'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+# libraries:
+    # Define your own libraries here, example react, or cdn library
+#   - test_a/theme-gcweb
+
+# libraries-extend:
+#   bootstrap/framework:
+#     - 'wxt_bootstrap/drupal.wxt_bootstrap'
+
+libraries-override:
+  # Disablle the whole theme
+  #wxt_library/theme-gcweb: false
+
+  # Override a certain file
+  # wxt_library/theme-gcweb:
+  #   css:
+  #     theme:
+  #       /libraries/theme-gcweb/css/theme.min.css: css/theme.css
+  #       /libraries/theme-gcweb/css/ie8-theme.min.css: css/test.css
+
+  # Disablle the whole theme
+  # wxt_library/theme-gcweb: true
+
+  # Disables a library
+  # contextual/drupal.contextual-links: false
+
+  # Replace only a certain file for a library
+  # contextual/drupal.contextual-links: test_a/contextual-css-override
+
+  # Replace an entire library. The new library is defined in test_a.libraries.yml
+  # core/drupal.collapse: mytheme/collapse
+
+  #Replace an asset with another. -> check test_a.libraries.yml
+  # core/jquery: test_a/diff-jquery
+
+
+# Information added by Drupal.org packaging script on 2019-03-30
+version: '8.x-1.9'
+core: '8.x'
