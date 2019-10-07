@@ -28,9 +28,11 @@
 @import "component/nodes/landing-page";
 // jQuery UI style overrides.
 @import "jquery-ui/autocomplete";
+
 ol,
 ul {
     padding-left: 1.5em;
+
     .popover &:last-child {
         margin-bottom: 0;
     }
@@ -63,6 +65,7 @@ p:last-child,
         float: left;
         margin: -0.05em 0.5em 0 0;
     }
+
     .block {
         overflow: hidden;
     }
@@ -74,7 +77,67 @@ p:last-child,
     font-size: 12px;
     margin: 5px 0 10px;
     padding: 0;
+
     &:first-child {
         margin-top: 0;
+    }
+}
+
+
+.logo img {
+    max-height: 43px;
+    width: 100%;
+    margin-bottom: .375em;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.wxt-search-block-form {
+    float: right;
+    text-align: right;
+}
+
+.region-branding {
+
+    float: left;
+
+    nav[data-block-plugin-id="system_menu_block:brand"] {
+        padding-bottom: 2em;
+        padding-top: 2em;
+
+        // display: none;
+        ul {
+            padding-left: 1.1em;
+
+            li {
+                display: inline-block;
+                float: left;
+                margin-right: .7em;
+
+                &:first-child {
+                    &:before {
+                        content: none;
+                        // margin-right: .7em;
+                    }
+                }
+
+                &:before {
+                    content: "\2022";
+                    margin-right: .7em;
+                }
+            }
+
+        }
+    }
+}
+
+.brand .col-xs-6.col-md-2.text-right {
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 1215px) {
+    .bs-region--main {
+        max-width: 970px;
+        margin: 0 auto;
     }
 }

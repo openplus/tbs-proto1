@@ -8,7 +8,7 @@ var gulp = require('gulp'),
 // Static Server + watching scss/html files
 gulp.task('serve', ['sass'], function() {
     browserSync.init({
-        proxy: "https://tbsprototype.dd:8443/"
+        proxy: "http://v2tbsproto.dd:8083/"
     });
     gulp.watch("sass/**/*.scss", ['sass']);
 });
