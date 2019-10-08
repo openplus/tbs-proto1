@@ -41,8 +41,8 @@ libraries-override:
    wxt_library/theme-gcweb:
      css:
        theme:
-         /libraries/theme-gcweb/css/theme.min.css: css/theme.css
-         /libraries/theme-gcweb/css/ie8-theme.min.css: css/test.css
+         /libraries/theme-gcweb/css/theme.min.css: css/test-full-wxt-override.css
+         /libraries/theme-gcweb/css/ie8-theme.min.css: css/test-full-wxt-override.css
 
   # Disablle the whole theme
   # wxt_library/theme-gcweb: false
