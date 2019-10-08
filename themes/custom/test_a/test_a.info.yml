@@ -28,6 +28,7 @@ regions:
 libraries:
     # Define your own libraries here, example react, or cdn library
   - test_a/diff-jquery
+  - test_a/contextual-css-override
 
 # libraries-extend:
 #   bootstrap/framework:
