@@ -9,7 +9,6 @@ diff-jquery:
 contextual-css-override:
   css:
     theme:
-      css/testfullwxt.css: {}
       css/testappend.css: {}
 
 # #   # Replace an entire library.
