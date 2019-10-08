@@ -10,7 +10,7 @@ contextual-css-override:
   css:
     theme:
       css/test.css: {}
-
+      css/test-append-only.css: {}
 
 # #   # Replace an entire library.
 # #   # core/drupal.collapse: mytheme/collapse
