@@ -9,8 +9,8 @@ diff-jquery:
 contextual-css-override:
   css:
     theme:
-      css/test-full-wxt-override.css: {}
       css/test-append-only.css: {}
+#      css/test-full-wxt-override.css: {}
 
 # #   # Replace an entire library.
 # #   # core/drupal.collapse: mytheme/collapse
