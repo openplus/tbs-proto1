@@ -1,0 +1,5 @@
+convert_bundles.admin:
+  route_name: convert_bundles.admin
+  title: Convert Bundles
+  description: 'Convert Entity Bundles'
+  parent: system.admin_config_content

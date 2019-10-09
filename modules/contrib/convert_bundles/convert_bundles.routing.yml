@@ -1,0 +1,16 @@
+convert_bundles.form:
+  path: /admin/convert_bundles
+  defaults:
+    _title: Convert Bundles
+    _form: \Drupal\convert_bundles\Form\ConvertBundlesForm
+  options:
+   _admin_route: TRUE
+  requirements:
+    _permission: 'administer convert_bundles'
+convert_bundles.admin:
+  path: /admin/config/content/convert_bundles
+  defaults:
+    _title: Convert Bundles
+    _form: \Drupal\convert_bundles\Form\ConvertBundlesForm
+  requirements:
+    _permission: 'administer convert_bundles'

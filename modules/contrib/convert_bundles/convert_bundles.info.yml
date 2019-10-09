@@ -1,0 +1,13 @@
+name: Convert Bundles
+type: module
+description: Convert entity bundles from one value to another
+# core: 8.x
+configure: convert_bundles.admin
+dependencies:
+  - drupal:action
+
+# Information added by Drupal.org packaging script on 2019-06-07
+version: '8.x-1.0-alpha4'
+core: '8.x'
+project: 'convert_bundles'
+datestamp: 1559920093

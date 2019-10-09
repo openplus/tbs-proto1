@@ -172,7 +172,7 @@ function library_manager_page_attachments(array &$attachments) {
   $definitions = $storage->loadByProperties(['load' => TRUE]);
   $context_repository = \Drupal::service('context.repository');
   $context_handler = \Drupal::service('context.handler');
-  
+
   foreach ($definitions as $definition) {
     foreach ($definition->getVisibilityConditions() as $condition) {
       $missing_context = FALSE;
@@ -186,7 +186,7 @@ function library_manager_page_attachments(array &$attachments) {
         }
       }
 
-      if ($missing_context || !$condition->execute()) {
+      if (!$missing_context || !$condition->execute()) {
         break 2;
       }
     }
