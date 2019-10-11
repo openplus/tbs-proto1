@@ -17,8 +17,7 @@
 
     alert('A custom JS file - loads this alert!');
     console.log('test');
-    console.log('NEW TEST');
-    console.log('NEW TEST WILD');
+    console.log('Please work!');
   
     /**
      * Returns the version of WxT being used.
