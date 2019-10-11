@@ -16,6 +16,7 @@
     };
 
     alert('A custom JS file - loads this alert!');
+    console.log('test');
     /**
      * Returns the version of WxT being used.
      *
