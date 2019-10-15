@@ -102,8 +102,23 @@
 
 }
 
+.bs-region--main {
+    // max-width: 970px;
+    // margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+
+    .promo {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+}
+
 main.col-md-12 {
     width: 100%;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .region-header.container {
