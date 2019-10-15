@@ -1,4 +1,6 @@
-.page-node-type-landing-page {
+.page-node-type-landing-page,
+.path-user,
+.theme-gcweb {
     .dialog-off-canvas-main-canvas {
         &>.container {
             width: 100%;
@@ -74,33 +76,36 @@
 }
 
 // @media (min-width: 768px) and (max-width: 1215px) {
-//     .bs-region--main {
-//         // max-width: 970px;
-//         // margin: 0 auto;
+.bs-region--main {
+    // max-width: 970px;
+    // margin: 0 auto;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+// }
+
+// main {
+//     @media (min-width: 768px) and (max-width: 1215px) {
+//         width: 100%;
+//         max-width: 750px;
 //     }
 // }
 
-// // main {
-// //     @media (min-width: 768px) and (max-width: 1215px) {
-// //         width: 100%;
-// //         max-width: 750px;
-// //     }
-// // }
 
+// .path-frontpage {
 
-.path-frontpage {
+//     main {
+//         width: 100%;
+//     }
 
-    main {
-        width: 100%;
-    }
+//     .region-content-footer {
+//         width: 100%;
+//         padding-left: 0;
+//         padding-right: 0;
+//     }
 
-    .region-content-footer {
-        width: 100%;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-}
+// }
 
 .bs-region--main {
     // max-width: 970px;
@@ -108,21 +113,34 @@
     padding-left: 0;
     padding-right: 0;
 
-    .promo {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+    // .promo {
+    //     padding-left: 15px;
+    //     padding-right: 15px;
+    // }
 }
 
-.row.bs-1col, .row{
+.row.bs-1col {
     margin-left: 0;
     margin-right: 0;
+
+    // width: 100%;
+    // max-width: inherit;
+    // padding-left: 0;
+    // padding-right: 0;
+}
+
+.region-content {
+    // max-width: 1170px;
+    margin: 0 auto;
 }
 
 main.col-md-12 {
     width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+
+    @media (min-width: 768px) {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 .region-header.container {
@@ -134,3 +152,8 @@ main.col-md-12 {
     padding-left: 0;
     padding-right: 0;
 }
+
+// .error.form-group {
+//     max-width: 1170px;
+//     margin: 0 auto;
+// }
