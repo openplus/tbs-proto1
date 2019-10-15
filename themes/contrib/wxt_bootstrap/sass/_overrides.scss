@@ -134,10 +134,3 @@ p:last-child,
 .brand .col-xs-6.col-md-2.text-right {
     float: right;
 }
-
-@media (min-width: 768px) and (max-width: 1215px) {
-    .bs-region--main {
-        max-width: 970px;
-        margin: 0 auto;
-    }
-}

@@ -5,12 +5,14 @@
             padding-left: 0;
             padding-right: 0;
         }
+
         .region-content-footer .row {
             width: 100%;
             padding-left: 0;
             padding-right: 0;
             max-width: 100%;
         }
+
         .node--type-landing_page {
             h1#wb-cont {
                 // max-width: 1176px;
@@ -18,20 +20,25 @@
                 // margin-top: 20px;
                 // margin-bottom: 20px;
             }
+
             .field--name-body {
                 // padding-top: 25px;
                 padding-bottom: 75px;
             }
         }
+
         &>footer#wb-info {
             background: transparent;
+
             &>.landscape {
                 // display: none;
                 // background: none;    
                 // background-image: inherit;
                 background: #26374a url(../../../../libraries/theme-gcweb/assets/landscape.png) no-repeat right bottom;
+
                 footer#wb-info {
                     background: transparent;
+
                     .landscape {
                         // display: none;
                         // background: none;    
@@ -64,4 +71,44 @@
             // margin: 0 auto;
         }
     }
+}
+
+// @media (min-width: 768px) and (max-width: 1215px) {
+//     .bs-region--main {
+//         // max-width: 970px;
+//         // margin: 0 auto;
+//     }
+// }
+
+// // main {
+// //     @media (min-width: 768px) and (max-width: 1215px) {
+// //         width: 100%;
+// //         max-width: 750px;
+// //     }
+// // }
+
+
+.path-frontpage {
+
+    main {
+        width: 100%;
+    }
+
+    .region-content-footer {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+}
+
+main.col-md-12 {
+    width: 100%;
+}
+
+
+.region-content-footer {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
 }
