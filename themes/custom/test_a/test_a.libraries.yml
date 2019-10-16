@@ -5,7 +5,6 @@ diff-jquery:
     gpl-compatible: true
   js:
     js/test.js: { preprocess: false, minified: false }
-    js/wet-theme-upd-fieldflow.js: { preprocess: false, minified: false }
 
 contextual-css-override:
   css:
