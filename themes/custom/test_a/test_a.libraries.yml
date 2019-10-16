@@ -13,10 +13,6 @@ contextual-css-override:
       css/testappend.css: {}
       css/experimental-components.css: {}
       
- wxt_library/theme-gcweb:
-    js:
-      /libraries/theme-gcweb/js/theme.min.js: js/wet-theme-upd-fieldflow.js
-
 # #   # Replace an entire library.
 # #   # core/drupal.collapse: mytheme/collapse
   
