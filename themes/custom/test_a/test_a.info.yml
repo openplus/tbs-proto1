@@ -45,7 +45,6 @@ libraries-override:
        theme:
          /libraries/theme-gcweb/css/theme.min.css: css/testfullwxt.css
          /libraries/theme-gcweb/css/ie8-theme.min.css: css/testfullwxt-ie8.css
-          wxt_library/theme-gcweb:
    
    wxt_library/theme-gcweb:
      js:
