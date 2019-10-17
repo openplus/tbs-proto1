@@ -39,7 +39,8 @@ libraries-override:
      js:
        /libraries/theme-gcweb/js/theme.min.js: js/wet-theme-upd-fieldflow.js
   
-  # Disablle the whole theme
+# libraries-override:
+ # Disable the whole theme
   #wxt_library/theme-gcweb: false
 
  
