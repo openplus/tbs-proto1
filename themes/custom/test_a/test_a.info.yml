@@ -35,11 +35,13 @@ libraries:
 #     - 'wxt_bootstrap/drupal.wxt_bootstrap'
 
 libraries-override:
-  # Disablle the whole theme
-  #wxt_library/theme-gcweb: false
    wxt_library/theme-gcweb:
      js:
        /libraries/theme-gcweb/js/theme.min.js: js/wet-theme-upd-fieldflow.js
+  
+  # Disablle the whole theme
+  #wxt_library/theme-gcweb: false
+
  
 
   # Override a certain file
