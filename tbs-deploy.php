@@ -9,8 +9,8 @@
     $commands = array(
         'echo $PWD',
         'whoami',
-        'git pull',
         'git status',
+        'git pull',
         'drush cr',
     );
     // Run the commands for output
