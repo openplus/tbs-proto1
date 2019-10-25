@@ -1,0 +1,51 @@
+# diff-jquery:
+#   remote: http://wet-boew.github.io
+#   license:
+#     name: MIT
+#     gpl-compatible: true
+#   js:
+#     js/test.js: { preprocess: false, minified: false }
+
+# contextual-css-override:
+#   css:
+#     theme:
+#       css/experimental-components.css: {}
+
+# #   # Replace an entire library.
+# #   # core/drupal.collapse: mytheme/collapse
+
+# #   # Replace an asset with another.
+# #   # subtheme/library:
+# #   #   css:
+# #   #     theme:
+# #   #       css/layout.css: css/my-layout.css
+
+# #   framework/jquery: false
+# #   jquery:
+# #     js:
+# #       js/drupal.wxt_bootstrap.js: js/test.js
+
+# #   drupal.wxt_bootstrap:
+# #     js:
+# #       js/drupal.wxt_bootstrap.js: false
+# #   # Remove an asset.
+# #   drupal/dialog:
+# #     css:
+# #       theme:
+# #         dialog.theme.css: false
+
+# #   # Remove an entire library.
+# #   wxt_library/theme-gcweb:
+# #     css:
+# #       theme:
+# #         libraries/theme-gcweb/css/theme.css: css/test.css
+
+# #   # The library name.
+# #   core/jquery.ui:
+# #     # CSS files are always labeled as such. This format is required.
+# #     css:
+# #       # The SMACSS category is required.
+# #       theme:
+# #         # The path to the file. It is not a path relative to your theme. // Use false to disable or enter file path
+# #         # Example: css/custom-file.css
+# #         core/assets/vendor/jquery.ui/themes/base/core.css: css/test.css

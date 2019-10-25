@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter for blocks.
+ */
+function custom_header_footer_theme_suggestions_block_alter(&$suggestions, $variables) {
+
+  // Load theme suggestions for blocks from parent theme.
+  foreach ($suggestions as &$suggestion) {
+    $suggestion = str_replace('custom_header_footer_', 'wxt_bootstrap_', $suggestion);
+  }
+}

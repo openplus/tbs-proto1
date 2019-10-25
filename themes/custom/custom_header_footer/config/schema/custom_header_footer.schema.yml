@@ -1,0 +1,4 @@
+# Schema for the theme setting configuration file of the THEMETITLE theme.
+custom_header_footer.settings:
+  type: theme_settings
+  label: 'Custom Header Footer settings'

@@ -1,0 +1,74 @@
+name: Custom Header Footer
+description: Sub-theme for custom header footer with templates
+type: theme
+# core: 8.x
+package: 'Custom'
+base theme: wxt_bootstrap
+
+regions:
+  branding: 'Branding'
+  breadcrumb: 'Breadcrumbs'
+  language_toggle: 'Language Toggle'
+  banner: 'Banner'
+  search: 'Search'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  header: 'Header'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  content_footer: 'Content Footer'
+  content_suffix: 'Content Suffix'
+  sidebar_first: 'Sidebar First'
+  sidebar_second: 'Sidebar Second'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+# libraries:
+    # Define your own libraries here, example react, or cdn library
+  # - custom_header_footer/diff-jquery
+  # - custom_header_footer/contextual-css-override
+
+# libraries-extend:
+#   bootstrap/framework:
+#     - 'wxt_bootstrap/drupal.wxt_bootstrap'
+
+# libraries-override:
+#    wxt_library/theme-gcweb:
+#      js:
+#        /libraries/theme-gcweb/js/theme.min.js: js/wet-theme-upd-fieldflow.js
+  
+# libraries-override:
+ # Disable the whole theme
+  #wxt_library/theme-gcweb: false
+
+ 
+
+  # Override a certain file
+  #  wxt_library/theme-gcweb:
+  #    css:
+  #      theme:
+  #        /libraries/theme-gcweb/css/theme.min.css: css/testfullwxt.css
+  #        /libraries/theme-gcweb/css/ie8-theme.min.css: css/testfullwxt-ie8.css
+  
+
+  # Disablle the whole theme
+  # wxt_library/theme-gcweb: false
+
+  # Disables a library
+  # contextual/drupal.contextual-links: false
+
+  # Replace only a certain file for a library
+  # contextual/drupal.contextual-links: custom_header_footer/contextual-css-override
+
+  # Replace an entire library. The new library is defined in custom_header_footer.libraries.yml
+  # core/drupal.collapse: mytheme/collapse
+
+  #Replace an asset with another. -> check custom_header_footer.libraries.yml
+  # core/jquery: custom_header_footer/diff-jquery
+
+
+# Information added by Drupal.org packaging script on 2019-03-30
+version: '8.x-1.9'
+core: '8.x'
