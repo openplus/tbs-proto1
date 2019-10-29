@@ -24,6 +24,7 @@
 @import "component/blocks/date-modified";
 @import "component/blocks/report-problem";
 @import "component/blocks/share-this-block";
+@import "component/blocks/search";
 @import "component/font/type";
 @import "component/nodes/landing-page";
 // jQuery UI style overrides.
@@ -134,3 +135,4 @@ p:last-child,
 .brand .col-xs-6.col-md-2.text-right {
     float: right;
 }
+
