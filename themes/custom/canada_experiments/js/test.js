@@ -16,7 +16,7 @@
     };
 
     // alert('A custom JS file - loads this alert!');
-    console.log('Custom Header Footer Theme Active');
+    console.log('Canada Experiments theme active.');
     // console.log('!!!>>???');
   
     /**
