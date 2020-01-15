@@ -7,7 +7,7 @@ a:not([href]) {
 }
 
 h1 {
-  margin-top: 500em !important /* tighten h1 spacing on desktop */
+  margin-top: 10em !important; /* tighten h1 spacing on desktop */
   color: pink !important;
 }
 /*Resize h2 */
