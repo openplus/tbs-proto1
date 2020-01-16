@@ -11,7 +11,7 @@
         'whoami',
         'git status',
         'git pull',
-        'drush cr',
+        'drush cc theme-registry',
     );
     // Run the commands for output
     $output = '';
