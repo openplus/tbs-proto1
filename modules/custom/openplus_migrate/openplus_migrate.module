@@ -1,0 +1,61 @@
+<?php
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_migrate_moderation_sidebar_alter
+ *
+ * @param array $build
+ *   The render array for the sidebar.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The default or latest revision of an entity being moderated.
+ *
+ * @see \Drupal\moderation_sidebar\Controller\ModerationSidebarController::sideBar()
+ */
+function openplus_migrate_moderation_sidebar_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'node') {
+    $build['migrate_info'] = views_embed_view('migation_information', 'block_1', $entity->id());
+    unset($build['actions']);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+/*
+function openplus_migrate_node_presave(Node $node) {
+  $user = \Drupal::currentUser();
+  
+  if ($user->id() != 1) {
+    return;
+  }
+ 
+  // get node from migration map
+  $migration_table = 'migrate_map_maas__nd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6';
+  $nid = $node->id();
+  $database = \Drupal::database();
+
+  $query = "select sourceid1 from {$migration_table} where destid1 = $nid";
+  $query = $database->query($query);
+  $result = $query->fetchAll();
+
+  if (isset($result[0])) {
+    $id = $result[0]->sourceid1;
+    $uri = "https://gccloud.ca:3000/nodejs/export/e6aa56b2-23f5-4d73-93c0-24de70faf1d6/page/id/$id";
+    $headers = [
+      'Accept' => 'application/json; charset=utf-8',
+      'Content-Type' => 'application/json',
+    ];
+
+    $request = \Drupal::httpClient()
+      ->get($uri, array(
+        'headers' => $headers,
+      ));
+
+    $response = json_decode($request->getBody());
+    if (isset($response->rows[0]->website)) {
+      $node->set('field_original_url', ['uri' => $response->rows[0]->website, 'title' => 'View original', 'options' => ['attributes' => ['target' => '_blank']]]);
+    }
+  }
+}
+*/

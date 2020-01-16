@@ -1,0 +1,37 @@
+uuid: 20073214-4d6a-4eff-9826-71a59d7b6412
+langcode: en
+status: true
+dependencies: {  }
+id: maas__mdi__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+label: 'jenn-test - Media migration - images'
+source:
+  plugin: media_image
+  key: default
+  target: default
+  migration_uuid: e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+process:
+  mid: fid
+  vid: fid
+  bundle:
+    plugin: default_value
+    default_value: image
+  name: filename
+  status:
+    plugin: default_value
+    default_value: 1
+  langcode: language
+  image/target_id: fid
+  image/title: title
+  image/alt:
+    plugin: image_alt_text
+  content_translation_source:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:media'
+migration_dependencies: null

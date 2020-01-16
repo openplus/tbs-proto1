@@ -1,0 +1,34 @@
+uuid: 01b79331-c84c-4678-bbc0-9921f9b0f707
+langcode: en
+status: true
+dependencies: {  }
+id: maas__mdd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+label: 'jenn-test - Media migration - documents'
+source:
+  plugin: media_document
+  key: default
+  target: default
+  migration_uuid: e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+process:
+  mid: fid
+  vid: fid
+  bundle:
+    plugin: default_value
+    default_value: document
+  name: filename
+  status:
+    plugin: default_value
+    default_value: 1
+  langcode: language
+  field_document/target_id: fid
+  content_translation_source:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:media'
+migration_dependencies: null

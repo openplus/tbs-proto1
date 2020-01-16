@@ -1,0 +1,76 @@
+uuid: 251b7860-485f-4409-95a1-649c2cf8be06
+langcode: en
+status: true
+dependencies: {  }
+id: maas__nd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+label: jenn-test
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  item_selector: rows/
+  ids:
+    id:
+      type: string
+  headers:
+    Accept: 'application/json; charset=utf-8'
+    Content-Type: application/json
+  urls:
+    - 'https://gccloud.ca:3000/nodejs/export/e6aa56b2-23f5-4d73-93c0-24de70faf1d6/page/en'
+  fields:
+    -
+      name: id
+      label: ID
+      selector: id
+    -
+      name: title
+      label: Title
+      selector: title
+    -
+      name: body
+      label: Body
+      selector: body
+    -
+      name: language
+      label: Language
+      selector: language
+    -
+      name: website
+      label: Website
+      selector: website
+process:
+  id:
+    -
+      plugin: op_migration_lookup
+      migration: maas__nd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+      source: id
+    -
+      plugin: skip_on_lock
+      method: row
+  type:
+    plugin: default_value
+    default_value: page
+  moderation_state:
+    plugin: default_value
+    default_value: published
+  uid:
+    plugin: default_value
+    default_value: 1
+  title: title
+  body/value: body
+  body/format:
+    plugin: default_value
+    default_value: rich_text
+  langcode:
+    plugin: default_value
+    default_value: en
+  field_source_url: website
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null
+

@@ -1,0 +1,7 @@
+openplus_migrate.settings:
+  path: '/admin/config/system/openplus_migrate'
+  defaults:
+    _title: 'OpenPlus Migrate settings'
+    _form: '\Drupal\openplus_migrate\Form\OpenplusMigrateSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
