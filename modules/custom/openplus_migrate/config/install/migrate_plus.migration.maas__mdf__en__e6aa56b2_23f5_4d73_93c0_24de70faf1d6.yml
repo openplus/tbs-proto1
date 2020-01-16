@@ -1,0 +1,72 @@
+uuid: a4624996-2cb4-4277-b8ef-5d6288e31897
+langcode: en
+status: true
+dependencies: {  }
+id: maas__mdf__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+label: 'jenn-test - Media'
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  item_selector: rows/
+  ids:
+    file_id:
+      type: string
+  headers:
+    Accept: 'application/json; charset=utf-8'
+    Content-Type: application/json
+    Authorization: 'Bearer 8c336cb91315d25ac6a2ff43d2975d1a'
+  urls:
+    - 'https://gccloud.ca:3000/nodejs/export/e6aa56b2-23f5-4d73-93c0-24de70faf1d6/media'
+  fields:
+    -
+      name: file_id
+      label: 'Harvestedn file ID'
+      selector: id
+    -
+      name: file_name
+      label: 'File name'
+      selector: filename_uuid
+    -
+      name: file_path
+      label: 'File path'
+      selector: filename
+    -
+      name: file_url
+      label: URI
+      selector: url
+  constants:
+    is_public: 'true'
+    file_destination: 'public://migrated'
+process:
+  uid:
+    plugin: default_value
+    default_value: 1
+  filename: file_name
+  destination_full_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/file_destination
+        - file_name
+    -
+      plugin: urlencode
+  uri:
+    plugin: file_copy
+    source:
+      - file_path
+      - '@destination_full_path'
+    file_exists: rename
+  langcode:
+    plugin: default_value
+    default_value: en
+destination:
+  plugin: 'entity:file'
+migration_dependencies: null
+

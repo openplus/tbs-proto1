@@ -1,0 +1,88 @@
+uuid: 5afb5ec4-68ee-4f38-94f6-1eda6617822e
+langcode: en
+status: true
+dependencies: {  }
+id: maas__ndp__fr__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+label: 'jenn-test - Post node translations'
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  item_selector: rows/
+  ids:
+    id:
+      type: string
+  headers:
+    Accept: 'application/json; charset=utf-8'
+    Content-Type: application/json
+    Authorization: 'Bearer 8c336cb91315d25ac6a2ff43d2975d1a'
+  urls:
+    - 'https://gccloud.ca:3000/nodejs/export/e6aa56b2-23f5-4d73-93c0-24de70faf1d6/page/fr'
+  fields:
+    -
+      name: id
+      label: ID
+      selector: id
+    -
+      name: title
+      label: Title
+      selector: title
+    -
+      name: body
+      label: Body
+      selector: body
+    -
+      name: language
+      label: Language
+      selector: language
+process:
+  id:
+    -
+      plugin: op_migration_lookup
+      migration: maas__nd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+      source: id
+    -
+      plugin: skip_on_lock
+      method: row
+  nid:
+    -
+      plugin: explode
+      source: id
+      delimiter: _
+    -
+      plugin: array_shift
+    -
+      plugin: migration_lookup
+      migration: maas__nd__en__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+  body/value:
+    -
+      plugin: replace_tables
+      migration_uuid: e6aa56b2-23f5-4d73-93c0-24de70faf1d6
+      source: body
+    -
+      plugin: replace_links
+      migration_uuid: e6aa56b2-23f5-4d73-93c0-24de70faf1d6
+    -
+      plugin: replace_media_images
+      migration_uuid: e6aa56b2-23f5-4d73-93c0-24de70faf1d6
+    -
+      plugin: replace_media_files
+      migration_uuid: e6aa56b2-23f5-4d73-93c0-24de70faf1d6
+  body/format:
+    plugin: default_value
+    default_value: rich_text
+  langcode:
+    plugin: default_value
+    default_value: fr
+destination:
+  plugin: 'entity:node'
+  translations: 'true'
+migration_dependencies:
+    required:
+    - maas__nd__fr__e6aa56b2_23f5_4d73_93c0_24de70faf1d6
+
