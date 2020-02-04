@@ -1,0 +1,15 @@
+uuid: ba4eac9b-e827-4cf5-9dc2-94ebaac8226a
+langcode: en
+status: true
+dependencies: {  }
+name: three_quarter
+label: 'Three quarter'
+effects:
+  80158ca0-614a-4b9f-b339-4640bf5f0425:
+    uuid: 80158ca0-614a-4b9f-b339-4640bf5f0425
+    id: image_scale
+    weight: 1
+    data:
+      width: 900
+      height: null
+      upscale: false

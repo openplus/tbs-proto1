@@ -12,10 +12,13 @@ use Drupal\node\Entity\Node;
 use Drupal\openplus_migrate\Util\ConfigUtil;
 
 /**
- * Process the node body and replace link UUID's with linkit formatted links.
+ * Process the node body and replace link UUID's if possible and put back originalk link if not 
+ *  (a) uses all nodes as source 
+ *  (b) replace link tokens - just to be sure
+ *  (c) reverts unreplaceable link tokens back to their original.
  *
  * @MigrateProcessPlugin(
- *   id = "replace_links",
+ *   id = "replace_links_all",
  *   handle_multiples = TRUE
  * )
 * @codingStandardsIgnoreStart
@@ -23,23 +26,19 @@ use Drupal\openplus_migrate\Util\ConfigUtil;
  * To do a link replacement use the following:
  * @code
  * body/value:
- *   plugin: replace_links
+ *   plugin: replace_links_all
  *   source: text
- *   migration_uuid: 41ba1708-839f-4fa8-9d8f-8ba452b98534
  * @endcode
  *
  * @codingStandardsIgnoreEnd
  */
 
-class ReplaceLinks extends ProcessPluginBase {
+class ReplaceLinksAll extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    if (!isset($configuration['migration_uuid'])) {
-      throw new \InvalidArgumentException('The "migration uuid" must be provided.');
-    }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -47,8 +46,6 @@ class ReplaceLinks extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    // get the UUID from config to call the correct harvest DB/endpoint
-    $mig_uuid = $this->configuration['migration_uuid'];
 
     $matches = [];
     //preg_match_all('/<a href="(\[NODEJSHARVEST_LINK:.*?\])/', $value, $matches, PREG_SET_ORDER);
@@ -64,53 +61,43 @@ class ReplaceLinks extends ProcessPluginBase {
     if (!empty($matches)) {
       foreach ($matches as $match) {
         list($placeholder, $link_uuid) = explode(':', str_replace(array('[', ']'),'' , $match[1]));
-        // get source_url from nodejs EP using UUID
-        $uri = ConfigUtil::GetHarvesterBaseUrl() . $mig_uuid . '/links/id/' . $link_uuid;
-        \Drupal::logger('openplus')->notice('Checking for link: ' . $link_uuid);
-
-        $headers = [
-          'Accept' => 'application/json; charset=utf-8',
-          'Content-Type' => 'application/json',
-        ];
-
-        $request = \Drupal::httpClient()
-          ->get($uri, array(
-            'headers' => $headers,
-          ));
+        // get source_url from cache 
+        if ($item = \Drupal::cache()->get('openplus_migrate:harvested_links')) {
+          $link_info = isset($item->data[$link_uuid]) ? $item->data[$link_uuid] : NULL;
+        }
 
         $source_nid = $row->getSourceProperty('nid');
 
-        $response = json_decode($request->getBody());
         // only do replacement if we found a link
-        if (isset($response->rows[0]->link)) {
-          $source_url = $response->rows[0]->link;
-          $link_text = isset($response->rows[0]->metadata) ? $response->rows[0]->metadata : 'link text';
-          \Drupal::logger('openplus')->notice('Source url: ' . $source_url);
+        if (!empty($link_info)) {
+          $link_url = $link_info->link;
+          $link_text = $link_info->metadata;
+          //\Drupal::logger('openplus')->notice('Link url: ' . $link_url);
 
           // see if we have the node migrated
           $query = \Drupal::entityQuery('node');
-          $query->condition('field_source_url', $source_url, '=');
+          $query->condition('field_source_url', $link_url, '=');
           $results = $query->execute();
 
+          $find = $match[0];
           if (!empty($results)) {
             $node = Node::load(array_pop($results));
-            \Drupal::logger('openplus')->notice('Found a link from source node: ' . $source_nid . ' to ' . $node->id());
 
-            $find = $match[0];
             // The entire replacement string.
             $replacement = '<a data-entity-substitution="canonical"';
             $replacement .= ' data-entity-type="node"';
             $replacement .= ' data-entity-uuid="' . $node->uuid() . '"';
             $replacement .= ' href="/node/' . $node->id() . '">' . $link_text . '</a>';
-            // Do the actual string replacement.
-            $value = str_replace($find, $replacement, $value);
           }
           else {
-            // @TODO flag an error that no node was found for the link
+            // Put the original link back.
+            $replacement = '<a href="' . $link_url . '">' . $link_text . '</a>';
           }
+          // Do the actual string replacement.
+          $value = str_replace($find, $replacement, $value);
         }
         else {
-          // @TODO flag an error that the link was not found in the harvest
+          // Likely log an error here that we found a token that was not in harvester DB - which should not happen since harvester creates the tokens
         }
       }
     }

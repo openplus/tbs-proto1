@@ -1,0 +1,15 @@
+uuid: 7cf5f2b3-b22f-4cb1-8386-f17866bdd618
+langcode: en
+status: true
+dependencies: {  }
+name: one_quarter
+label: 'One quarter'
+effects:
+  f7c6974f-49d9-4f56-9c1f-07e60ac52960:
+    uuid: f7c6974f-49d9-4f56-9c1f-07e60ac52960
+    id: image_scale
+    weight: 1
+    data:
+      width: 300
+      height: null
+      upscale: false

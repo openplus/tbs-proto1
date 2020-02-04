@@ -1,0 +1,15 @@
+uuid: 8bc265c5-e088-41d3-9bdb-f8b4388fa212
+langcode: en
+status: true
+dependencies: {  }
+name: one_sixth
+label: 'One sixth'
+effects:
+  62ea964f-8256-4ec0-a532-fc91b772b7b1:
+    uuid: 62ea964f-8256-4ec0-a532-fc91b772b7b1
+    id: image_scale
+    weight: 1
+    data:
+      width: 200
+      height: null
+      upscale: false

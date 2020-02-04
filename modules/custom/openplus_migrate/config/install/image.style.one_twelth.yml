@@ -1,0 +1,15 @@
+uuid: 5420ee7b-9b02-44e5-9529-fcf47a35ad1e
+langcode: en
+status: true
+dependencies: {  }
+name: one_twelth
+label: 'One twelth'
+effects:
+  afeab485-52ef-4b05-b7a0-ef8190f0c626:
+    uuid: afeab485-52ef-4b05-b7a0-ef8190f0c626
+    id: image_scale
+    weight: 1
+    data:
+      width: 100
+      height: null
+      upscale: false

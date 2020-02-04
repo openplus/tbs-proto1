@@ -30,11 +30,28 @@ class OpenplusMigrateSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
+    $form[ConfigUtil::HARVESTER_DOMAIN_SETTING] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Harvester domain'),
+      '#description' => $this->t('Enter the harvester domain, prefixed with <code>http://</code> or <code>https://</code>.'),
+      '#default_value' => ConfigUtil::GetHarvesterDomain(),
+      '#required' => TRUE,
+    );
+
+    $form[ConfigUtil::HARVESTER_PORT_SETTING] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Harvester port'),
+      '#description' => $this->t('Enter the harvester port.'),
+      '#default_value' => ConfigUtil::GetHarvesterPort(),
+      '#required' => TRUE,
+    );
+
     $form[ConfigUtil::HARVESTER_API_URL_SETTING] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Harvester API URL'),
-      '#description' => $this->t('Enter the URL for the harvester API endpoints, prefixed with <code>http://</code> or <code>https://</code>.'),
-      '#default_value' => ConfigUtil::GetHarvesterBaseUrl(),
+      '#title' => $this->t('Harvester API path'),
+      '#description' => $this->t('Ex. /nodejs/export'),
+      '#default_value' => ConfigUtil::GetHarvesterApiUrl(),
       '#required' => TRUE,
     );
 
@@ -48,6 +65,8 @@ class OpenplusMigrateSettingsForm extends ConfigFormBase {
     // Retrieve the configuration
     $this->configFactory->getEditable(ConfigUtil::CONFIG_NAME)
     // Set the submitted configuration setting
+      ->set(ConfigUtil::HARVESTER_DOMAIN_SETTING, $form_state->getValue(ConfigUtil::HARVESTER_DOMAIN_SETTING))
+      ->set(ConfigUtil::HARVESTER_PORT_SETTING, $form_state->getValue(ConfigUtil::HARVESTER_PORT_SETTING))
       ->set(ConfigUtil::HARVESTER_API_URL_SETTING, $form_state->getValue(ConfigUtil::HARVESTER_API_URL_SETTING))
       ->save();
 

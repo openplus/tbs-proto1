@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies: {  }
+id: migration_cleanup
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: maas__group__cleanup
+label: 'Post migration clean-up'
+source:
+  plugin: post_process_all_nodes 
+  target: default
+  key: default
+process:
+  id: id
+  title: title
+  nid: nid
+  vid: vid
+  uid: uid
+  type: type
+  langcode: langcode
+  body/value:
+    -
+      plugin: replace_links_all
+      source: body
+  body/format:
+    plugin: default_value
+    default_value: rich_text
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null
+

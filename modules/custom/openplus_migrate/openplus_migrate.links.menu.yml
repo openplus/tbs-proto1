@@ -1,0 +1,6 @@
+openplus_migrate.admin:
+  title: 'Custom site settings'
+  description: 'Site settings specific to this site'
+  parent: system.admin_config_system
+  route_name: openplus_migrate.settings
+  weight: 100

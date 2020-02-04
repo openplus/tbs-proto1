@@ -5,3 +5,20 @@ openplus_migrate.settings:
     _form: '\Drupal\openplus_migrate\Form\OpenplusMigrateSettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+# This is the router item for exporting all migration entities.
+entity.migration.export:
+  path: '/admin/structure/migrate/manage/{migration_group}/export'
+  defaults:
+    _title: 'Export migrations'
+    _form: '\Drupal\openplus_migrate\Form\OpenplusMigrateExportForm'
+  requirements:
+    _permission: 'administer migrations'
+
+entity.migration_group.import_form:
+  path: '/admin/structure/migrate/manage/import'
+  defaults:
+    _title: 'Import migration'
+    _form: '\Drupal\openplus_migrate\Form\OpenplusMigrateImportForm'
+  requirements:
+    _permission: 'administer migrations'

@@ -9,23 +9,17 @@ use Drupal\migrate\Row;
  * Source plugin for Post Processing of content.
  *
  * @MigrateSource(
- *   id = "post_process_node"
+ *   id = "post_process_all_nodes"
  * )
  */
-class PostProcessNode extends SqlBase {
+class PostProcessAllNodes extends SqlBase {
 
   /**
    * {@inheritdoc}
    */
   public function query() {
-    $migration_table = 'migrate_map_maas__nd__en__' . str_replace('-', '_', $this->configuration['migration_uuid']);
 
     $query = $this->select('node', 'n');
-    $schema = \Drupal::database()->schema();
-    // if the migration has not run once this table will not exist and the admin migration page will whitescreen
-    if ($schema->tableExists($migration_table)) {
-      $query->innerJoin($migration_table, 'm', 'n.nid = m.destid1');
-    }
     $query ->fields('n',
       [
         'nid',

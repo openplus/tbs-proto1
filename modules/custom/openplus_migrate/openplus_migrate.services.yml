@@ -1,0 +1,5 @@
+services:
+  openplus_migrate.subscriber.import_events:
+    class: Drupal\openplus_migrate\EventSubscriber\MigrateImportEvents
+    tags:
+      - { name: event_subscriber }
