@@ -18,9 +18,9 @@
         {% for item in breadcrumb %}
           {% if loop.index == 1 %}
             <li {{ item.attributes }}>
-                <a href="http://www.google.com">Canada.ca</a>
+                <a href="{{ front.url }}>Canada.ca</a>
             </li>
-          <% else %>
+          {% else %}
             <li {{ item.attributes }}>
               {% if item.url %}
                 <a href="{{ item.url }}">{{ item.text }}</a>
