@@ -8,7 +8,6 @@
     // The commands
     $commands = array(
         'echo $PWD',
-        'whoami',
         'git pull',
         'drush cc theme-registry',
     );
