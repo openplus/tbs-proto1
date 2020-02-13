@@ -725,6 +725,9 @@ body .alert .text-default {
 
 }
 
+.signin {
+	padding-right: 10px;
+}
 
 .btn-login {
 
