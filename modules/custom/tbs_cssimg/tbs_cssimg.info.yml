@@ -1,0 +1,5 @@
+name: TBS Img Module
+type: module
+description: Assign Class to img if added to entity
+package: Custom
+core: 8.x
