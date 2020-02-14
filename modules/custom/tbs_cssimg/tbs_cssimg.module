@@ -9,10 +9,10 @@ function tbs_cssimg_preprocess_entity_embed_container(&$variables) {
     $DOM_object = Html::load($html_string);
     foreach ($DOM_object->getElementsByTagName('img') as $img) {      
       $class = $img->getAttribute('class');
-      if (!empty($class)) {
-        $img->setAttribute('class', $class . ' ' . $class_custom);
-      } else {
+      if (!empty($class_custom)) {
         $img->setAttribute('class', $class_custom);
+      } elseif (!empty($class)) {
+        $img->setAttribute('class', $class);
       }
     }    
     $html_string = Html::serialize($DOM_object);
