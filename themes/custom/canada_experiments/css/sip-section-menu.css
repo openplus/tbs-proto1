@@ -33,7 +33,7 @@ section.gc-nav ~ section.gc-nav-section {
 	right: 33.33%;
 }
 section.gc-nav ~ section.gc-nav-section h1 {
-	margin-top: 0px
+	margin-top: 0px !important; /* important tag needed to override other css in Drupal environment */
 }
 section.gc-nav-section + .pagedetails {
 	clear: both;
