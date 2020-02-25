@@ -1,6 +1,11 @@
 .gcweb-signin {
     border-top: 1px solid #ddd;
 }
+.home .gcweb-signin {
+    border-top: 0px;
+}
+
+
 .breadcrumb li:first-child {
     border-left: 6px #26374a solid;
   }

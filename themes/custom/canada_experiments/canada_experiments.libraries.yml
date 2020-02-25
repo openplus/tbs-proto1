@@ -16,7 +16,7 @@ contextual-css-override:
       css/theme-topic.css: {}
       css/alpha-beta-banner.css: {}
       css/sip-section-menu.css: {}
-      css/breadcrumbs.css: {}
+      css/updated-header.css: {}
 
 
 
