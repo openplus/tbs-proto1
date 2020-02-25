@@ -1,0 +1,6 @@
+.breadcrumb li:first-child {
+    border-left: 6px #26374a solid;
+  }
+#wb-bc li:first-child a {
+    padding-left: 8px;
+  }
