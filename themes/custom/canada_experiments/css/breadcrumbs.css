@@ -1,3 +1,6 @@
+.gcweb-signin {
+    border-top: 1px solid #ddd;
+}
 .breadcrumb li:first-child {
     border-left: 6px #26374a solid;
   }
