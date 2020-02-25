@@ -4,3 +4,17 @@
 #wb-bc li:first-child a {
     padding-left: 8px;
   }
+#wb-bc a {
+    padding: 5px 0px;
+}
+#wb-bc li:before {
+    color: #333;
+    content: "|";
+    font-family: "Glyphicons Halflings";
+    font-size: .7em;
+}
+/* .breadcrumb>li+li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/ ";
+} */
