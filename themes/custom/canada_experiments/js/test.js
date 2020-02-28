@@ -28,3 +28,7 @@
     Drupal.wxt_bootstrap.version = 'WxT v4.0.29';
 
 })(window.jQuery, window.Drupal, window.drupalSettings);
+
+jQuery(document).on("wb-ready", function (event) {
+    console.log("fired");
+});
