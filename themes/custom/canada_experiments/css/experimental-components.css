@@ -724,22 +724,3 @@ body .alert .text-default {
   }
 
 }
-
-.signin {
-	padding-right: 10px;
-}
-
-.btn-login {
-
-background-color: #26374a !important;
-border: 1px solid #26374a !important;
-font-weight: 600 !important;
-font-family: "Lato";
-font-size: 17px !important;
-padding-top: 7px;
-padding-bottom: 7px;
-padding-left: 16px;
-padding-right: 16px;
-margin-top: 3px;
-
-}
