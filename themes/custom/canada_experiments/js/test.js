@@ -36,10 +36,10 @@ jQuery(document).on("wb-ready.wb", function (event) {
             let a = jQuery('a').filter(function(index) { return jQuery(this).text() === searchParams.get("t"); });
             a.trigger('mouseenter');
         }
-        jQuery("#wb-auto-3 *").on("mouseleave",function() {
+        jQuery("#wb-auto-2 *").on("mouseleave",function() {
             event.stopPropagation();
         });
-        jQuery("#wb-auto-3 *").on("mouseenter",function() {
+        jQuery("#wb-auto-2 *").on("mouseenter",function() {
             event.stopPropagation();
         });
     }
