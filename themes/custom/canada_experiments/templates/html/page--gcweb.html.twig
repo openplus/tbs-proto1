@@ -80,13 +80,11 @@
           {{ page.search }}
         </div>
       </div>
-      <nav class="gcweb-menu" data-trgt="mb-pnl" typeof="SiteNavigationElement">
+      <div class="gcweb-signin" data-trgt="mb-pnl" typeof="SiteNavigationElement">
         <div id="menu-signin" class="{{ container }}">
-          <h2 class="wb-inv">{{ 'Menu'|t }}</h2>
-          <button type="button" aria-haspopup="true" aria-expanded="false"><span class="wb-inv">Main </span>Menu <span class="expicon glyphicon glyphicon-chevron-down"></span></button>
-          {{ page.navigation }}
+        <div class="pull-right"><a class="btn btn-primary btn-login" href="https://www.canada.ca/en/government/sign-in-online-account.html">Sign in</a></div>
         </div>
-      </nav>
+      </div>
       {{ page.breadcrumb }}
     </header>
   {% endblock %}
