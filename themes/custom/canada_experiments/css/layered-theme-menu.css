@@ -114,6 +114,10 @@
     left: 536px;
 }
 
+.alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] li a {
+    font-size: 18px;
+}
+
 .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu]  {
   border-left: 2px solid #f5f5f5 !important;
 }
@@ -146,6 +150,7 @@
 }
 
 /* CANADA.CA */
+
 .home .test-gcweb-menu {
     border-top: 1px solid #ddd;
     color: #284162;
