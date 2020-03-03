@@ -54,7 +54,7 @@
 .alpha .test-gcweb-menu [role=menu] [role=menu] li,
 .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child {
     margin-bottom: .3em;
-    width: 60%;
+    width: 63%;
     font-weight: 600;
     font-size: 20px;
 }
@@ -102,7 +102,7 @@
 .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
     width: 40% !important;
     top: 0;
-    left: 500px;
+    left: 536px;
 }
 
 .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu]  {
