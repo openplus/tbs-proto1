@@ -115,7 +115,7 @@
 }
 
 .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] li a {
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu]  {
@@ -126,7 +126,7 @@
   margin-left:20px;
   margin-bottom: .35em;
   font-weight:200 !important;
-  font-size: 16px !important;
+  font-size: 17px !important;
   line-height: 1.65;
 }
 
@@ -304,7 +304,7 @@
 }
 
 .test-gcweb-menu [role=menu] [role=menu] [role=menu] li:first-child [role=menuitem] {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 400;
     text-decoration: underline;
     width: auto
