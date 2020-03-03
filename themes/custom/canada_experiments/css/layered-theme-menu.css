@@ -2,9 +2,9 @@
 
 .alpha .test-gcweb-menu .fas {
     position: absolute;
-    left: 306px;
+    left: 294px;
     font-size: 10px;
-    margin-top: 2px
+    margin-top: 4px
 }
 
 .alpha .test-gcweb-menu .parent-list > li > a {
@@ -76,7 +76,7 @@
     -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
     box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
     z-index: 20; /* temp until I fix footer */
-    left: 326px;
+    left: 310px;
     width: 830px;
     padding: 0px 24px;
 }
@@ -88,7 +88,7 @@
 
 }
 .alpha .test-gcweb-menu [role=menuitem] {
-    width: 326px;
+    width: 310px;
 }
 
 .alpha .test-gcweb-menu [role=menuitem], .test-gcweb-menu [role=menuitem]:visited {
@@ -103,7 +103,6 @@
 .alpha .test-gcweb-menu [role=menuitem][aria-expanded=true]:first-child {
   background-color: #26374a;
   color: white;
-  font-weight: bold;
 }
 
 
