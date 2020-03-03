@@ -1,13 +1,15 @@
 /*alpha */
 
 .alpha .test-gcweb-menu .fas {
-    position: relative;
-    left: 240px;
+    position: absolute;
+    left: 306px;
+    font-size: 10px;
+    margin-top: 2px
 }
 
 .alpha .test-gcweb-menu .parent-list > li > a {
   font-size: 15px;
-  line-height: 1em;
+  line-height: 1.1em;
   color: #284162;
 }
 
