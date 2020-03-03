@@ -11,6 +11,10 @@
   color: #284162;
 }
 
+.alpha .test-gcweb-menu .parent-list > li > a:hover {
+    background-color: #f5f5f5;
+}
+
 .alpha .test-gcweb-menu  li a {
   line-height: 1.35;
 }
@@ -92,10 +96,6 @@
 .alpha .test-gcweb-menu a:active {
   color: #333;
   background-color: #f5f5f5;
-}
-
-.alpha .test-gcweb-menu a:hover {
-    background-color: #f5f5f5;
 }
 
 .alpha .test-gcweb-menu [role=menuitem][aria-expanded=true]:first-child {
