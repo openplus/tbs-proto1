@@ -4,7 +4,8 @@
     position: absolute;
     left: 294px;
     font-size: 10px;
-    margin-top: 4px
+    margin-top: -26px;
+    color: #284162;
 }
 
 .alpha .test-gcweb-menu .parent-list > li > a {
