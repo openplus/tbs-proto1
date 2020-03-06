@@ -1,0 +1,109 @@
+.gcweb-signin {
+    border-top: 1px solid #ddd;
+    margin-top: .75em;
+}
+.home .gcweb-signin {
+    border-top: 0px;
+}
+
+.btn-login {
+  background-color: #26374a !important;
+  border: 1px solid #26374a !important;
+  font-weight: 600 !important;
+  font-family: "Lato";
+  font-size: 17px !important;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 0px;
+  border-radius:0;
+}
+
+
+
+.breadcrumb li:first-child {
+    border-left: 6px #26374a solid;
+  }
+#wb-bc li:first-child a {
+    padding-left: 8px;
+  }
+#wb-bc a {
+    padding: 5px 0px;
+}
+#wb-bc li:before {
+    color: #333;
+    content: ">";
+    font-family: "Glyphicons Halflings";
+    font-size: .7em;
+}
+/* .breadcrumb>li+li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/ ";
+} */
+
+
+/* Footer */
+.alpha.global-footer h3 {
+      margin-top: 1.5em;
+      color: white;
+      font-size: 1.25em;
+      margin-bottom: 1.5em;
+    }
+    .alpha #wb-info a {
+      font-size: 15px;
+    }
+    .alpha #wb-info nav {
+    padding-top: 0em;
+    }
+    .alpha .brand nav {
+      padding-top: 2em !important;
+    }
+    .alpha.global-footer #wb-info .footer-gov ul li:last-child > a {
+      border-radius: 0px;
+      margin-top:1em;
+      font-family: 'Lato';
+      font-weight: bold;
+      font-size: 17px;
+      color: #333;
+      background-color: #eaebed;
+      border-style: outset;
+      height: auto;
+      min-height: 36px;
+      min-width: 36px;
+      white-space: normal;
+      display: inline-block;
+      margin-bottom: 0;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid #eaebed;
+      padding: 10px 14px;
+      line-height: 1.4375;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .alpha.global-footer #wb-info .footer-gov ul li:last-child > a:hover {
+      color: white;
+      background-color: #26374a;
+    }
+
+    @media screen and (min-width: 768px){
+    .alpha .footer-srv-info {
+      padding-left: 4em;
+    }
+
+    .alpha .footer-srv-info ul {
+      border-left: 1px solid white;
+      padding-left: 2em;
+      margin-left: -2em;
+      line-height: 1.8em;
+    }
+    }
