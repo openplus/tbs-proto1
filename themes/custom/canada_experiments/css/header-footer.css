@@ -91,7 +91,7 @@ footer#wb-info .footer-gov ul li:last-child > a {
   -ms-user-select: none;
   user-select: none;
 }
-.footer-gov ul li:last-child > a:hover {
+footer#wb-info .footer-gov ul li:last-child > a:hover {
   color: white;
   background-color: #26374a;
 }
