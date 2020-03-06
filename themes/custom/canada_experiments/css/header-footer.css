@@ -101,10 +101,13 @@ footer#wb-info .footer-gov ul li:last-child > a:hover {
     padding-left: 4em;
   }
 
-.footer-srv-info ul {
+  footer#wb-info .footer-srv-info ul {
     border-left: 1px solid white;
     padding-left: 2em;
     margin-left: -2em;
+    /* line-height: 1.8em; */
+  }
+  footer#wb-info .footer-srv-info ul li {
     line-height: 1.8em;
   }
 }
