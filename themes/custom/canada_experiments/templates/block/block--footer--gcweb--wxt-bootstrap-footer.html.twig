@@ -38,7 +38,7 @@
     'wb-navcurr'
   ]
 %}
-<nav{{ attributes.addClass(classes) }}>
+<div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   <h2>{{ 'About this site'|t }}</h2>
   {{ title_suffix }}
@@ -50,4 +50,4 @@
       </ul>
     </div>
   {% endblock %}
-</nav>
+</div>
