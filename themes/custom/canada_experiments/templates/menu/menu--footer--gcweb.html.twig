@@ -27,7 +27,9 @@
   {% import _self as menus %}
   {% if items %}
     {% if gcweb.footer %}
-     <ul class="list-unstyled colcount-sm-2 colcount-md-3">
+    <div class="col-md-4 col-sm-4 footer-gov">
+      <h3>You government<h3>
+     <ul class="list-unstyled colcount-sm-1">
     {% endif %}
     {% if menu_level != 0 %}
       <ul{{ attributes.addClass('list-unstyled') }}>
@@ -52,9 +54,13 @@
     {% endfor %}
     {% if menu_level != 0 %}
       </ul>
+      </div>
+
     {% endif %}
     {% if gcweb.footer %}
     </ul>
+     </div>
+
     {% endif %}
   {% endif %}
 {% endmacro %}
