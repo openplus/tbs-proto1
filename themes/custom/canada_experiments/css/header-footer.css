@@ -22,12 +22,12 @@
 
 
 
-.breadcrumb li:first-child {
+/* .breadcrumb li:first-child {
     border-left: 6px #26374a solid;
   }
 #wb-bc li:first-child a {
     padding-left: 8px;
-  }
+  } */
 #wb-bc a {
     padding: 5px 0px;
 }
