@@ -1,6 +1,6 @@
 .gcweb-signin {
     border-top: 1px solid #ddd;
-    margin-top: .75em;
+    margin-top: .5em;
 }
 .home .gcweb-signin {
     border-top: 0px;
@@ -19,7 +19,6 @@
   margin-top: 0px;
   border-radius:0;
 }
-
 
 
 /* .breadcrumb li:first-child {
@@ -110,4 +109,13 @@ footer#wb-info .footer-gov ul li:last-child > a:hover {
   footer#wb-info .footer-srv-info ul li {
     line-height: 1.8em;
   }
+
+}
+
+@media screen and (min-width: 1024px) {
+    /* silly temp fix */
+  .region-language-toggle .links {
+    position: absolute; right:-65px;
+  }
+
 }
