@@ -407,7 +407,7 @@ nav#tp-pg.stuck, .wb-disable nav#tp-pg {
 }
 }
 
-/*alert design */
+/*alert design
 .alert:before {
 	height: 34px;
 	content: "";
@@ -426,7 +426,7 @@ nav#tp-pg.stuck, .wb-disable nav#tp-pg {
 	margin-left: 12px;
 	/* margin-top: 1.7em; */
 	/* margin-bottom: 1.7em; */
-	padding-left: 20px;
+/*	padding-left: 20px;
 	border-width: 0px 0px 0px 6px!important
 }
 .alert-success > :first-child::before, .alert-info > :first-child::before, .alert-warning > :first-child::before, .alert-danger > :first-child::before {
@@ -440,7 +440,7 @@ nav#tp-pg.stuck, .wb-disable nav#tp-pg {
 }
 .alert >:first-child::before {
 	margin-right: 0.4em
-}
+}*/
 /*targets the first h2 or h3 of alerts and matches the border color */
 /* .alert-info h2:first-child, .alert-info h3:first-child, .alert-info .h2:first-child, .alert-info .h3:first-child {
 	color: #269abc
@@ -455,9 +455,9 @@ nav#tp-pg.stuck, .wb-disable nav#tp-pg {
 	color: #d3080c
 } */
 /* reverts header to black if need for overwrite */
-body .alert .text-default {
+/*body .alert .text-default {
 	color: inherit
-}
+} */
 
 /* blockquote with quote design*/
 	blockquote {margin-left:12px; border-left-width:6px!important; border-left-color: #d4d4d4; }
