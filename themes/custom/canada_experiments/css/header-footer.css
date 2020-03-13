@@ -1,3 +1,18 @@
+/* Header */
+
+/* stops search from breaking apart from the icon */
+#wxt-search-block-form.search-form {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+/* stops search from breaking apart from the icon */
+#wxt-search-block-form .form-item,
+#wxt-search-block-form .submit {
+  display: table-cell !important;
+}
+
+
 .gcweb-signin {
     border-top: 1px solid #ddd;
     margin-top: .5em;
