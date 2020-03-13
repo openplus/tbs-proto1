@@ -118,7 +118,7 @@ footer#wb-info .footer-gov ul li:last-child > a:hover {
 
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1200px) {
     /* silly temp fix */
   .region-language-toggle .links {
     position: absolute; right:-65px;
