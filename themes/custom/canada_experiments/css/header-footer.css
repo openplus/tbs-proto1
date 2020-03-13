@@ -12,6 +12,13 @@
   display: table-cell !important;
 }
 
+/* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
+@-moz-document url-prefix() {
+  .region-language-toggle .links {
+    position:relative;
+    right:0px;
+}
+
 
 /* Chrome 29+ */
 @media screen and (min-width: 1200px)
