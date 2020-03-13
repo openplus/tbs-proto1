@@ -12,6 +12,11 @@
   display: table-cell !important;
 }
 
+.wxt-search-block-form {
+  float: none !important;
+  text-align: start !important;
+}
+
 /* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
 /* @-moz-document url-prefix() {
   .region-language-toggle .links {
