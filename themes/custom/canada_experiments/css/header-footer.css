@@ -13,18 +13,46 @@
 }
 
 
+/* Chrome 29+ */
+@media screen and (min-width: 1200px)
+  and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+    .region-language-toggle .links {
+      position:absolute;
+      right:-65px;
+    }
+}
+
+/* Chrome 22-28 */
+@media screen and (min-width: 1200px)
+  and(-webkit-min-device-pixel-ratio:0) {
+  .region-language-toggle .links {-chrome-:only(;
+      position:absolute;
+      right:-65px;
+  );}
+}
+/*
+@media screen and (min-width: 1200px) {
+    /* silly temp fix - in this view the search bar isn't taking the full width, so this backs up the Francais to align */
+ /* .region-language-toggle .links {
+    position: absolute; right:-65px;
+  }
+
+} */
+
+/* overrides some Drupal css somehwere... */
+.logo img {
+    padding-left:0px !important;
+    padding-right:0px !important;
+    min-height: 28px; /*needed or it's invisible on Firefox*/
+}
+
 .gcweb-signin {
     border-top: 1px solid #ddd;
     margin-top: .5em;
 }
 .home .gcweb-signin {
     border-top: 0px;
-}
-/* overrides some Drupal css somehwere... */
-.logo img {
-    padding-left:0px !important;
-    padding-right:0px !important;
-    min-height: 28px; /*needed or it's invisible on Firefox*/
 }
 
 .btn-login {
@@ -64,7 +92,8 @@
 } */
 
 
-/* Footer */
+
+/* Footer CSS */
 footer h3 {
   margin-top: 1.5em;
   color: white;
@@ -129,14 +158,6 @@ footer#wb-info .footer-gov ul li:last-child > a:hover {
   }
   footer#wb-info .footer-srv-info ul li {
     line-height: 1.8em;
-  }
-
-}
-
-@media screen and (min-width: 1200px) {
-    /* silly temp fix */
-  .region-language-toggle .links {
-    position: absolute; right:-65px;
   }
 
 }
