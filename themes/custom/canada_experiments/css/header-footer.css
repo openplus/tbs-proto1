@@ -13,7 +13,7 @@
 }
 
 /* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
-@-moz-document url-prefix() {
+/* @-moz-document url-prefix() {
   .region-language-toggle .links {
     position:relative;
     right:0px;
@@ -21,7 +21,7 @@
 
 
 /* Chrome 29+ */
-@media screen and (min-width: 1200px)
+/*  @media screen and (min-width: 1200px)
   and (-webkit-min-device-pixel-ratio:0)
   and (min-resolution:.001dpcm) {
     .region-language-toggle .links {
@@ -31,7 +31,7 @@
 }
 
 /* Chrome 22-28 */
-@media screen and (min-width: 1200px)
+/*  @media screen and (min-width: 1200px)
   and(-webkit-min-device-pixel-ratio:0) {
   .region-language-toggle .links {-chrome-:only(;
       position:absolute;
