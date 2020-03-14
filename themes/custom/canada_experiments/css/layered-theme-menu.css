@@ -64,10 +64,16 @@
 
 .alpha .test-gcweb-menu [role=menu] [role=menu] li,
 .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child {
-    margin-bottom: .3em;
     width: 63%;
     font-weight: 600;
     font-size: 20px;
+}
+
+.alpha .test-gcweb-menu [role=menu] [role=menu] li {
+    margin-bottom: 1em;
+}
+.alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child{
+  margin-bottom: .3mem;
 }
 
 .alpha .test-gcweb-menu [role=menu] [role=menu] {
