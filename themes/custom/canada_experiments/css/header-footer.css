@@ -1,5 +1,12 @@
 /* Header */
 
+/* if it has important, it overrides some Drupal css... */
+.logo img {
+    padding-left:0px !important;
+    padding-right:0px !important;
+    min-height: 28px; /*needed or it's invisible on Firefox*/
+}
+
 /* stops search from breaking apart from the icon */
 #wxt-search-block-form.search-form {
   display: table;
@@ -15,6 +22,14 @@
 .wxt-search-block-form {
   float: none !important;
   text-align: start !important;
+}
+
+#wb-srch-sub {
+    margin-left: 0px !important;
+}
+
+#wb-srch input {
+  width: 100% !important;
 }
 
 /* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
@@ -52,12 +67,6 @@
 
 } */
 
-/* overrides some Drupal css somehwere... */
-.logo img {
-    padding-left:0px !important;
-    padding-right:0px !important;
-    min-height: 28px; /*needed or it's invisible on Firefox*/
-}
 
 .gcweb-signin {
     border-top: 1px solid #ddd;
