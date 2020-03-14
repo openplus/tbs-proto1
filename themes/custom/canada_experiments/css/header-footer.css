@@ -39,10 +39,10 @@
 }
 
 @media screen and (max-width: 767px) and (min-width: 480px) {
-#wb-srch input {
-    max-width: none !important;
+  #wb-srch input {
+      max-width: none !important;
+  }
 }
-
 
 /* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
 /* @-moz-document url-prefix() {
