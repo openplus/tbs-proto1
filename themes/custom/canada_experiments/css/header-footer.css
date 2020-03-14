@@ -28,9 +28,16 @@
     margin-left: 0px !important;
 }
 
-.alpha #wb-srch input {
+#wb-srch input {
   width: 100% !important;
 }
+
+@media screen and (max-width: 479px) {
+  #wb-srch input {
+    max-width: none !important;
+  }
+}
+
 
 /* Need to fix the problem with the search bar width not corresponding with the column - temp fixes */
 /* @-moz-document url-prefix() {
