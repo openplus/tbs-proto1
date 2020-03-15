@@ -8,20 +8,25 @@
 }
 
 /* stops search from breaking apart from the icon */
-#wxt-search-block-form.search-form {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
+.form-type-search {
+  display: table !important;
+  width:100%;
+
 }
 /* stops search from breaking apart from the icon */
-#wxt-search-block-form .form-item,
+#wxt-search-block-form .search-input,
 #wxt-search-block-form .submit {
   display: table-cell !important;
+  width:100%;
+}
+
+#wb-srch .submit {
+    float:none !important;
 }
 
 .wxt-search-block-form {
-  float: none !important;
-  text-align: start !important;
+  float:none !important;
+  text-align:start !important;
 }
 
 #wb-srch-sub {

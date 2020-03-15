@@ -27,7 +27,16 @@
     ]
   %}
   {% block input %}
+  <div class="search-input">
     <input data-drupal-selector="wb-srch-q" class="form-search form-control" placeholder="Search Canada.ca" type="search" id="wb-srch-q" name="keys" value="" size="27" maxlength="128" data-toggle="tooltip"/>
     {# <input{{attributes.addClass(classes)}}/> #}
+  </div>
+    <div class="form-group submit">
+      <button{{ attributes.addClass(classes, 'icon-only') }}>
+        <span class="sr-only">{{ label }}</span>
+        {{ icon }}
+      </button>
+    </div>
+  </div> {# to close div from the left open form-element.html.twig #}
   {% endblock %}
 {% endspaceless %}
