@@ -22,7 +22,7 @@
  * @see template_preprocess_input()
  */
 #}
-{# {% spaceless %}
+{% spaceless %}
   {%
     set classes = [
       'btn',
@@ -51,4 +51,4 @@
     {% endif %}
     {{ children }}
   {% endblock %}
-{% endspaceless %} #}
+{% endspaceless %}
