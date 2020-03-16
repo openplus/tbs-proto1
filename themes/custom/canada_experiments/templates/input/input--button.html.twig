@@ -31,6 +31,7 @@
     ]
   %}
   {% block input %}
+  {% if not (attributes.id == 'wb-srch-sub') %}
     {% if icon and icon_only %}
     <div class="form-group submit">
       <button{{ attributes.addClass(classes, 'icon-only') }}>
@@ -48,6 +49,7 @@
           <button{{ attributes.addClass(classes) }}>{{ icon }}{{ label }}</button>{{ children }}
         </div>
       {% endif %}
+    {% endif %}
     {% endif %}
     {{ children }}
   {% endblock %}
