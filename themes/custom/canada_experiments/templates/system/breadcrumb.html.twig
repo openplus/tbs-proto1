@@ -13,18 +13,24 @@
 {% if breadcrumb %}
   <nav id="wb-bc" property="breadcrumb">
     <h2>{{ 'You are here'|t }}</h2>
-    <div class="{{ container }}">
+    {# <div class="{{ container }}"> #}
       <ol class="breadcrumb">
         {% for item in breadcrumb %}
-          <li {{ item.attributes }}>
-            {% if item.url %}
-              <a href="{{ item.url }}">{{ item.text }}</a>
-            {% else %}
-              {{ item.text }}
-            {% endif %}
-          </li>
+          {% if loop.index == 1 %}
+            <li {{ item.attributes }}>
+                <a href="{{ path('<front>') }}">Canada.ca</a>
+            </li>
+          {% else %}
+            <li {{ item.attributes }}>
+              {% if item.url %}
+                <a href="{{ item.url }}">{{ item.text }}</a>
+              {% else %}
+                {{ item.text }}
+              {% endif %}
+            </li>
+          {% endif %}
         {% endfor %}
       </ol>
-  </div>
+  {# </div> #}
 </nav>
 {% endif %}

@@ -1,7 +1,5 @@
 <?php
 
-// @codingStandardsIgnoreFile
-
 /**
  * @file
  * Drupal site-specific configuration file.
@@ -88,7 +86,16 @@
  * );
  * @endcode
  */
-$databases = [];
+$databases['default']['default'] = array (
+  'database' => 'wxt',
+  'username' => 'root',
+  'password' => 'root',
+  'prefix' => '',
+  'host' => 'db',
+  'port' => '3306',
+  'namespace' => 'Drupal\Core\Database\Driver\mysql',
+  'driver' => 'mysql',
+);
 
 /**
  * Customizing database settings.
@@ -146,11 +153,6 @@ $databases = [];
  * @code
  *   'prefix' => 'main_',
  * @endcode
- *
- * Per-table prefixes are deprecated as of Drupal 8.2, and will be removed in
- * Drupal 9.0. After that, only a single prefix for all tables will be
- * supported.
- *
  * To provide prefixes for specific tables, set 'prefix' as an array.
  * The array's keys are the table names and the values are the prefixes.
  * The 'default' element is mandatory and holds the prefix for any tables
@@ -251,7 +253,7 @@ $databases = [];
  *   );
  * @endcode
  */
-$config_directories = [];
+$config_directories = array();
 
 /**
  * Settings:
@@ -262,6 +264,18 @@ $config_directories = [];
  *
  * @see \Drupal\Core\Site\Settings::get()
  */
+
+/**
+ * The active installation profile.
+ *
+ * Changing this after installation is not recommended as it changes which
+ * directories are scanned during extension discovery. If this is set prior to
+ * installation this value will be rewritten according to the profile selected
+ * by the user.
+ *
+ * @see install_select_profile()
+ */
+# $settings['install_profile'] = '';
 
 /**
  * Salt for one-time login links, cancel links, form tokens, etc.
@@ -280,7 +294,7 @@ $config_directories = [];
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = 'default';
 
 /**
  * Deployment identifier.
@@ -320,7 +334,10 @@ $settings['update_free_access'] = FALSE;
  *
  * You can also define an array of host names that can be accessed directly,
  * bypassing the proxy, in $settings['http_client_config']['proxy']['no'].
- */
+ *
+ * If these settings are not configured, the system environment variables
+ * HTTP_PROXY, HTTPS_PROXY, and NO_PROXY on the web server will be used instead.
+*/
 # $settings['http_client_config']['proxy']['http'] = 'http://proxy_user:proxy_pass@example.com:8080';
 # $settings['http_client_config']['proxy']['https'] = 'http://proxy_user:proxy_pass@example.com:8080';
 # $settings['http_client_config']['proxy']['no'] = ['127.0.0.1', 'localhost'];
@@ -356,13 +373,13 @@ $settings['update_free_access'] = FALSE;
  * Be aware, however, that it is likely that this would allow IP
  * address spoofing unless more advanced precautions are taken.
  */
-# $settings['reverse_proxy'] = TRUE;
+$settings['reverse_proxy'] = TRUE;
 
 /**
  * Specify every reverse proxy IP address in your environment.
  * This setting is required if $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
+$settings['reverse_proxy_addresses'] = array('0.0.0.0/0');
 
 /**
  * Set this value if your proxy server sends the client IP in a header
@@ -411,29 +428,6 @@ $settings['update_free_access'] = FALSE;
  * getting cached pages from the proxy.
  */
 # $settings['omit_vary_cookie'] = TRUE;
-
-
-/**
- * Cache TTL for client error (4xx) responses.
- *
- * Items cached per-URL tend to result in a large number of cache items, and
- * this can be problematic on 404 pages which by their nature are unbounded. A
- * fixed TTL can be set for these items, defaulting to one hour, so that cache
- * backends which do not support LRU can purge older entries. To disable caching
- * of client error responses set the value to 0. Currently applies only to
- * page_cache module.
- */
-# $settings['cache_ttl_4xx'] = 3600;
-
-/**
- * Expiration of cached forms.
- *
- * Drupal's Form API stores details of forms in a cache and these entries are
- * kept for at least 6 hours by default. Expired entries are cleared by cron.
- *
- * @see \Drupal\Core\Form\FormCache::setCache()
- */
-# $settings['form_cache_expiration'] = 21600;
 
 /**
  * Class Loader.
@@ -556,10 +550,10 @@ if ($settings['hash_salt']) {
  * The "en" part of the variable name, is dynamic and can be any langcode of
  * any added language. (eg locale_custom_strings_de for german).
  */
-# $settings['locale_custom_strings_en'][''] = [
+# $settings['locale_custom_strings_en'][''] = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
-# ];
+# );
 
 /**
  * A custom theme for the offline page:
@@ -613,7 +607,7 @@ if ($settings['hash_salt']) {
  *   override in a services.yml file in the same directory as settings.php
  *   (definitions in this file will override service definition defaults).
  */
-# $settings['bootstrap_config_storage'] = ['Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage'];
+# $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
 
 /**
  * Configuration overrides.
@@ -637,7 +631,6 @@ if ($settings['hash_salt']) {
  * configuration values in settings.php will not fire any of the configuration
  * change events.
  */
-# $config['system.file']['path']['temporary'] = '/tmp';
 # $config['system.site']['name'] = 'My Drupal site';
 # $config['system.theme']['default'] = 'stark';
 # $config['user.settings']['anonymous'] = 'Visitor';
@@ -672,7 +665,7 @@ if ($settings['hash_salt']) {
 /**
  * Load services definition file.
  */
-$settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
+$settings['container_yamls'][] = __DIR__ . '/services.yml';
 
 /**
  * Override the default service container class.
@@ -682,15 +675,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * to test a service container that throws an exception.
  */
 # $settings['container_base_class'] = '\Drupal\Core\DependencyInjection\Container';
-
-/**
- * Override the default yaml parser class.
- *
- * Provide a fully qualified class name here if you would like to provide an
- * alternate implementation YAML parser. The class must implement the
- * \Drupal\Component\Serialization\SerializationInterface interface.
- */
-# $settings['yaml_parser_class'] = NULL;
 
 /**
  * Trusted host configuration.
@@ -730,29 +714,25 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  */
 
 /**
- * The default list of directories that will be ignored by Drupal's file API.
+ * Get environment settings.
  *
- * By default ignore node_modules and bower_components folders to avoid issues
- * with common frontend tools and recursive scanning of directories looking for
- * extensions.
- *
- * @see file_scan_directory()
- * @see \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory()
+ * Production (default): normal production settings.
+ * Development: Use development settings.
  */
-$settings['file_scan_ignore_directories'] = [
-  'node_modules',
-  'bower_components',
-];
+$drupal_settings = 'production';
+if (isset($_ENV['DRUPAL_SETTINGS'])) {
+  $drupal_settings = $_ENV['DRUPAL_SETTINGS'];
+}
+
+/** Todo: create better patterns on production sites */
+if ($drupal_settings !== 'production') {
+  $settings['trusted_host_patterns'] = array('[\s\S]*');
+}
 
 /**
- * The default number of entities to update in a batch process.
- *
- * This is used by update and post-update functions that need to go through and
- * change all the entities on a site, so it is useful to increase this number
- * if your hosting configuration (i.e. RAM allocation, CPU speed) allows for a
- * larger number of entities to be processed in a single batch run.
+ * Set private file path directory.
  */
-$settings['entity_update_batch_size'] = 50;
+$settings['file_private_path'] =  '/var/www/files_private';
 
 /**
  * Load local development override configuration, if available.
@@ -764,7 +744,14 @@ $settings['entity_update_batch_size'] = 50;
  *
  * Keep this code block at the end of this file to take full effect.
  */
-#
-# if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-#   include $app_root . '/' . $site_path . '/settings.local.php';
-# }
+if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local.php')) {
+  include __DIR__ . '/settings.local.php';
+}
+
+/** Everything after here is added by the installation process.
+ *
+ * TODO: improve the installtion by putting the settings.local part below these
+ * settings.
+ */
+
+$config_directories[CONFIG_SYNC_DIRECTORY] = 'sites/default/files/config/sync';

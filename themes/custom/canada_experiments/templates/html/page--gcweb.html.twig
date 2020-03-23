@@ -70,24 +70,40 @@
       ]
     %}
     <header{{ navbar_attributes.addClass(navbar_classes) }} id="navbar">
-      <div id="wb-bnr" class="{{ container }}">
-        <section id="wb-lng" class="text-right">
-          <h2 class="wb-inv">{{ 'Language selection'|t }}</h2>
-          {{ page.language_toggle }}
-        </section>
-        <div class="row">
+      <div id="wb-bnr" class="{{ container }} mrgn-tp-sm">
+       <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+          <section class="col-md-4 col-sm-6">
           {{ page.banner }}
-          {{ page.search }}
+          </section>
+          <section id="wb-lng" class="text-right col-md-4 mrgn-tp-md">
+            <h2 class="wb-inv">{{ 'Language selection'|t }}</h2>
+            {{ page.language_toggle }}
+          </section>
+          <section class="col-md-4">
+            {{ page.search }}
+          </section>
+            </div>
+          </div>
         </div>
       </div>
-      <nav class="gcweb-menu" data-trgt="mb-pnl" typeof="SiteNavigationElement">
-        <div class="{{ container }}">
-          <h2 class="wb-inv">{{ 'Menu'|t }}</h2>
-          <button type="button" aria-haspopup="true" aria-expanded="false"><span class="wb-inv">Main </span>Menu <span class="expicon glyphicon glyphicon-chevron-down"></span></button>
-          {{ page.navigation }}
+      <div class="gcweb-signin" data-trgt="mb-pnl" typeof="SiteNavigationElement">
+        <div id="menu-signin">
+          <div class="{{ container }}">
+            <div class="row">
+              <div class="col-md-2 pull-right">
+                <div class="pull-right">
+                  <a id="canada-sign-in" class="btn btn-primary btn-login" href="/en/landing/sign-government-canada-online-account">Sign in</a>
+                </div>
+              </div>
+              <div class="col-md-10">
+                    {{ page.breadcrumb }}
+              </div>
+            </div>
+          </div>
         </div>
-      </nav>
-      {{ page.breadcrumb }}
+      </div>
     </header>
   {% endblock %}
 {% endif %}
@@ -95,7 +111,7 @@
 {# Main #}
 {% block main %}
 
-  <div class="{{ is_front ? "container-fluid" : container }}">
+  {# <div class="{{ is_front ? "container-fluid" : container }}"> #}
     <div class="row">
 
       {# Highlighted #}
@@ -164,7 +180,7 @@
 
 
           {{ page.content_footer }}
-          
+
 
         {% endblock %}
       </section>
@@ -206,7 +222,7 @@
       {% endif %}
 
     </div>
-  </div>
+  {# </div> #}
 
 {% endblock %}
 
@@ -230,12 +246,14 @@
       <footer id="wb-info">
         <div class="landscape">
           <div class="{{ container }}">
-            {{ page.footer }}
-          </div> 
+            <div class="row">
+            <nav>{{ page.footer }}</nav>
+            </div>
+          </div>
         </div>
         <div class="brand">
           <div class="{{ container }}">
-            <div class="row ">
+            <div class="row">
               {{ page.branding }}
               <div class="col-xs-6 visible-sm visible-xs tofpg">
                 <a href="#wb-cont">{{ 'Top of Page'|t }}<span class="glyphicon glyphicon-chevron-up"></span></a>

@@ -27,7 +27,13 @@
     ]
   %}
   {% block input %}
+  <div class="search-input">
     <input data-drupal-selector="wb-srch-q" class="form-search form-control" placeholder="Search Canada.ca" type="search" id="wb-srch-q" name="keys" value="" size="27" maxlength="128" data-toggle="tooltip"/>
     {# <input{{attributes.addClass(classes)}}/> #}
+  </div>
+    <div class="form-group submit">
+      <button class="btn-primary button js-form-submit form-submit btn icon-before" data-drupal-selector="wb-srch-sub" type="submit" id="wb-srch-sub" name="op" value=""><span class="icon glyphicon glyphicon-search" aria-hidden="true"></span></button>
+    </div>
+  </div> {# to close div from the left open form-element.html.twig #}
   {% endblock %}
 {% endspaceless %}
