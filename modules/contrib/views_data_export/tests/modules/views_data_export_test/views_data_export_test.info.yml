@@ -1,0 +1,13 @@
+name: 'Views data export test views'
+type: module
+description: 'Provides default views for views data export tests.'
+package: Testing
+# version: VERSION
+core: 8.x
+dependencies:
+  - views_data_export:views_data_export
+
+# Information added by Drupal.org packaging script on 2020-01-29
+version: '8.x-1.0-beta4'
+project: 'views_data_export'
+datestamp: 1580333471
