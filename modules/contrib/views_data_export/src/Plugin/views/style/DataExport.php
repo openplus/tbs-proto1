@@ -255,17 +255,17 @@ class DataExport extends Serializer {
 
     $url = $url->setOptions($url_options)->toString();
 
-    // Add the icon to the view.
-    $format = $this->displayHandler->getContentType();
+    // Add the CSV icon to the view.
+    $type = $this->displayHandler->getContentType();
     $this->view->feedIcons[] = [
       '#theme' => 'export_icon',
       '#url' => $url,
-      '#format' => mb_strtoupper($format),
+      '#type' => mb_strtoupper($type),
       '#theme_wrappers' => [
         'container' => [
           '#attributes' => [
             'class' => [
-              Html::cleanCssIdentifier($format) . '-feed',
+              Html::cleanCssIdentifier($type) . '-feed',
               'views-data-export-feed',
             ],
           ],

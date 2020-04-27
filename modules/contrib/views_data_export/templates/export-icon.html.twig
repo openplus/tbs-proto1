@@ -6,12 +6,12 @@
  * Available variables:
  * - url: An internal system path of the data export.
  * - attributes: Remaining HTML attributes for the export link.
- *   - format: The export format (csv, json, xml).
+ *   - type: The type of export (csv, json, xml).
  *   - class: HTML classes to be applied to the export link.
  *
  * @ingroup themeable
  */
 #}
 <a href="{{ url }}"{{ attributes.addClass('feed-icon') }}>
-  {{ 'Download @format'|t({'@format': format}) }}
+  {{ 'Download @type'|t({'@type': type}) }}
 </a>

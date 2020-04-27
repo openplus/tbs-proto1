@@ -19,7 +19,8 @@
         "drupal/moderation_note": "^1.0@beta",
         "drupal/entity_clone": "^1.0@beta",
         "drupal/term_condition": "^1.1",
-        "drupal/views_data_export": "^1.0@beta"
+        "drupal/views_data_export": "^1.0@beta",
+        "drupal/csv_serialization": "^1.4"
     },
     "replace": {
         "drupal/core": "^8.6"

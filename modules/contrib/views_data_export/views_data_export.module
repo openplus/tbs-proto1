@@ -21,7 +21,7 @@ function views_data_export_theme() {
   return [
     'export_icon' => [
       'variables' => [
-        'format' => NULL,
+        'type' => NULL,
         'url' => NULL,
       ],
     ],
