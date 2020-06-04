@@ -169,7 +169,7 @@
     width: inherit;
   }
   .alpha .test-gcweb-menu [role=menu] [role=menu] li, .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child {
-      width: 100%
+    width: 100%
   }
   .alpha .test-gcweb-menu [aria-expanded=true]:not(button) + [role=menu] li {
     margin-left: 0px;
@@ -181,9 +181,16 @@
 
 
 @media screen and (min-width: 992px) and (max-width: 1199px) {
+    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] {
+        border-left:0px;
+    }
 
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
-        left: 0;
+        width:100%;
+    }
+
+    .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
+        left:0;
     }
 }
 
