@@ -172,7 +172,7 @@
         margin-left:0px;
     }
 
-    .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem], .test-gcweb-menu [role=menu] [role=menu] li:last-child [role=menuitem] {
+    .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem], .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child [role=menuitem] {
         background-color:none;
     }
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
@@ -190,7 +190,7 @@
     .alpha .test-gcweb-menu [aria-expanded=true]:not(button) + [role=menu] li {
         margin-left: 0px;
     }
-    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menuitem], .test-gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem] {
+    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menuitem], .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem] {
         border-bottom: 0px !important;
     }
 }
