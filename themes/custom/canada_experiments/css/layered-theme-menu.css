@@ -176,7 +176,7 @@
         background-color:none;
     }
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
-        width:100%;
+        width:100% !important;
     }
     .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] {
         border-left: 0px !important;
@@ -185,7 +185,7 @@
         width: inherit;
     }
     .alpha .test-gcweb-menu [role=menu] [role=menu] li, .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child {
-        width: 100%;
+        width: 100% !important;
     }
     .alpha .test-gcweb-menu [aria-expanded=true]:not(button) + [role=menu] li {
         margin-left: 0px;
