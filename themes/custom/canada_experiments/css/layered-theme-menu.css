@@ -172,6 +172,10 @@
         width: inherit;
     }
 
+    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menuitem] {
+        text-decoration: underline;
+    }
+
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
         width:100% !important;
     }
