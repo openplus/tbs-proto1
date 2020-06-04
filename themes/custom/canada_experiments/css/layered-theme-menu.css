@@ -172,8 +172,12 @@
         width: inherit;
     }
 
-    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menuitem] {
+    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menuitem], .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child [role=menuitem] {
         text-decoration: underline;
+    }
+
+    .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] li:first-child [role=menuitem] {
+        text-decoration: none;
     }
 
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
