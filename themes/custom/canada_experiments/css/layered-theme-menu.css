@@ -173,7 +173,7 @@
     }
 
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem], .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child [role=menuitem] {
-        background-color:none;
+        background-color:white;
     }
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
         width:100% !important;
