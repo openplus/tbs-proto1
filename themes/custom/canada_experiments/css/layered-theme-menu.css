@@ -182,15 +182,15 @@
 
 @media screen and (min-width: 992px) and (max-width: 1199px) {
     .alpha .test-gcweb-menu [role=menu] [role=menu] [role=menu] {
-        border-left:0px;
+        border-left:0px !important;
     }
 
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
-        width:100%;
+        width:100% !important;
     }
 
     .alpha .test-gcweb-menu [role=menu] [role=menu] li:last-child {
-        left:0;
+        left:0 !important;
     }
 }
 
