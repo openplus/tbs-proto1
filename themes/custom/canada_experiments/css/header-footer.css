@@ -119,9 +119,10 @@
 }
 #wb-bc li:before {
     color: #333;
-    content: ">";
-    font-family: "Glyphicons Halflings";
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
     font-size: .7em;
+    font-weight: 900;
 }
 /* .breadcrumb>li+li:before {
     padding: 0 5px;
